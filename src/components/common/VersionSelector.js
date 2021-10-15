@@ -138,15 +138,18 @@ const getReleasedVersions = ({ releasedVersions, minVersion, maxVersion }) => {
   )
 }
 
-// Finds the first minor release (which in react-native is the major) when compared to another version
-const getFirstMajorRelease = ({ releasedVersions, versionToCompare }) =>
+// Finds the first specified release (patch, minor, major) when compared to another version
+const getFirstRelease = (
+  { releasedVersions, versionToCompare },
+  type = 'minor'
+) =>
   releasedVersions.find(
     releasedVersion =>
       semver.lt(releasedVersion, versionToCompare) &&
       semver.diff(
         semver.valid(semver.coerce(releasedVersion)),
         semver.valid(semver.coerce(versionToCompare))
-      ) === 'minor'
+      ) === type
   )
 
 // Return if version exists in the ones returned from GitHub
@@ -219,10 +222,20 @@ const VersionSelector = ({
       const fromVersionToBeSet = hasFromVersionInURL
         ? versionsInURL.fromVersion
         : // Get first major release before latest
-          getFirstMajorRelease({
-            releasedVersions: sanitizedVersions,
-            versionToCompare: toVersionToBeSet
-          })
+          getFirstRelease(
+            {
+              releasedVersions: sanitizedVersions,
+              versionToCompare: toVersionToBeSet
+            },
+            'minor'
+          ) ||
+          getFirstRelease(
+            {
+              releasedVersions: sanitizedVersions,
+              versionToCompare: toVersionToBeSet
+            },
+            'patch'
+          )
 
       setFromVersionList(
         getReleasedVersions({
