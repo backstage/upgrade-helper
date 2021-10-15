@@ -9,11 +9,21 @@ import versions from './releases'
 
 const getRNDiffRepository = ({ packageName }) =>
   RN_DIFF_REPOSITORIES[packageName]
+const getDiffBranch = ({ packageName }) =>
+  packageName === PACKAGE_NAMES.BACKSTAGE ? 'master' : 'diffs'
 
 export const getReleasesFileURL = ({ packageName }) =>
   `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName
-  })}/master/${packageName === PACKAGE_NAMES.RNM ? 'RELEASES_MAC' : 'RELEASES'}`
+  })}/master/${
+    packageName === PACKAGE_NAMES.BACKSTAGE
+      ? 'releases.json'
+      : packageName === PACKAGE_NAMES.RNM
+      ? 'RELEASES_MAC'
+      : packageName === PACKAGE_NAMES.RNM
+      ? 'RELEASES_MAC'
+      : 'RELEASES'
+  }`
 
 export const getDiffURL = ({
   packageName,
@@ -21,6 +31,7 @@ export const getDiffURL = ({
   fromVersion,
   toVersion
 }) => {
+  // eslint-disable-next-line no-unused-vars
   const languageDir =
     packageName === PACKAGE_NAMES.RNM
       ? 'mac/'
@@ -30,7 +41,7 @@ export const getDiffURL = ({
 
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName
-  })}/diffs/diffs/${languageDir}${fromVersion}..${toVersion}.diff`
+  })}/${getDiffBranch({ packageName })}/diffs/${fromVersion}..${toVersion}.diff`
 }
 
 // `path` must contain `RnDiffApp` prefix
@@ -88,6 +99,9 @@ export const getVersionsContentInDiff = ({
 export const getChangelogURL = ({ version, packageName }) => {
   if (packageName === PACKAGE_NAMES.RNW || packageName === PACKAGE_NAMES.RNM) {
     return `${RN_CHANGELOG_URLS[packageName]}v${version}`
+  }
+  if (packageName === PACKAGE_NAMES.BACKSTAGE) {
+    return `${RN_CHANGELOG_URLS[packageName]}`
   }
 
   return `${RN_CHANGELOG_URLS[packageName]}#v${version.replace('.', '')}0`
