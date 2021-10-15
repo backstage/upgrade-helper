@@ -15,6 +15,7 @@ import { PACKAGE_NAMES } from '../../constants'
 import { TroubleshootingGuidesButton } from '../common/TroubleshootingGuidesButton'
 import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
+import { ReleasesProvider } from '../../ReleaseProvider'
 
 const Page = styled.div`
   display: flex;
@@ -91,7 +92,7 @@ const Home = () => {
   const [toVersion, setToVersion] = useState('')
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
   // const [releases, setReleases] = useState({})
-  const [settings /*setSettings*/] = useState({
+  const [settings, setSettings] = useState({
     [`${SHOW_LATEST_RCS}`]: false
   })
   const [appName /* setAppName */] = useState('')
@@ -113,6 +114,7 @@ const Home = () => {
     setShouldShowDiff(true)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const handlePackageNameAndLanguageChange = ({
     newPackageName,
     newLanguage
@@ -136,7 +138,7 @@ const Home = () => {
     setShouldShowDiff(false)
   }
 
-  /*
+  // eslint-disable-next-line no-unused-vars
   const handleSettingsChange = settingsValues => {
     const normalizedIncomingSettings = settingsValues.reduce((acc, val) => {
       acc[val] = true
@@ -145,33 +147,33 @@ const Home = () => {
 
     setSettings(normalizedIncomingSettings)
   }
-  */
 
   return (
-    <Page>
-      <Container>
-        <HeaderContainer>
-          <TitleContainer>
-            <LogoImg alt="Backstage logo" title="React logo" src={logo} />
+    <ReleasesProvider packageName={packageName}>
+      <Page>
+        <Container>
+          <HeaderContainer>
+            <TitleContainer>
+              <LogoImg alt="Backstage logo" title="React logo" src={logo} />
 
-            <a href={homepage}>
-              <TitleHeader>Backstage Upgrade Helper</TitleHeader>
-            </a>
-          </TitleContainer>
-          <SettingsContainer>
-            <StarButton
-              href="https://github.com/backstage/upgrade-helper"
-              data-icon="octicon-star"
-              data-show-count="true"
-              aria-label="Star react-native-community/upgrade-helper on GitHub"
-            >
-              Star
-            </StarButton>
+              <a href={homepage}>
+                <TitleHeader>Backstage Upgrade Helper</TitleHeader>
+              </a>
+            </TitleContainer>
+            <SettingsContainer>
+              <StarButton
+                href="https://github.com/backstage/upgrade-helper"
+                data-icon="octicon-star"
+                data-show-count="true"
+                aria-label="Star backstage/upgrade-helper on GitHub"
+              >
+                Star
+              </StarButton>
 
-            {packageName === PACKAGE_NAMES.RN && (
-              <TroubleshootingGuidesButton />
-            )}
-            {/*
+              {packageName === PACKAGE_NAMES.RN && (
+                <TroubleshootingGuidesButton />
+              )}
+              {/*
             <Settings
               handleSettingsChange={handleSettingsChange}
               appName={appName}
@@ -182,27 +184,28 @@ const Home = () => {
               language={language}
               onChangeAppName={setAppName}
             />*/}
-          </SettingsContainer>
-        </HeaderContainer>
+            </SettingsContainer>
+          </HeaderContainer>
 
-        <VersionSelector
-          key={packageName}
-          showDiff={handleShowDiff}
-          showReleaseCandidates={settings[SHOW_LATEST_RCS]}
+          <VersionSelector
+            key={packageName}
+            showDiff={handleShowDiff}
+            showReleaseCandidates={settings[SHOW_LATEST_RCS]}
+            packageName={packageName}
+            language={language}
+            isPackageNameDefinedInURL={isPackageNameDefinedInURL}
+          />
+        </Container>
+        <DiffViewer
+          shouldShowDiff={shouldShowDiff}
+          fromVersion={fromVersion}
+          toVersion={toVersion}
+          appName={appName}
           packageName={packageName}
           language={language}
-          isPackageNameDefinedInURL={isPackageNameDefinedInURL}
         />
-      </Container>
-      <DiffViewer
-        shouldShowDiff={shouldShowDiff}
-        fromVersion={fromVersion}
-        toVersion={toVersion}
-        appName={appName}
-        packageName={packageName}
-        language={language}
-      />
-    </Page>
+      </Page>
+    </ReleasesProvider>
   )
 }
 
