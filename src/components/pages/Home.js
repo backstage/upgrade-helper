@@ -5,7 +5,7 @@ import GitHubButton from 'react-github-btn'
 import ReactGA from 'react-ga'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer from '../common/DiffViewer'
-import Settings from '../common/Settings'
+// import Settings from '../common/Settings'
 import { homepage } from '../../../package.json'
 import logo from '../../assets/logo.svg'
 import { SHOW_LATEST_RCS } from '../../utils'
@@ -41,7 +41,7 @@ const HeaderContainer = styled.div`
 `
 
 const LogoImg = styled.img`
-  width: 50px;
+  width: 60px;
   margin-bottom: 15px;
 
   @media ${deviceSizes.tablet} {
@@ -90,10 +90,11 @@ const Home = () => {
   const [fromVersion, setFromVersion] = useState('')
   const [toVersion, setToVersion] = useState('')
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
-  const [settings, setSettings] = useState({
+  // const [releases, setReleases] = useState({})
+  const [settings /*setSettings*/] = useState({
     [`${SHOW_LATEST_RCS}`]: false
   })
-  const [appName, setAppName] = useState('')
+  const [appName /* setAppName */] = useState('')
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
@@ -135,6 +136,7 @@ const Home = () => {
     setShouldShowDiff(false)
   }
 
+  /*
   const handleSettingsChange = settingsValues => {
     const normalizedIncomingSettings = settingsValues.reduce((acc, val) => {
       acc[val] = true
@@ -143,34 +145,33 @@ const Home = () => {
 
     setSettings(normalizedIncomingSettings)
   }
+  */
 
   return (
     <Page>
       <Container>
         <HeaderContainer>
           <TitleContainer>
-            <LogoImg
-              alt="React Native Upgrade Helper logo"
-              title="React Native Upgrade Helper logo"
-              src={logo}
-            />
+            <LogoImg alt="Backstage logo" title="React logo" src={logo} />
+
             <a href={homepage}>
-              <TitleHeader>React Native Upgrade Helper</TitleHeader>
+              <TitleHeader>Backstage Upgrade Helper</TitleHeader>
             </a>
           </TitleContainer>
-
           <SettingsContainer>
             <StarButton
-              href="https://github.com/react-native-community/upgrade-helper"
+              href="https://github.com/backstage/upgrade-helper"
               data-icon="octicon-star"
               data-show-count="true"
               aria-label="Star react-native-community/upgrade-helper on GitHub"
             >
               Star
             </StarButton>
+
             {packageName === PACKAGE_NAMES.RN && (
               <TroubleshootingGuidesButton />
             )}
+            {/*
             <Settings
               handleSettingsChange={handleSettingsChange}
               appName={appName}
@@ -180,7 +181,7 @@ const Home = () => {
               }
               language={language}
               onChangeAppName={setAppName}
-            />
+            />*/}
           </SettingsContainer>
         </HeaderContainer>
 
