@@ -42,11 +42,11 @@ const HeaderContainer = styled.div`
 `
 
 const LogoImg = styled.img`
-  width: 60px;
+  width: 50px;
   margin-bottom: 15px;
 
   @media ${deviceSizes.tablet} {
-    width: 100px;
+    width: 50px;
   }
 `
 
@@ -154,7 +154,7 @@ const Home = () => {
         <Container>
           <HeaderContainer>
             <TitleContainer>
-              <LogoImg alt="Backstage logo" title="React logo" src={logo} />
+              <LogoImg alt="Backstage logo" title="Backstage logo" src={logo} />
 
               <a href={homepage}>
                 <TitleHeader>Backstage Upgrade Helper</TitleHeader>
