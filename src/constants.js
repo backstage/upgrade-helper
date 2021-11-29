@@ -16,7 +16,7 @@ export const RN_DIFF_REPOSITORIES = {
   [PACKAGE_NAMES.RN]: 'react-native-community/rn-diff-purge',
   [PACKAGE_NAMES.RNM]: 'acoates-ms/rnw-diff',
   [PACKAGE_NAMES.RNW]: 'acoates-ms/rnw-diff',
-  [PACKAGE_NAMES.BACKSTAGE]: 'vinzscam/backstage-diff-purge'
+  [PACKAGE_NAMES.BACKSTAGE]: 'backstage/upgrade-helper-diff'
 }
 
 export const RN_CHANGELOG_URLS = {
