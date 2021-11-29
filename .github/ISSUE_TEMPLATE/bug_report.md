@@ -10,7 +10,7 @@ about: Report a reproducible bug or regression in in this project.
   Include screenshots if needed.
 -->
 
-## React Native versions
+## Backstage versions
 
 <!--
   Please specify from and to which versions you are upgrading.
