@@ -1,6 +1,6 @@
 {
-  "short_name": "Upgrade RN apps",
-  "name": "Upgrade your React Native Apps",
+  "short_name": "Upgrade Backstage",
+  "name": "Upgrade your Backstage Apps",
   "icons": [
     {
       "src": "favicon.ico",
