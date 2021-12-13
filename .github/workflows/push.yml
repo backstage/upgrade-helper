@@ -64,6 +64,7 @@ jobs:
   test-e2e:
     needs: [setup, install]
     runs-on: ubuntu-latest
+    if: ${{ !always() }}
     steps:
       - name: ⬇️ Restore output
         uses: actions/download-artifact@v2
