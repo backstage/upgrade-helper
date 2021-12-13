@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import styled from '@emotion/styled'
 import { motion } from 'framer-motion'
 import { removeAppPathPrefix, getVersionsContentInDiff } from '../../../utils'
@@ -92,11 +92,11 @@ const LINE_CHANGE_TYPES = {
 const getLineNumberWithType = ({ lineChangeType, lineNumber }) =>
   `${LINE_CHANGE_TYPES[lineChangeType.toUpperCase()]}${lineNumber}`
 
-const getComments = ({ packageName, newPath, fromVersion, toVersion }) => {
+const getComments = ({ versions, newPath, fromVersion, toVersion }) => {
   const newPathSanitized = removeAppPathPrefix(newPath)
 
   const versionsInDiff = getVersionsContentInDiff({
-    packageName,
+    versions,
     fromVersion,
     toVersion
   }).filter(
@@ -116,7 +116,10 @@ const getComments = ({ packageName, newPath, fromVersion, toVersion }) => {
         return {
           ...versionComments,
           [getLineNumberWithType({ lineChangeType, lineNumber })]: (
-            <DiffComment content={content} lineChangeType={lineChangeType} />
+            <DiffComment
+              content={<Fragment>{content}</Fragment>}
+              lineChangeType={lineChangeType}
+            />
           )
         }
       },
