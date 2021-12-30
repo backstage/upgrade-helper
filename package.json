@@ -1,7 +1,7 @@
 {
   "name": "upgrade-helper",
   "version": "0.1.0",
-  "homepage": "https://react-native-community.github.io/upgrade-helper",
+  "homepage": "https://backstage.github.io/upgrade-helper",
   "license": "MIT",
   "dependencies": {
     "@ant-design/icons": "4.0.3",
