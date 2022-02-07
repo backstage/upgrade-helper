@@ -322,7 +322,7 @@ const VersionSelector = ({
       <Selectors>
         <FromVersionSelector
           data-testid={testIDs.fromVersionSelector}
-          title={`What's your current ${packageName} version?`}
+          title={`What's your current Backstage release or @backstage/create-app (0.4.x) version?`}
           loading={isLoading}
           value={localFromVersion}
           options={fromVersionList}
