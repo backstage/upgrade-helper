@@ -68,7 +68,7 @@ const getLatestMajorReleaseVersion = releasedVersions =>
   semver.valid(
     semver.coerce(
       releasedVersions.find(
-        releasedVersion =>
+        ({ version: releasedVersion }) =>
           !semver.prerelease(releasedVersion) &&
           semver.patch(releasedVersion) === 0
       )
@@ -94,7 +94,7 @@ const getReleasedVersionsWithCandidates = ({
   const isToVersionAReleaseCandidate = semver.prerelease(toVersion) !== null
   const isLatestAReleaseCandidate = semver.prerelease(latestVersion) !== null
 
-  return releasedVersions.filter(releasedVersion => {
+  return releasedVersions.filter(({ version: releasedVersion }) => {
     // Show the release candidates of the latest version
     const isLatestReleaseCandidate =
       showReleaseCandidates &&
@@ -130,7 +130,7 @@ const getReleasedVersions = ({ releasedVersions, minVersion, maxVersion }) => {
     semver.valid(semver.coerce(version)) === latestMajorReleaseVersion
 
   return releasedVersions.filter(
-    releasedVersion =>
+    ({ version: releasedVersion }) =>
       releasedVersion.length > 0 &&
       ((maxVersion && semver.lt(releasedVersion, maxVersion)) ||
         (minVersion &&
@@ -213,12 +213,16 @@ const VersionSelector = ({
         : latestVersion
 
       // Remove `rc` versions from the array of versions
-      const sanitizedVersions = getReleasedVersionsWithCandidates({
-        releasedVersions: releaseVersions,
+      const sanitizedVersionsWithReleases = getReleasedVersionsWithCandidates({
+        releasedVersions: releases,
         toVersion: toVersionToBeSet,
         latestVersion,
         showReleaseCandidates
       })
+
+      const sanitizedVersions = sanitizedVersionsWithReleases.map(
+        ({ version }) => version
+      )
 
       setAllVersions(sanitizedVersions)
 
@@ -242,13 +246,13 @@ const VersionSelector = ({
 
       setFromVersionList(
         getReleasedVersions({
-          releasedVersions: sanitizedVersions,
+          releasedVersions: sanitizedVersionsWithReleases,
           maxVersion: toVersionToBeSet
         })
       )
       setToVersionList(
         getReleasedVersions({
-          releasedVersions: sanitizedVersions,
+          releasedVersions: sanitizedVersionsWithReleases,
           minVersion: fromVersionToBeSet
         })
       )

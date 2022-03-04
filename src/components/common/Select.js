@@ -16,9 +16,9 @@ const Select = ({ title, options, ...props }) => (
     <h4>{title}</h4>
 
     <SelectBox size="large" {...props}>
-      {options.map(option => (
-        <Option key={option} value={option}>
-          {option}
+      {options.map(({ version, release }) => (
+        <Option key={version} value={version}>
+          {release ? `${release} (${version})` : version}
         </Option>
       ))}
     </SelectBox>
