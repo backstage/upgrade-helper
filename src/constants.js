@@ -29,3 +29,6 @@ export const RN_CHANGELOG_URLS = {
   [PACKAGE_NAMES.BACKSTAGE]:
     'https://github.com/backstage/backstage/releases/tag/release-2021-10-07'
 }
+
+export const DIFF_BASE_BRANCH =
+  process.env.REACT_APP_DIFF_BASE_BRANCH || 'master'
