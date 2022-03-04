@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 import { Card } from 'antd'
 import GitHubButton from 'react-github-btn'
-import ReactGA from 'react-ga'
+// import ReactGA from 'react-ga'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer from '../common/DiffViewer'
 // import Settings from '../common/Settings'
@@ -99,8 +99,8 @@ const Home = () => {
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
-      ReactGA.initialize('UA-136307971-1')
-      ReactGA.pageview('/')
+      // ReactGA.initialize('UA-136307971-1')
+      // ReactGA.pageview('/')
     }
   }, [])
 

@@ -3,7 +3,8 @@ import {
   RN_DIFF_REPOSITORIES,
   DEFAULT_APP_NAME,
   PACKAGE_NAMES,
-  RN_CHANGELOG_URLS
+  RN_CHANGELOG_URLS,
+  DIFF_BASE_BRANCH
 } from './constants'
 
 const getRNDiffRepository = ({ packageName }) =>
@@ -14,7 +15,7 @@ const getDiffBranch = ({ packageName }) =>
 export const getReleasesFileURL = ({ packageName }) =>
   `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName
-  })}/master/${
+  })}/${DIFF_BASE_BRANCH}/${
     packageName === PACKAGE_NAMES.BACKSTAGE
       ? 'releases.json'
       : packageName === PACKAGE_NAMES.RNM
