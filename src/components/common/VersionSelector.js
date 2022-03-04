@@ -68,7 +68,7 @@ const getLatestMajorReleaseVersion = releasedVersions =>
   semver.valid(
     semver.coerce(
       releasedVersions.find(
-        ({ version: releasedVersion }) =>
+        ({ createApp: releasedVersion }) =>
           !semver.prerelease(releasedVersion) &&
           semver.patch(releasedVersion) === 0
       )
@@ -224,7 +224,7 @@ const VersionSelector = ({
         ({ version }) => version
       )
 
-      setAllVersions(sanitizedVersions)
+      setAllVersions(sanitizedVersionsWithReleases)
 
       const fromVersionToBeSet = hasFromVersionInURL
         ? versionsInURL.fromVersion
@@ -307,9 +307,13 @@ const VersionSelector = ({
   ])
 
   const onShowDiff = () => {
+    const resolveDiffVersion = targetVersion =>
+      releases.find(r => r.version === targetVersion)?.createApp ||
+      targetVersion
+
     showDiff({
-      fromVersion: localFromVersion,
-      toVersion: localToVersion
+      fromVersion: resolveDiffVersion(localFromVersion),
+      toVersion: resolveDiffVersion(localToVersion)
     })
 
     updateURL({
