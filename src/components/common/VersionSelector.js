@@ -184,7 +184,7 @@ const VersionSelector = ({
   const [localToVersion, setLocalToVersion] = useState('')
 
   const upgradeButtonEl = useRef(null)
-  const { isDone, isLoading, releases } = useReleases()
+  const { isDone, isLoading, releases, setSelectedVersions } = useReleases()
   const releaseVersions = useMemo(
     () => releases?.map(({ version }) => version),
     [releases]
@@ -308,12 +308,17 @@ const VersionSelector = ({
 
   const onShowDiff = () => {
     const resolveDiffVersion = targetVersion =>
-      releases.find(r => r.version === targetVersion)?.createApp ||
-      targetVersion
+      releases.find(r => r.version === targetVersion)
+
+    setSelectedVersions({
+      from: resolveDiffVersion(localFromVersion),
+      to: resolveDiffVersion(localToVersion)
+    })
 
     showDiff({
-      fromVersion: resolveDiffVersion(localFromVersion),
-      toVersion: resolveDiffVersion(localToVersion)
+      fromVersion:
+        resolveDiffVersion(localFromVersion)?.createApp || localFromVersion,
+      toVersion: resolveDiffVersion(localToVersion)?.createApp || localToVersion
     })
 
     updateURL({
