@@ -132,7 +132,7 @@ const List = styled.ol`
 
 class UsefulContentSection extends Component {
   state = {
-    isContentVisible: true
+    isContentVisible: false
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -151,8 +151,9 @@ class UsefulContentSection extends Component {
     }))
 
   getChangelog = ({ version }) => {
-    const { packageName, toVersion } = this.props
-
+    const { packageName } = this.props
+    const { to } = this.context
+    const { version: toVersion } = to
     if (
       packageName === PACKAGE_NAMES.RNW ||
       packageName === PACKAGE_NAMES.RNM
@@ -170,7 +171,7 @@ class UsefulContentSection extends Component {
     }
     if (packageName === PACKAGE_NAMES.BACKSTAGE) {
       return {
-        title: `Backstage ${toVersion} changelog`,
+        title: `Backstage ${version} changelog`,
         url: getChangelogURL({
           packageName,
           version
@@ -192,22 +193,13 @@ class UsefulContentSection extends Component {
   }
 
   render() {
-    const { fromVersion, toVersion } = this.props
     const { isContentVisible } = this.state
 
     const versions = getVersionsContentInDiff({
-      fromVersion,
-      toVersion,
+      fromVersion: this.context.from.version,
+      toVersion: this.context.to.version,
       versions: this.context.releases
     })
-
-    const doesAnyVersionHaveUsefulContent = versions.some(
-      ({ usefulContent }) => !!usefulContent
-    )
-
-    if (!doesAnyVersionHaveUsefulContent) {
-      return null
-    }
 
     const hasMoreThanOneRelease = versions.length > 1
 

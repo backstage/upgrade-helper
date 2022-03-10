@@ -27,7 +27,7 @@ export const RN_CHANGELOG_URLS = {
   [PACKAGE_NAMES.RNW]:
     'https://github.com/microsoft/react-native-windows/releases/tag/react-native-windows_',
   [PACKAGE_NAMES.BACKSTAGE]:
-    'https://github.com/backstage/backstage/releases/tag/release-2021-10-07'
+    'https://github.com/backstage/backstage/releases/tag/'
 }
 
 export const DIFF_BASE_BRANCH =
