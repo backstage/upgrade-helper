@@ -218,7 +218,9 @@ class UsefulContentSection extends Component {
           />
 
           <ContentContainer isContentVisible={isContentVisible}>
-            <UsefulLinks versions={versions} />
+            {doesAnyVersionHaveUsefulLinks ? (
+              <UsefulLinks versions={versions} />
+            ) : null}
 
               const links = [...(usefulContent?.links || []), changelog]
 
