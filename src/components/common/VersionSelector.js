@@ -9,7 +9,6 @@ import UpgradeButton from './UpgradeButton'
 import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { useReleases } from '../../ReleaseProvider'
-import RawDiffLinkButton from './RawDiffLinkButton'
 
 export const testIDs = {
   fromVersionSelector: 'fromVersionSelector',
@@ -173,8 +172,6 @@ const VersionSelector = ({
   packageName,
   language,
   isPackageNameDefinedInURL,
-  fromVersion,
-  toVersion,
   showDiff,
   showReleaseCandidates
 }) => {
@@ -365,12 +362,6 @@ const VersionSelector = ({
       </Selectors>
 
       <UpgradeButton ref={upgradeButtonEl} onShowDiff={onShowDiff} />
-      <RawDiffLinkButton
-        packageName={packageName}
-        language={language}
-        fromVersion={fromVersion}
-        toVersion={toVersion}
-      />
     </Fragment>
   )
 }

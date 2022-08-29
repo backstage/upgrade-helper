@@ -6,13 +6,15 @@ import { getDiffURL } from '../../utils'
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  height: auto;
-  overflow: hidden;
-  margin-top: 25px;
+  top: 10px;
+  font-size: 12px;
+  border-width: 0px;
+  height: 20px;
 `
 
 const Button = styled(AntdButton)`
   border-radius: 3px;
+  line-height: 30px;
 `
 
 const RawDiffLinkButton = ({
@@ -32,8 +34,8 @@ const RawDiffLinkButton = ({
   })
   return (
     <Container>
-      <Button href={diffURL} type="link" size="large">
-        See raw text diff
+      <Button href={diffURL} type="link">
+        View raw diff
       </Button>
     </Container>
   )
