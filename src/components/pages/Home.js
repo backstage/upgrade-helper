@@ -191,6 +191,8 @@ const Home = () => {
             key={packageName}
             showDiff={handleShowDiff}
             showReleaseCandidates={settings[SHOW_LATEST_RCS]}
+            fromVersion={fromVersion}
+            toVersion={toVersion}
             packageName={packageName}
             language={language}
             isPackageNameDefinedInURL={isPackageNameDefinedInURL}

@@ -11,6 +11,7 @@ import UsefulContentSection from './UsefulContentSection'
 import BinaryDownload from './BinaryDownload'
 import ViewStyleOptions from './Diff/DiffViewStyleOptions'
 import CompletedFilesCounter from './CompletedFilesCounter'
+import RawDiffLinkButton from './RawDiffLinkButton'
 import { useFetchDiff } from '../../hooks/fetch-diff'
 
 const Container = styled.div`
@@ -164,6 +165,13 @@ const DiffViewer = ({
               toVersion={toVersion}
               appName={appName}
               packageName={packageName}
+            />
+
+            <RawDiffLinkButton
+              packageName={packageName}
+              language={language}
+              fromVersion={fromVersion}
+              toVersion={toVersion}
             />
 
             <ViewStyleOptions
