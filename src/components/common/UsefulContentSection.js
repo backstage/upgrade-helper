@@ -85,6 +85,36 @@ const ContentContainer = styled(({ isContentVisible, children, ...props }) => (
   }
 `
 
+// Filter all versions for versions that represent pre-release versions with "next" keyword,
+// but keep versions that don't have a full version yet.
+const removeRedundantPreReleases = versions => {
+  let fullVersions = []
+  let filteredVersions = []
+
+  versions.forEach(versionObject => {
+    if (!versionObject.version.includes('next')) {
+      fullVersions.push(versionObject)
+    }
+  })
+
+  // Find versions that do cannot be represented using full versions
+  versions.forEach(versionObject => {
+    let hasFullVersion = false
+    fullVersions.forEach(fullVersion => {
+      if (versionObject.version.includes(fullVersion.version)) {
+        hasFullVersion = true
+      }
+    })
+
+    // Cases where we did not find a full version representation can be assumed
+    // that they are actual pre-release versions
+    if (!hasFullVersion) {
+      filteredVersions.push(versionObject)
+    }
+  })
+  return filteredVersions.concat(fullVersions)
+}
+
 const Icon = styled(props => (
   <span {...props} role="img" aria-label="Megaphone emoji">
     📣
@@ -195,11 +225,12 @@ class UsefulContentSection extends Component {
   render() {
     const { isContentVisible } = this.state
 
-    const versions = getVersionsContentInDiff({
+    const allVersions = getVersionsContentInDiff({
       fromVersion: this.context.from.version,
       toVersion: this.context.to.version,
       versions: this.context.releases
     })
+    const versions = removeRedundantPreReleases(allVersions)
 
     const hasMoreThanOneRelease = versions.length > 1
 
