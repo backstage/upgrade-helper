@@ -14,7 +14,7 @@ import UpgradeSupportAlert from './UpgradeSupportAlert'
 // import AppNameWarning from './AppNameWarning'
 import { motion } from 'framer-motion'
 import UsefulLinks from './UsefulLinks'
-import DepCheckAlert from './DepCheckAlert'
+import AlignDepsAlert from './AlignDepsAlert'
 
 import { PACKAGE_NAMES } from '../../constants'
 import { ReleasesContext } from '../../ReleaseProvider'
