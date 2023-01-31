@@ -18,6 +18,7 @@ export const useFetchReleases = ({ packageName }) => {
       const _releases = Object.entries(response)
         .map(([version, value]) => ({ version, ...value }))
         .sort((a, b) => compare(a.version, b.version))
+
       setReleases(_releases)
 
       setIsLoading(false)

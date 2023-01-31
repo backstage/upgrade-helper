@@ -5,15 +5,12 @@ import GitHubButton from 'react-github-btn'
 // import ReactGA from 'react-ga'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer from '../common/DiffViewer'
-// import Settings from '../common/Settings'
+import Settings from '../common/Settings'
 import { homepage } from '../../../package.json'
 import logo from '../../assets/logo.svg'
 import { SHOW_LATEST_RCS } from '../../utils'
 import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
-import { PACKAGE_NAMES } from '../../constants'
-import { TroubleshootingGuidesButton } from '../common/TroubleshootingGuidesButton'
-import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
 
@@ -86,8 +83,6 @@ const Home = () => {
     isPackageNameDefinedInURL
   } = useGetPackageNameFromURL()
   const defaultLanguage = useGetLanguageFromURL()
-  const [packageName, setPackageName] = useState(defaultPackageName)
-  const [language, setLanguage] = useState(defaultLanguage)
   const [fromVersion, setFromVersion] = useState('')
   const [toVersion, setToVersion] = useState('')
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
@@ -114,31 +109,6 @@ const Home = () => {
     setShouldShowDiff(true)
   }
 
-  // eslint-disable-next-line no-unused-vars
-  const handlePackageNameAndLanguageChange = ({
-    newPackageName,
-    newLanguage
-  }) => {
-    let localPackageName =
-      newPackageName === undefined ? packageName : newPackageName
-    let localLanguage = newLanguage === undefined ? language : newLanguage
-
-    updateURL({
-      packageName: localPackageName,
-      language: localLanguage,
-      isPackageNameDefinedInURL:
-        isPackageNameDefinedInURL || newPackageName !== undefined,
-      toVersion: '',
-      fromVersion: ''
-    })
-    setPackageName(localPackageName)
-    setLanguage(localLanguage)
-    setFromVersion('')
-    setToVersion('')
-    setShouldShowDiff(false)
-  }
-
-  // eslint-disable-next-line no-unused-vars
   const handleSettingsChange = settingsValues => {
     const normalizedIncomingSettings = settingsValues.reduce((acc, val) => {
       acc[val] = true
@@ -149,7 +119,7 @@ const Home = () => {
   }
 
   return (
-    <ReleasesProvider packageName={packageName}>
+    <ReleasesProvider packageName={defaultPackageName}>
       <Page>
         <Container>
           <HeaderContainer>
@@ -170,31 +140,18 @@ const Home = () => {
                 Star
               </StarButton>
 
-              {packageName === PACKAGE_NAMES.RN && (
-                <TroubleshootingGuidesButton />
-              )}
-              {/*
-            <Settings
-              handleSettingsChange={handleSettingsChange}
-              appName={appName}
-              packageName={packageName}
-              onChangePackageNameAndLanguage={
-                handlePackageNameAndLanguageChange
-              }
-              language={language}
-              onChangeAppName={setAppName}
-            />*/}
+              <Settings handleSettingsChange={handleSettingsChange} />
             </SettingsContainer>
           </HeaderContainer>
 
           <VersionSelector
-            key={packageName}
+            key={defaultPackageName}
             showDiff={handleShowDiff}
             showReleaseCandidates={settings[SHOW_LATEST_RCS]}
             fromVersion={fromVersion}
             toVersion={toVersion}
-            packageName={packageName}
-            language={language}
+            packageName={defaultPackageName}
+            language={defaultLanguage}
             isPackageNameDefinedInURL={isPackageNameDefinedInURL}
           />
         </Container>
@@ -203,8 +160,8 @@ const Home = () => {
           fromVersion={fromVersion}
           toVersion={toVersion}
           appName={appName}
-          packageName={packageName}
-          language={language}
+          packageName={defaultPackageName}
+          language={defaultLanguage}
         />
       </Page>
     </ReleasesProvider>

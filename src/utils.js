@@ -108,7 +108,7 @@ export const getTransitionDuration = duration =>
   navigator.webdriver ? 0 : duration
 
 // settings constants
-export const SHOW_LATEST_RCS = 'Show latest release candidates'
+export const SHOW_LATEST_RCS = 'Show all next releases'
 
 export const getFilePathsToShow = ({ oldPath, newPath, appName }) => {
   const oldPathSanitized = replaceWithProvidedAppName(oldPath, appName)

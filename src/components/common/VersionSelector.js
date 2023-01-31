@@ -76,7 +76,7 @@ const getLatestMajorReleaseVersion = releasedVersions =>
   )
 
 // Check if `from` rc version is one of the latest major release (ie. 0.60.0)
-const checkIfVersionIsALatestRC = ({ version, latestVersion }) =>
+const checkIfVersionIsALatestPrerelease = ({ version, latestVersion }) =>
   semver.prerelease(version) &&
   compareReleaseCandidateVersions({
     version: latestVersion,
@@ -96,15 +96,21 @@ const getReleasedVersionsWithCandidates = ({
 
   return releasedVersions.filter(({ version: releasedVersion }) => {
     // Show the release candidates of the latest version
-    const isLatestReleaseCandidate =
+    const isNotLatestReleaseCandidate =
       showReleaseCandidates &&
-      checkIfVersionIsALatestRC({
+      !checkIfVersionIsALatestPrerelease({
         version: releasedVersion,
         latestVersion
       })
 
+    const isLatestReleaseCandidate = checkIfVersionIsALatestPrerelease({
+      version: releasedVersion,
+      latestVersion
+    })
+
     return (
       isLatestReleaseCandidate ||
+      isNotLatestReleaseCandidate ||
       semver.prerelease(releasedVersion) === null ||
       (isToVersionAReleaseCandidate &&
         compareReleaseCandidateVersions({
@@ -126,7 +132,7 @@ const getReleasedVersions = ({ releasedVersions, minVersion, maxVersion }) => {
   )
 
   const isVersionAReleaseAndOfLatest = version =>
-    version.includes('rc') &&
+    version.includes('next') &&
     semver.valid(semver.coerce(version)) === latestMajorReleaseVersion
 
   return releasedVersions.filter(
