@@ -10,26 +10,29 @@ const SettingsButton = styled(Button)`
 const SettingsIcon = styled(props => <span {...props}>⚙️</span>)`
   font-family: initial;
 `
-const Settings = ({ handleSettingsChange }) => {
+const Settings = ({ handleSettingsChange, settings }) => {
   const [popoverVisibility, setVisibility] = useState(false)
 
   const handleClickChange = visibility => {
     setVisibility(visibility)
   }
 
-  const updateCheckboxValues = checkboxValues =>
-    handleSettingsChange(checkboxValues)
+  const updateCheckboxValues = () =>
+    handleSettingsChange({
+      [SHOW_LATEST_RCS]: !settings[SHOW_LATEST_RCS]
+    })
 
   return (
     <Popover
       placement="bottomRight"
       content={
         <>
-          <Checkbox.Group onChange={updateCheckboxValues}>
-            <div>
-              <Checkbox value={SHOW_LATEST_RCS}>{SHOW_LATEST_RCS}</Checkbox>
-            </div>
-          </Checkbox.Group>
+          <Checkbox
+            defaultChecked={settings[SHOW_LATEST_RCS]}
+            onChange={updateCheckboxValues}
+          >
+            {SHOW_LATEST_RCS}
+          </Checkbox>
         </>
       }
       trigger="click"

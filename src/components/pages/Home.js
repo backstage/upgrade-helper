@@ -13,6 +13,7 @@ import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
+import useLocalStorage from 'react-use/lib/useLocalStorage'
 
 const Page = styled.div`
   display: flex;
@@ -87,9 +88,12 @@ const Home = () => {
   const [toVersion, setToVersion] = useState('')
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
   // const [releases, setReleases] = useState({})
-  const [settings, setSettings] = useState({
-    [`${SHOW_LATEST_RCS}`]: false
-  })
+  const [settings, setSettings] = useLocalStorage(
+    'backstage:upgrade-helper:settings',
+    {
+      [`${SHOW_LATEST_RCS}`]: false
+    }
+  )
   const [appName /* setAppName */] = useState('')
 
   useEffect(() => {
@@ -110,12 +114,7 @@ const Home = () => {
   }
 
   const handleSettingsChange = settingsValues => {
-    const normalizedIncomingSettings = settingsValues.reduce((acc, val) => {
-      acc[val] = true
-      return acc
-    }, {})
-
-    setSettings(normalizedIncomingSettings)
+    setSettings(settingsValues)
   }
 
   return (
@@ -140,7 +139,10 @@ const Home = () => {
                 Star
               </StarButton>
 
-              <Settings handleSettingsChange={handleSettingsChange} />
+              <Settings
+                handleSettingsChange={handleSettingsChange}
+                settings={settings}
+              />
             </SettingsContainer>
           </HeaderContainer>
 
