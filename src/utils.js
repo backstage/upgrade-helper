@@ -83,9 +83,11 @@ export const getVersionsContentInDiff = ({
 
   return versions.filter(({ version }) => {
     const cleanedVersion = semver.coerce(version)
+    const isPreRelease = semver.prerelease(version)
 
     // `cleanedVersion` can't be newer than `cleanedToVersion` nor older (or equal) than `fromVersion`
     return (
+      !isPreRelease &&
       semver.compare(cleanedToVersion, cleanedVersion) !== -1 &&
       ![0, -1].includes(semver.compare(cleanedVersion, fromVersion))
     )
@@ -108,7 +110,7 @@ export const getTransitionDuration = duration =>
   navigator.webdriver ? 0 : duration
 
 // settings constants
-export const SHOW_LATEST_RCS = 'Show latest release candidates'
+export const SHOW_LATEST_RCS = 'Show all next releases'
 
 export const getFilePathsToShow = ({ oldPath, newPath, appName }) => {
   const oldPathSanitized = replaceWithProvidedAppName(oldPath, appName)
