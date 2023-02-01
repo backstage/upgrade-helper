@@ -17,9 +17,7 @@ export const useFetchReleases = ({ packageName }) => {
 
       const _releases = Object.entries(response)
         .map(([version, value]) => ({ version, ...value }))
-        .filter(({ version }) => version.includes('-next') === false) // TODO(hhogg): remove this temp filter
         .sort((a, b) => compare(a.version, b.version))
-
       setReleases(_releases)
 
       setIsLoading(false)
