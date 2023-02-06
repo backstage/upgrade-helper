@@ -68,6 +68,10 @@ const SettingsContainer = styled.div`
   flex: 1;
 `
 
+const UpdateDocsLink = styled.div`
+  flex: 1;
+`
+
 const StarButton = styled(({ className, ...props }) => (
   <div className={className}>
     <GitHubButton {...props} />
@@ -138,6 +142,12 @@ const Home = () => {
               >
                 Star
               </StarButton>
+
+              <UpdateDocsLink>
+                <a href="https://backstage.io/docs/getting-started/keeping-backstage-updated">
+                  Keeping Backstage Updated
+                </a>
+              </UpdateDocsLink>
 
               <Settings
                 handleSettingsChange={handleSettingsChange}
