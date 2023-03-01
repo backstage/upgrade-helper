@@ -14,7 +14,7 @@ import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from '../../utils'
 
 export const testIDs = {
   fromVersionSelector: 'fromVersionSelector',
-  toVersionSelector: 'toVersionSelector'
+  toVersionSelector: 'toVersionSelector',
 }
 
 const Selectors = styled.div`
@@ -38,7 +38,7 @@ const FromVersionSelector = styled(Select)`
 const ToVersionSelector = styled(({ popover, ...props }) =>
   popover ? (
     React.cloneElement(popover, {
-      children: <Select {...props} />
+      children: <Select {...props} />,
     })
   ) : (
     <Select {...props} />
@@ -54,7 +54,7 @@ const compareReleaseCandidateVersions = ({ version, versionToCompare }) =>
     semver.diff(version, versionToCompare)
   )
 
-const getLatestMajorReleaseVersion = releasedVersions =>
+const getLatestMajorReleaseVersion = (releasedVersions) =>
   semver.valid(
     semver.coerce(
       releasedVersions.find(
@@ -70,7 +70,7 @@ const checkIfVersionIsALatestPrerelease = ({ version, latestVersion }) =>
   semver.prerelease(version) &&
   compareReleaseCandidateVersions({
     version: latestVersion,
-    versionToCompare: version
+    versionToCompare: version,
   })
 
 // Filters out release candidates from `releasedVersion` with the
@@ -79,7 +79,7 @@ const getReleasedVersionsWithCandidates = ({
   releasedVersions,
   toVersion,
   latestVersion,
-  showReleaseCandidates
+  showReleaseCandidates,
 }) => {
   const isToVersionAReleaseCandidate = semver.prerelease(toVersion) !== null
   const isLatestAReleaseCandidate = semver.prerelease(latestVersion) !== null
@@ -90,7 +90,7 @@ const getReleasedVersionsWithCandidates = ({
       showReleaseCandidates &&
       !checkIfVersionIsALatestPrerelease({
         version: releasedVersion,
-        latestVersion
+        latestVersion,
       })
 
     const isLatestReleaseCandidate = checkIfVersionIsALatestPrerelease({
@@ -105,21 +105,20 @@ const getReleasedVersionsWithCandidates = ({
       (isToVersionAReleaseCandidate &&
         compareReleaseCandidateVersions({
           version: toVersion,
-          versionToCompare: releasedVersion
+          versionToCompare: releasedVersion,
         })) ||
       (isLatestAReleaseCandidate &&
         compareReleaseCandidateVersions({
           version: latestVersion,
-          versionToCompare: releasedVersion
+          versionToCompare: releasedVersion,
         }))
     )
   })
 }
 
 const getReleasedVersions = ({ releasedVersions, minVersion, maxVersion }) => {
-  const latestMajorReleaseVersion = getLatestMajorReleaseVersion(
-    releasedVersions
-  )
+  const latestMajorReleaseVersion =
+    getLatestMajorReleaseVersion(releasedVersions)
 
   const isVersionAReleaseAndOfLatest = version =>
     version.includes('next') &&
@@ -141,7 +140,7 @@ const getFirstRelease = (
   type = 'minor'
 ) =>
   releasedVersions.find(
-    releasedVersion =>
+    (releasedVersion) =>
       semver.lt(releasedVersion, versionToCompare) &&
       semver.diff(
         semver.valid(semver.coerce(releasedVersion)),
@@ -251,7 +250,7 @@ const VersionSelector = ({
         releasedVersions: releases,
         toVersion: toVersionToBeSet,
         latestVersion,
-        showReleaseCandidates
+        showReleaseCandidates,
       })
 
       const sanitizedVersions = sanitizedVersionsWithReleases.map(
@@ -309,7 +308,7 @@ const VersionSelector = ({
     releaseVersions,
     setLocalFromVersion,
     setLocalToVersion,
-    showReleaseCandidates
+    showReleaseCandidates,
   ])
 
   useEffect(() => {
@@ -320,13 +319,13 @@ const VersionSelector = ({
     setFromVersionList(
       getReleasedVersions({
         releasedVersions: allVersions,
-        maxVersion: localToVersion
+        maxVersion: localToVersion,
       })
     )
     setToVersionList(
       getReleasedVersions({
         releasedVersions: allVersions,
-        minVersion: localFromVersion
+        minVersion: localFromVersion,
       })
     )
 
@@ -366,7 +365,7 @@ const VersionSelector = ({
       language,
       isPackageNameDefinedInURL,
       fromVersion: localFromVersion,
-      toVersion: localToVersion
+      toVersion: localToVersion,
     })
   }
 
@@ -380,7 +379,7 @@ const VersionSelector = ({
           loading={isLoading}
           value={localFromVersion}
           options={fromVersionList}
-          onChange={chosenVersion => setLocalFromVersion(chosenVersion)}
+          onChange={(chosenVersion) => setLocalFromVersion(chosenVersion)}
         />
 
         <ToVersionSelector
@@ -399,7 +398,7 @@ const VersionSelector = ({
               />
             )
           }
-          onChange={chosenVersion => setLocalToVersion(chosenVersion)}
+          onChange={(chosenVersion) => setLocalToVersion(chosenVersion)}
         />
       </Selectors>
 

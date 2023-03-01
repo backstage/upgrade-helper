@@ -15,6 +15,6 @@ export const useGetPackageNameFromURL = () => {
 
   return {
     packageName: packageNameFromURL,
-    isPackageNameDefinedInURL: true
+    isPackageNameDefinedInURL: true,
   }
 }

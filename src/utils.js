@@ -59,7 +59,7 @@ export const getBinaryFileURL = ({ packageName, language, version, path }) => {
       : version
 
   return `https://github.com/${getRNDiffRepository({
-    packageName
+    packageName,
   })}/raw/release/${branch}/${path}`
 }
 
@@ -111,7 +111,7 @@ export const getChangelogURL = ({ version, packageName }) => {
 }
 
 // If the browser is headless (running puppeteer) then it doesn't have any duration
-export const getTransitionDuration = duration =>
+export const getTransitionDuration = (duration) =>
   navigator.webdriver ? 0 : duration
 
 // settings constants
@@ -124,6 +124,6 @@ export const getFilePathsToShow = ({ oldPath, newPath, appName }) => {
 
   return {
     oldPath: removeAppPathPrefix(oldPathSanitized, appName),
-    newPath: removeAppPathPrefix(newPathSanitized, appName)
+    newPath: removeAppPathPrefix(newPathSanitized, appName),
   }
 }

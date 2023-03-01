@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy'
 import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
 import { useSettings } from '../SettingsProvider'
 
-const delay = ms => new Promise(res => setTimeout(res, ms))
+const delay = (ms) => new Promise((res) => setTimeout(res, ms))
 
 const excludeYarnLock = ({ oldPath, newPath, ...rest }) =>
   !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
@@ -27,7 +27,7 @@ export const useFetchDiff = ({
   packageName,
   language,
   fromVersion,
-  toVersion
+  toVersion,
 }) => {
   const {
     settings: { [USE_YARN_PLUGIN]: useYarnPlugin }
@@ -72,6 +72,6 @@ export const useFetchDiff = ({
   return {
     isLoading,
     isDone,
-    diff
+    diff,
   }
 }

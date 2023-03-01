@@ -82,10 +82,8 @@ const StarButton = styled(({ className, ...props }) => (
 `
 
 const Home = () => {
-  const {
-    packageName: defaultPackageName,
-    isPackageNameDefinedInURL
-  } = useGetPackageNameFromURL()
+  const { packageName: defaultPackageName, isPackageNameDefinedInURL } =
+    useGetPackageNameFromURL()
   const defaultLanguage = useGetLanguageFromURL()
   const [fromVersion, setFromVersion] = useState('')
   const [toVersion, setToVersion] = useState('')

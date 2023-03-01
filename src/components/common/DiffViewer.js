@@ -30,7 +30,7 @@ const TopContainer = styled.div`
 const getDiffKey = ({ oldRevision, newRevision }) =>
   `${oldRevision}${newRevision}`
 
-const scrollToRef = ref => ref.current.scrollIntoView({ behavior: 'smooth' })
+const scrollToRef = (ref) => ref.current.scrollIntoView({ behavior: 'smooth' })
 
 const DiffViewer = ({
   packageName,
@@ -40,26 +40,26 @@ const DiffViewer = ({
   shouldShowDiff,
   selectedChanges,
   onToggleChangeSelection,
-  appName
+  appName,
 }) => {
   const { isLoading, isDone, diff } = useFetchDiff({
     shouldShowDiff,
     packageName,
     language,
     fromVersion,
-    toVersion
+    toVersion,
   })
   const [completedDiffs, setCompletedDiffs] = useState([])
   const [isGoToDoneClicked, setIsGoToDoneClicked] = useState(false)
   const donePopoverPossibleOpts = {
     done: {
       content: 'Scroll to Done section',
-      cursorType: 's-resize'
+      cursorType: 's-resize',
     },
     top: {
       content: 'Scroll to Top',
-      cursorType: 'n-resize'
-    }
+      cursorType: 'n-resize',
+    },
   }
   const [donePopoverOpts, setDonePopoverOpts] = useState(
     donePopoverPossibleOpts.done
@@ -80,14 +80,14 @@ const DiffViewer = ({
     }
   }
 
-  const handleCompleteDiff = diffKey => {
+  const handleCompleteDiff = (diffKey) => {
     if (completedDiffs.includes(diffKey)) {
-      return setCompletedDiffs(prevCompletedDiffs =>
-        prevCompletedDiffs.filter(completedDiff => completedDiff !== diffKey)
+      return setCompletedDiffs((prevCompletedDiffs) =>
+        prevCompletedDiffs.filter((completedDiff) => completedDiff !== diffKey)
       )
     }
 
-    setCompletedDiffs(prevCompletedDiffs => [...prevCompletedDiffs, diffKey])
+    setCompletedDiffs((prevCompletedDiffs) => [...prevCompletedDiffs, diffKey])
   }
 
   const renderUpgradeDoneMessage = ({ diff, completedDiffs }) =>
@@ -107,7 +107,7 @@ const DiffViewer = ({
     localStorage.getItem('viewStyle') || 'split'
   )
 
-  const handleViewStyleChange = newViewStyle => {
+  const handleViewStyleChange = (newViewStyle) => {
     setViewStyle(newViewStyle)
     localStorage.setItem('viewStyle', newViewStyle)
   }
@@ -140,7 +140,7 @@ const DiffViewer = ({
     toVersion: toVersion,
     handleCompleteDiff: handleCompleteDiff,
     selectedChanges: selectedChanges,
-    onToggleChangeSelection: onToggleChangeSelection
+    onToggleChangeSelection: onToggleChangeSelection,
   }
 
   return (

@@ -5,7 +5,7 @@ import {
   Hunk,
   markEdits,
   tokenize,
-  Decoration as DiffDecoration
+  Decoration as DiffDecoration,
 } from 'react-diff-view'
 import { Button, Card, Typography } from 'antd'
 import DiffHeader from './DiffHeader'
@@ -15,7 +15,7 @@ import { useReleases } from '../../../ReleaseProvider'
 
 const copyPathPopoverContentOpts = {
   default: 'Click to copy file path',
-  copied: 'File path copied!'
+  copied: 'File path copied!',
 }
 
 const Container = styled.div`
@@ -127,7 +127,7 @@ const Diff = ({
   areAllCollapsed,
   setAllCollapsed,
   diffViewStyle,
-  appName
+  appName,
 }) => {
   const [isDiffCollapsed, setIsDiffCollapsed] = useState(
     isDiffCollapsedByDefault({ type, hunks })
@@ -148,17 +148,17 @@ const Diff = ({
   }
 
   const getHunksWithAppName = useCallback(
-    originalHunks => {
+    (originalHunks) => {
       if (!appName) {
         return originalHunks
       }
 
-      return originalHunks.map(hunk => ({
+      return originalHunks.map((hunk) => ({
         ...hunk,
-        changes: hunk.changes.map(change => ({
+        changes: hunk.changes.map((change) => ({
           ...change,
-          content: replaceWithProvidedAppName(change.content, appName)
-        }))
+          content: replaceWithProvidedAppName(change.content, appName),
+        })),
       }))
     },
     [appName]
@@ -178,7 +178,7 @@ const Diff = ({
     newPath,
     fromVersion,
     toVersion,
-    appName
+    appName,
   })
 
   return (

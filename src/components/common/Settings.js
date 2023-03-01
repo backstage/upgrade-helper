@@ -8,14 +8,14 @@ const SettingsButton = styled(Button)`
   color: initial;
 `
 
-const SettingsIcon = styled(props => <span {...props}>⚙️</span>)`
+const SettingsIcon = styled((props) => <span {...props}>⚙️</span>)`
   font-family: initial;
 `
 const Settings = () => {
   const { settings, setSettings } = useSettings()
   const [popoverVisibility, setVisibility] = useState(false)
 
-  const handleClickChange = visibility => {
+  const handleClickChange = (visibility) => {
     setVisibility(visibility)
   }
 

@@ -9,7 +9,7 @@ export const PACKAGE_NAMES = {
 
 export const LANGUAGE_NAMES = {
   CPP: 'cpp',
-  CS: 'cs'
+  CS: 'cs',
 }
 
 export const RN_DIFF_REPOSITORIES = {

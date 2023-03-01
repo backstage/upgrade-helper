@@ -7,9 +7,9 @@ export default {
     links: [
       {
         title: 'See here to learn more about bundled Hermes',
-        url: 'https://reactnative.dev/architecture/bundled-hermes'
-      }
-    ]
+        url: 'https://reactnative.dev/architecture/bundled-hermes',
+      },
+    ],
   },
   comments: [
     {
@@ -22,7 +22,7 @@ export default {
           information on bundled Hermes, look
           [here](https://reactnative.dev/architecture/bundled-hermes).
         </Fragment>
-      )
-    }
-  ]
+      ),
+    },
+  ],
 }
