@@ -392,7 +392,7 @@ const VersionSelector = ({
           popover={
             localToVersion === '0.60.1' && (
               <Popover
-                visible={true}
+                open={true}
                 placement="topLeft"
                 content="We recommend using the latest 0.60 patch release instead of 0.60.1."
               />
