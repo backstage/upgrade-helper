@@ -6,7 +6,6 @@ import GitHubButton from 'react-github-btn'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer from '../common/DiffViewer'
 import Settings from '../common/Settings'
-import { homepage } from '../../../package.json'
 import logo from '../../assets/logo.svg'
 import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
@@ -90,6 +89,8 @@ const Home = () => {
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
   // const [releases, setReleases] = useState({})
   const [appName /* setAppName */] = useState('')
+
+  const homepageUrl = process.env.PUBLIC_URL
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
