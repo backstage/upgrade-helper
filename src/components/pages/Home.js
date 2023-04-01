@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
-import { Card } from 'antd'
+import { Card, Input, Typography } from 'antd'
 import GitHubButton from 'react-github-btn'
 // import ReactGA from 'react-ga'
 import VersionSelector from '../common/VersionSelector'
