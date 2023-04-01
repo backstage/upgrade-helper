@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from '@emotion/styled'
 import { Card, Input, Typography } from 'antd'
 import GitHubButton from 'react-github-btn'
@@ -103,6 +103,11 @@ const Home = () => {
     if (fromVersion === toVersion) {
       return
     }
+
+    setAppName(({ input }) => ({
+      input: '',
+      diff: input || DEFAULT_APP_NAME,
+    }))
 
     setFromVersion(fromVersion)
     setToVersion(toVersion)
