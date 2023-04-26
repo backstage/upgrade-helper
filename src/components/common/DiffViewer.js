@@ -4,7 +4,7 @@ import { Alert } from 'antd'
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion'
 import { withChangeSelect } from 'react-diff-view'
 import 'react-diff-view/style/index.css'
-import { getTransitionDuration } from '../../utils'
+import { getTransitionDuration, getChangelogURL } from '../../utils'
 import DiffSection from './Diff/DiffSection'
 import DiffLoading from './Diff/DiffLoading'
 import UsefulContentSection from './UsefulContentSection'
@@ -25,6 +25,11 @@ const TopContainer = styled.div`
   margin-top: 16px;
   flex-direction: row;
   justify-content: flex-end;
+`
+
+const Link = styled.a`
+  padding: 4px 15px;
+  color: #1677ff;
 `
 
 const getDiffKey = ({ oldRevision, newRevision }) =>
@@ -128,6 +133,16 @@ const DiffViewer = ({
 
   const [, jumpToAnchorOnce] = useReducer(jumpToAnchor, false)
 
+  let changelog
+  if (!toVersion.includes('-rc')) {
+    const href = getChangelogURL({ packageName, version: toVersion })
+    changelog = (
+      <Link href={href} target="_blank" rel="noreferrer">
+        changelog
+      </Link>
+    )
+  }
+
   useEffect(() => {
     if (!isDone) {
       resetCompletedDiffs()
@@ -176,6 +191,8 @@ const DiffViewer = ({
           />
 
           <TopContainer>
+            {changelog}
+
             <BinaryDownload
               diff={diff}
               fromVersion={fromVersion}
