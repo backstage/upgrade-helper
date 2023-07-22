@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useDeferredValue } from 'react'
 import styled from '@emotion/styled'
 import { Card, Input, Typography } from 'antd'
 import GitHubButton from 'react-github-btn'
@@ -57,6 +57,34 @@ const TitleContainer = styled.div`
   margin-bottom: 8px;
 `
 
+const AppNameField = styled.div`
+  width: 100%;
+
+  @media ${deviceSizes.tablet} {
+    padding-right: 5px;
+  }
+`
+
+const AppPackageField = styled.div`
+  width: 100%;
+
+  @media ${deviceSizes.tablet} {
+    padding-left: 5px;
+  }
+`
+
+const AppDetailsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+
+  @media ${deviceSizes.tablet} {
+    flex-direction: row;
+    gap: 0;
+  }
+`
+
 const SettingsContainer = styled.div`
   display: flex;
   align-items: center;
@@ -103,11 +131,6 @@ const Home = () => {
     if (fromVersion === toVersion) {
       return
     }
-
-    setAppName(({ input }) => ({
-      input: '',
-      diff: input || DEFAULT_APP_NAME,
-    }))
 
     setFromVersion(fromVersion)
     setToVersion(toVersion)

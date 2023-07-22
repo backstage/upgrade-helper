@@ -60,6 +60,7 @@ const DiffViewer = ({
   selectedChanges,
   onToggleChangeSelection,
   appName,
+  appPackage,
 }) => {
   const { isLoading, isDone, diff } = useFetchDiff({
     shouldShowDiff,
@@ -198,6 +199,7 @@ const DiffViewer = ({
               fromVersion={fromVersion}
               toVersion={toVersion}
               appName={appName}
+              appPackage={appPackage}
               packageName={packageName}
             />
 
@@ -220,6 +222,7 @@ const DiffViewer = ({
             isDoneSection={false}
             diffViewStyle={diffViewStyle}
             appName={appName}
+            appPackage={appPackage}
           />
 
           {renderUpgradeDoneMessage({ diff, completedDiffs })}
@@ -230,6 +233,7 @@ const DiffViewer = ({
             isDoneSection={true}
             title="Done"
             appName={appName}
+            appPackage={appPackage}
             doneTitleRef={doneTitleRef}
           />
         </motion.div>
