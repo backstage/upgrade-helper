@@ -397,6 +397,7 @@ const VersionSelector = ({
       <Selectors>
         <FromVersionSelector
           key={'from-' + useYarnPlugin}
+          showSearch
           data-testid={testIDs.fromVersionSelector}
           title={`What's your current Backstage release or @backstage/create-app (0.4.x) version?`}
           loading={isLoading}
@@ -409,6 +410,7 @@ const VersionSelector = ({
 
         <ToVersionSelector
           key={'to-' + useYarnPlugin}
+          showSearch
           data-testid={testIDs.toVersionSelector}
           title="To which version would you like to upgrade?"
           loading={isLoading}
