@@ -32,6 +32,8 @@ const Settings = () => {
     })
   }
 
+  const humanThemeName = themeName[0].toUpperCase() + themeName.substring(1)
+
   return (
     <Popover
       placement="bottomRight"

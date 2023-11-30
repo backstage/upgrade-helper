@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useDeferredValue } from 'react'
 import styled from '@emotion/styled'
+import { ThemeProvider } from '@emotion/react'
 import { Card, Input, Typography } from 'antd'
 import GitHubButton from 'react-github-btn'
 // import ReactGA from 'react-ga'
@@ -12,8 +13,10 @@ import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
 import { SettingsProvider } from '../../SettingsProvider'
+import { lightTheme, darkTheme } from '../../theme'
 
 const Page = styled.div`
+  background-color: ${({ theme }) => theme.body};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +27,7 @@ const Page = styled.div`
 const Container = styled(Card)`
   width: 90%;
   border-radius: 3px;
-  border-color: #e8e8e8;
+  border-color: ${({ theme }) => theme.border};
 `
 
 const HeaderContainer = styled.div`
@@ -140,6 +143,7 @@ const Home = () => {
   return (
     <SettingsProvider>
       <ReleasesProvider packageName={defaultPackageName}>
+      <ThemeProvider theme={themeName === 'light' ? lightTheme : darkTheme}>
         <Page>
           <Container>
             <HeaderContainer>
@@ -193,6 +197,7 @@ const Home = () => {
             language={defaultLanguage}
           />
         </Page>
+      </ThemeProvider>
       </ReleasesProvider>
     </SettingsProvider>
   )
