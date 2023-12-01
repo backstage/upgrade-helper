@@ -11,7 +11,10 @@ const SettingsButton = styled(Button)`
 const SettingsIcon = styled((props) => <span {...props}>⚙️</span>)`
   font-family: initial;
 `
-const Settings = () => {
+const Settings = ({
+  isDarkMode,
+  toggleDarkMode,
+}) => {
   const { settings, setSettings } = useSettings()
   const [popoverVisibility, setVisibility] = useState(false)
 
@@ -31,8 +34,6 @@ const Settings = () => {
       [USE_YARN_PLUGIN]: e.target.checked
     })
   }
-
-  const humanThemeName = themeName[0].toUpperCase() + themeName.substring(1)
 
   return (
     <Popover
@@ -55,6 +56,12 @@ const Settings = () => {
               {USE_YARN_PLUGIN}
             </Checkbox>
           </div>
+          <>
+          <h5>Theme:</h5>
+          <Button onClick={toggleDarkMode}>
+            {isDarkMode ? 'Dark' : 'Light'}
+          </Button>
+          </>
         </>
       }
       trigger="click"

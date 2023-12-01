@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useDeferredValue } from 'react'
 import styled from '@emotion/styled'
-import { ThemeProvider } from '@emotion/react'
-import { Card, Input, Typography } from 'antd'
+import { ThemeProvider, Global, css } from '@emotion/react'
+import { Card, Input, Typography, ConfigProvider, theme } from 'antd'
 import GitHubButton from 'react-github-btn'
 // import ReactGA from 'react-ga'
 import VersionSelector from '../common/VersionSelector'
@@ -25,6 +25,7 @@ const Page = styled.div`
 `
 
 const Container = styled(Card)`
+  background-color: ${({ theme }) => theme.background};
   width: 90%;
   border-radius: 3px;
   border-color: ${({ theme }) => theme.border};
@@ -140,9 +141,28 @@ const Home = () => {
     setShouldShowDiff(true)
   }
 
-  return (
+const { defaultAlgorithm, darkAlgorithm } = theme
+const [isDarkMode, setIsDarkMode] = useState(false)
+const toggleDarkMode = () => setIsDarkMode((previousValue) => !previousValue)
+const themeString = isDarkMode ? 'dark' : 'light' 
+ return (
     <SettingsProvider>
       <ReleasesProvider packageName={defaultPackageName}>
+      <ConfigProvider
+      theme={{
+        algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+        // components: {
+        //   Button: {
+        //     // colorPrimary: '#00b96b',
+        //     algorithm: true, // Enable algorithm
+        //   },
+        //   Input: {
+        //     colorPrimary: '#eb2f96',
+        //     algorithm: true, // Enable algorithm
+        //   },
+        // },
+      }}
+    >
       <ThemeProvider theme={themeName === 'light' ? lightTheme : darkTheme}>
         <Page>
           <Container>
@@ -198,6 +218,7 @@ const Home = () => {
           />
         </Page>
       </ThemeProvider>
+      </ConfigProvider>
       </ReleasesProvider>
     </SettingsProvider>
   )
