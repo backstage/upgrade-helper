@@ -11,6 +11,7 @@ import Settings from '../common/Settings'
 import logo from '../../assets/logo.svg'
 import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
+import { DarkModeButton } from '../common/DarkModeButton'
 import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
 import { SettingsProvider } from '../../SettingsProvider'
@@ -197,6 +198,10 @@ const Home = () => {
                 </UpdateDocsLink>
 
                 <Settings />
+                <DarkModeButton
+                  isDarkMode={isDarkMode}
+                  onClick={toggleDarkMode}
+                />
               </SettingsContainer>
             </HeaderContainer>
 
