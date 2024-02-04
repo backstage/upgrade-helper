@@ -2,12 +2,13 @@ import React, { useState, useEffect, useDeferredValue } from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
 import { Card, Input, Typography, ConfigProvider, theme } from 'antd'
-import GitHubButton, { ReactGitHubButtonProps }  from 'react-github-btn'
+import GitHubButton, { ReactGitHubButtonProps } from 'react-github-btn'
 // import ReactGA from 'react-ga'
 import createPersistedState from 'use-persisted-state'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer from '../common/DiffViewer'
 import Settings from '../common/Settings'
+// @ts-ignore-next-line
 import logo from '../../assets/logo.svg'
 import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
@@ -15,10 +16,11 @@ import { DarkModeButton } from '../common/DarkModeButton'
 import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
 import { SettingsProvider } from '../../SettingsProvider'
-import { lightTheme, darkTheme } from '../../theme'
+import { lightTheme, darkTheme, type Theme } from '../../theme'
+import { CheckboxValueType } from 'antd/es/checkbox/Group'
 
 const Page = styled.div<{ theme?: Theme }>`
-  background-color: ${({ theme }) => theme.body};
+  background-color: ${({ theme }) => theme.background};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,7 +28,7 @@ const Page = styled.div<{ theme?: Theme }>`
   padding-top: 30px;
 `
 
-const Container = styled(Card)`
+const Container = styled(Card)<{ theme?: Theme }>`
   background-color: ${({ theme }) => theme.background};
   width: 90%;
   border-radius: 3px;
@@ -141,7 +143,13 @@ const Home = () => {
     }
   }, [])
 
-  const handleShowDiff = ({ fromVersion, toVersion }) => {
+  const handleShowDiff = ({
+    fromVersion,
+    toVersion,
+  }: {
+    fromVersion: string
+    toVersion: string
+  }) => {
     if (fromVersion === toVersion) {
       return
     }
@@ -154,7 +162,8 @@ const Home = () => {
   // Dark Mode Setup:
   const { defaultAlgorithm, darkAlgorithm } = theme // Get default and dark mode states from antd.
   const [isDarkMode, setIsDarkMode] = useDarkModeState(false) // Remembers dark mode state between sessions.
-  const toggleDarkMode = () => setIsDarkMode((previousValue) => !previousValue)
+  const toggleDarkMode = () =>
+    setIsDarkMode((previousValue: boolean) => !previousValue)
   const themeString = isDarkMode ? 'dark' : 'light'
   useEffect(() => {
     // Set the document's background color to the theme's body color.
@@ -162,74 +171,74 @@ const Home = () => {
       ? darkTheme.background
       : lightTheme.background
   }, [isDarkMode])
- return (
+  return (
     <SettingsProvider>
       <ReleasesProvider packageName={defaultPackageName}>
-      <ConfigProvider
-      theme={{
-        algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
-      }}
-    >
-      <ThemeProvider theme={themeName === 'light' ? lightTheme : darkTheme}>
-        <Page>
-          <Container>
-            <HeaderContainer>
-              <TitleContainer>
-                <LogoImg
-                  alt="Backstage logo"
-                  title="Backstage logo"
-                  src={logo}
+        <ConfigProvider
+          theme={{
+            algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+          }}
+        >
+          <ThemeProvider theme={themeName === 'light' ? lightTheme : darkTheme}>
+            <Page>
+              <Container>
+                <HeaderContainer>
+                  <TitleContainer>
+                    <LogoImg
+                      alt="Backstage logo"
+                      title="Backstage logo"
+                      src={logo}
+                    />
+
+                    <a href={homepage}>
+                      <TitleHeader>Backstage Upgrade Helper</TitleHeader>
+                    </a>
+                  </TitleContainer>
+                  <SettingsContainer>
+                    <StarButton
+                      href="https://github.com/backstage/upgrade-helper"
+                      data-icon="octicon-star"
+                      data-show-count="true"
+                      aria-label="Star backstage/upgrade-helper on GitHub"
+                    >
+                      Star
+                    </StarButton>
+
+                    <UpdateDocsLink>
+                      <a href="https://backstage.io/docs/getting-started/keeping-backstage-updated">
+                        Keeping Backstage Updated
+                      </a>
+                    </UpdateDocsLink>
+
+                    <Settings />
+                    <DarkModeButton
+                      isDarkMode={isDarkMode}
+                      onClick={toggleDarkMode}
+                    />
+                  </SettingsContainer>
+                </HeaderContainer>
+
+                <VersionSelector
+                  key={defaultPackageName}
+                  showDiff={handleShowDiff}
+                  fromVersion={fromVersion}
+                  toVersion={toVersion}
+                  packageName={defaultPackageName}
+                  language={defaultLanguage}
+                  isPackageNameDefinedInURL={isPackageNameDefinedInURL}
                 />
-
-                <a href={homepage}>
-                  <TitleHeader>Backstage Upgrade Helper</TitleHeader>
-                </a>
-              </TitleContainer>
-              <SettingsContainer>
-                <StarButton
-                  href="https://github.com/backstage/upgrade-helper"
-                  data-icon="octicon-star"
-                  data-show-count="true"
-                  aria-label="Star backstage/upgrade-helper on GitHub"
-                >
-                  Star
-                </StarButton>
-
-                <UpdateDocsLink>
-                  <a href="https://backstage.io/docs/getting-started/keeping-backstage-updated">
-                    Keeping Backstage Updated
-                  </a>
-                </UpdateDocsLink>
-
-                <Settings />
-                <DarkModeButton
-                  isDarkMode={isDarkMode}
-                  onClick={toggleDarkMode}
-                />
-              </SettingsContainer>
-            </HeaderContainer>
-
-            <VersionSelector
-              key={defaultPackageName}
-              showDiff={handleShowDiff}
-              fromVersion={fromVersion}
-              toVersion={toVersion}
-              packageName={defaultPackageName}
-              language={defaultLanguage}
-              isPackageNameDefinedInURL={isPackageNameDefinedInURL}
-            />
-          </Container>
-          <DiffViewer
-            shouldShowDiff={shouldShowDiff}
-            fromVersion={fromVersion}
-            toVersion={toVersion}
-            appName={appName}
-            packageName={defaultPackageName}
-            language={defaultLanguage}
-          />
-        </Page>
-      </ThemeProvider>
-      </ConfigProvider>
+              </Container>
+              <DiffViewer
+                shouldShowDiff={shouldShowDiff}
+                fromVersion={fromVersion}
+                toVersion={toVersion}
+                appName={appName}
+                packageName={defaultPackageName}
+                language={defaultLanguage}
+              />
+            </Page>
+          </ThemeProvider>
+        </ConfigProvider>
       </ReleasesProvider>
     </SettingsProvider>
   )

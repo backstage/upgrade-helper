@@ -186,7 +186,7 @@ class UsefulContentSection extends Component<
       isContentOpen: !isContentOpen,
     }))
 
-  getChangelog = ({ version }) => {
+  getChangelog = ({ version }: { version: string }) => {
     const { packageName } = this.props
     const { to } = this.context
     const { version: toVersion } = to

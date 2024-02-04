@@ -43,8 +43,8 @@ export const useFetchDiff = ({
   const {
     settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
   } = useSettings()
-  const [isLoading, setIsLoading] = useState(true)
-  const [isDone, setIsDone] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isDone, setIsDone] = useState<boolean>(false)
   const [diff, setDiff] = useState<File[]>([])
 
   useEffect(() => {

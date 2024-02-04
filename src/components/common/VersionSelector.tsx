@@ -43,6 +43,7 @@ interface ToVersionSelectorProps extends SelectProps {
 const ToVersionSelector = styled(
   ({ popover, ...props }: ToVersionSelectorProps) =>
     popover ? (
+      // @ts-ignore-next-line
       React.cloneElement(popover, {
         children: <Select {...props} />,
       })
@@ -78,12 +79,18 @@ const stripAnchorInUrl = () => {
   return true
 }
 
-const compareReleaseCandidateVersions = ({ version, versionToCompare }) =>
+const compareReleaseCandidateVersions = ({
+  version,
+  versionToCompare,
+}: {
+  version: string | semver.SemVer
+  versionToCompare: string | semver.SemVer
+}) =>
   ['prerelease', 'prepatch', null].includes(
     semver.diff(version, versionToCompare)
   )
 
-const getLatestMajorReleaseVersion = (releasedVersions) =>
+const getLatestMajorReleaseVersion = (releasedVersions: string[]) =>
   semver.valid(
     semver.coerce(
       releasedVersions.find(
@@ -95,7 +102,13 @@ const getLatestMajorReleaseVersion = (releasedVersions) =>
   )
 
 // Check if `from` rc version is one of the latest major release (ie. 0.60.0)
-const checkIfVersionIsALatestPrerelease = ({ version, latestVersion }) =>
+const checkIfVersionIsALatestPrerelease = ({
+  version,
+  latestVersion,
+}: {
+  version: string
+  latestVersion: string
+}) =>
   semver.prerelease(version) &&
   compareReleaseCandidateVersions({
     version: latestVersion,
@@ -109,6 +122,11 @@ const getReleasedVersionsWithCandidates = ({
   toVersion,
   latestVersion,
   showReleaseCandidates,
+}: {
+  releasedVersions: string[]
+  toVersion: string
+  latestVersion: string
+  showReleaseCandidates: boolean
 }) => {
   const isToVersionAReleaseCandidate = semver.prerelease(toVersion) !== null
   const isLatestAReleaseCandidate = semver.prerelease(latestVersion) !== null
@@ -124,7 +142,7 @@ const getReleasedVersionsWithCandidates = ({
 
     const isLatestReleaseCandidate = checkIfVersionIsALatestPrerelease({
       version: releasedVersion,
-      latestVersion
+      latestVersion,
     })
 
     return (
@@ -145,11 +163,19 @@ const getReleasedVersionsWithCandidates = ({
   })
 }
 
-const getReleasedVersions = ({ releasedVersions, minVersion, maxVersion }) => {
+const getReleasedVersions = ({
+  releasedVersions,
+  minVersion,
+  maxVersion,
+}: {
+  releasedVersions: string[]
+  minVersion?: string
+  maxVersion?: string
+}) => {
   const latestMajorReleaseVersion =
     getLatestMajorReleaseVersion(releasedVersions)
 
-  const isVersionAReleaseAndOfLatest = version =>
+  const isVersionAReleaseAndOfLatest = (version: string) =>
     version.includes('next') &&
     semver.valid(semver.coerce(version)) === latestMajorReleaseVersion
 
@@ -165,7 +191,13 @@ const getReleasedVersions = ({ releasedVersions, minVersion, maxVersion }) => {
 
 // Finds the first specified release (patch, minor, major) when compared to another version
 const getFirstRelease = (
-  { releasedVersions, versionToCompare },
+  {
+    releasedVersions,
+    versionToCompare,
+  }: {
+    releasedVersions: string[]
+    versionToCompare: string
+  },
   type = 'minor'
 ) =>
   releasedVersions.find(
@@ -178,7 +210,15 @@ const getFirstRelease = (
   )
 
 // Return if version exists in the ones returned from GitHub
-const doesVersionExist = ({ version, allVersions, minVersion }) => {
+const doesVersionExist = ({
+  version,
+  allVersions,
+  minVersion,
+}: {
+  version: string
+  allVersions: string[]
+  minVersion?: string
+}) => {
   try {
     return (
       version &&
@@ -192,7 +232,7 @@ const doesVersionExist = ({ version, allVersions, minVersion }) => {
   }
 }
 
-const getDefaultToVersion = releases => releases[0]
+const getDefaultToVersion = (releases) => releases[0]
 
 const getDefaultFromVersion = (toVersion, releases, showReleaseCandidates) => {
   // Remove `rc` versions from the array of versions
@@ -200,7 +240,7 @@ const getDefaultFromVersion = (toVersion, releases, showReleaseCandidates) => {
     releasedVersions: releases,
     toVersion,
     latestVersion: releases[0].version,
-    showReleaseCandidates
+    showReleaseCandidates,
   })
 
   const sanitizedVersions = sanitizedVersionsWithReleases.map(
@@ -211,42 +251,49 @@ const getDefaultFromVersion = (toVersion, releases, showReleaseCandidates) => {
     getFirstRelease(
       {
         releasedVersions: sanitizedVersions,
-        versionToCompare: toVersion.version
+        versionToCompare: toVersion.version,
       },
       'minor'
     ) ||
     getFirstRelease(
       {
         releasedVersions: sanitizedVersions,
-        versionToCompare: toVersion.version
+        versionToCompare: toVersion.version,
       },
       'patch'
     )
 
-  return sanitizedVersionsWithReleases.find(value => value.version === version)
+  return sanitizedVersionsWithReleases.find(
+    (value) => value.version === version
+  )
 }
 
 const VersionSelector = ({
   packageName,
   language,
   isPackageNameDefinedInURL,
-  showDiff
+  showDiff,
+}: {
+  packageName: string
+  language: string
+  isPackageNameDefinedInURL: boolean
+  showDiff: (args: { fromVersion: string; toVersion: string }) => void
 }) => {
   const {
     settings: {
       [SHOW_LATEST_RCS]: showReleaseCandidates,
-      [USE_YARN_PLUGIN]: useYarnPlugin
-    }
+      [USE_YARN_PLUGIN]: useYarnPlugin,
+    },
   } = useSettings()
   const [allVersions, setAllVersions] = useState([])
   const [fromVersionList, setFromVersionList] = useState([])
   const [toVersionList, setToVersionList] = useState([])
-  const [hasVersionsFromURL, setHasVersionsFromURL] = useState(false)
+  const [hasVersionsFromURL, setHasVersionsFromURL] = useState<boolean>(false)
 
-  const [localFromVersion, setLocalFromVersion] = useState('')
-  const [localToVersion, setLocalToVersion] = useState('')
+  const [localFromVersion, setLocalFromVersion] = useState<string>('')
+  const [localToVersion, setLocalToVersion] = useState<string>('')
 
-  const upgradeButtonEl = useRef(null)
+  const upgradeButtonEl = useRef<HTMLElement>(null)
   const { isDone, isLoading, releases, setSelectedVersions } = useReleases()
   const releaseVersions = useMemo(
     () => releases?.map(({ version }) => version),
@@ -261,13 +308,13 @@ const VersionSelector = ({
       // Check if the versions provided in the URL are valid
       const hasFromVersionInURL = doesVersionExist({
         version: fromVersion,
-        allVersions: releaseVersions
+        allVersions: releaseVersions,
       })
 
       const hasToVersionInURL = doesVersionExist({
         version: toVersion,
         allVersions: releaseVersions,
-        minVersion: fromVersion
+        minVersion: fromVersion,
       })
 
       const latestVersion = releaseVersions[0]
@@ -294,14 +341,14 @@ const VersionSelector = ({
           getFirstRelease(
             {
               releasedVersions: sanitizedVersions,
-              versionToCompare: toVersionToBeSet
+              versionToCompare: toVersionToBeSet,
             },
             'minor'
           ) ||
           getFirstRelease(
             {
               releasedVersions: sanitizedVersions,
-              versionToCompare: toVersionToBeSet
+              versionToCompare: toVersionToBeSet,
             },
             'patch'
           )
@@ -309,13 +356,13 @@ const VersionSelector = ({
       setFromVersionList(
         getReleasedVersions({
           releasedVersions: sanitizedVersionsWithReleases,
-          maxVersion: toVersionToBeSet
+          maxVersion: toVersionToBeSet,
         })
       )
       setToVersionList(
         getReleasedVersions({
           releasedVersions: sanitizedVersionsWithReleases,
-          minVersion: fromVersionToBeSet
+          minVersion: fromVersionToBeSet,
         })
       )
 
@@ -324,7 +371,7 @@ const VersionSelector = ({
 
       const doesHaveVersionsInURL = hasFromVersionInURL && hasToVersionInURL
 
-      setHasVersionsFromURL(doesHaveVersionsInURL)
+      setHasVersionsFromURL(!!doesHaveVersionsInURL)
     }
 
     if (isDone) {
@@ -366,12 +413,12 @@ const VersionSelector = ({
     localToVersion,
     hasVersionsFromURL,
     releases,
-    showReleaseCandidates
+    showReleaseCandidates,
   ])
 
   const onShowDiff = () => {
-    const resolveDiffVersion = targetVersion =>
-      releases.find(r => r.version === targetVersion)
+    const resolveDiffVersion = (targetVersion) =>
+      releases.find((r) => r.version === targetVersion)
 
     const to =
       resolveDiffVersion(localToVersion) || getDefaultToVersion(releases)
@@ -381,12 +428,12 @@ const VersionSelector = ({
 
     setSelectedVersions({
       from,
-      to
+      to,
     })
 
     showDiff({
       fromVersion: from[useYarnPlugin ? 'version' : 'createApp'],
-      toVersion: to[useYarnPlugin ? 'version' : 'createApp']
+      toVersion: to[useYarnPlugin ? 'version' : 'createApp'],
     })
 
     updateURL({

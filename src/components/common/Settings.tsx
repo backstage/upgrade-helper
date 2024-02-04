@@ -8,27 +8,29 @@ const SettingsButton = styled(Button)`
   color: initial;
 `
 
-const SettingsIcon = styled((props) => <span {...props}>⚙️</span>)`
+const SettingsIcon = styled((props: React.HTMLAttributes<HTMLSpanElement>) => (
+  <span {...props}>⚙️</span>
+))`
   font-family: initial;
 `
 const Settings = () => {
   const { settings, setSettings } = useSettings()
-  const [popoverVisibility, setVisibility] = useState(false)
+  const [popoverVisibility, setVisibility] = useState<boolean>(false)
 
-  const handleClickChange = (visibility) => {
+  const handleClickChange = (visibility: boolean) => {
     setVisibility(visibility)
   }
 
-  const toggleShowLatestRCs = e =>
+  const toggleShowLatestRCs = (e) =>
     setSettings({
       ...settings,
-      [SHOW_LATEST_RCS]: e.target.checked
+      [SHOW_LATEST_RCS]: e.target.checked,
     })
 
-  const toggleUseYarnPlugin = e => {
+  const toggleUseYarnPlugin = (e) => {
     setSettings({
       ...settings,
-      [USE_YARN_PLUGIN]: e.target.checked
+      [USE_YARN_PLUGIN]: e.target.checked,
     })
   }
 

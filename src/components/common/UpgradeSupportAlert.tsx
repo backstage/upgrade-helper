@@ -19,7 +19,6 @@ const UpgradeSupportAlert = styled((props: UpgradeSupportAlertProps) => (
           href="https://backstage.io/docs/overview/support"
           target="_blank"
           rel="noopener noreferrer"
-          {...props}
         >
           Support and community
         </a>

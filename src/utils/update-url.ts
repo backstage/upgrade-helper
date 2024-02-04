@@ -6,7 +6,14 @@ export function updateURL({
   isPackageNameDefinedInURL,
   fromVersion,
   toVersion,
-  yarnPlugin
+  yarnPlugin,
+}: {
+  packageName?: string
+  language?: string
+  isPackageNameDefinedInURL?: boolean
+  fromVersion?: string
+  toVersion?: string
+  yarnPlugin?: boolean
 } = {}) {
   const newURL = new URL(window.location.href)
 
