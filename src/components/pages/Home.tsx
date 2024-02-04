@@ -2,7 +2,7 @@ import React, { useState, useEffect, useDeferredValue } from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
 import { Card, Input, Typography, ConfigProvider, theme } from 'antd'
-import GitHubButton from 'react-github-btn'
+import GitHubButton, { ReactGitHubButtonProps }  from 'react-github-btn'
 // import ReactGA from 'react-ga'
 import createPersistedState from 'use-persisted-state'
 import VersionSelector from '../common/VersionSelector'
@@ -17,7 +17,7 @@ import { ReleasesProvider } from '../../ReleaseProvider'
 import { SettingsProvider } from '../../SettingsProvider'
 import { lightTheme, darkTheme } from '../../theme'
 
-const Page = styled.div`
+const Page = styled.div<{ theme?: Theme }>`
   background-color: ${({ theme }) => theme.body};
   display: flex;
   align-items: center;
@@ -104,7 +104,11 @@ const UpdateDocsLink = styled.div`
   flex: 1;
 `
 
-const StarButton = styled(({ className, ...props }) => (
+interface StarButtonProps extends ReactGitHubButtonProps {
+  className?: string
+}
+
+const StarButton = styled(({ className, ...props }: StarButtonProps) => (
   <div className={className}>
     <GitHubButton {...props} />
   </div>

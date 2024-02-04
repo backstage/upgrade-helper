@@ -1,30 +1,41 @@
-import React, { useState, Fragment } from 'react'
+import React, { value useState, value Fragment } from 'react'
 import styled from '@emotion/styled'
-import { motion } from 'framer-motion'
-import { removeAppPathPrefix, getVersionsContentInDiff } from '../../../utils'
+import { value HTMLMotionProps, value motion } from 'framer-motion'
+import {
+  value removeAppPathPrefix,
+  value getVersionsContentInDiff
+} from '../../../utils'
 import Markdown from '../Markdown'
+import type { value Theme } from '../../../theme'
+interface ContainerProps extends HTMLMotionProps<'div'> {
+  isCommentOpen: boolean
+  lineChangeType: 'add' | 'delete'
+  theme?: Theme
+}
 
-const Container = styled(({ isCommentOpen, children, ...props }) => {
-  return (
-    <motion.div
-      {...props}
-      variants={{
-        open: {
-          height: 'auto',
-        },
-        hidden: { height: 10 },
-      }}
-      initial={isCommentOpen ? 'open' : 'hidden'}
-      animate={isCommentOpen ? 'open' : 'hidden'}
-      transition={{
-        duration: 0.5,
-      }}
-      inherit={false}
-    >
-      <div children={children} />
-    </motion.div>
-  )
-})`
+const Container = styled(
+  ({ isCommentOpen, children, ...props }: ContainerProps) => {
+    return (
+      <motion.div
+        {...props}
+        variants={{
+          open: {
+            height: 'auto'
+          },
+          hidden: { height: 10 }
+        }}
+        initial={isCommentOpen ? 'open' : 'hidden'}
+        animate={isCommentOpen ? 'open' : 'hidden'}
+        transition={{
+          duration: 0.5
+        }}
+        inherit={false}
+      >
+        <div children={children} />
+      </motion.div>
+    )
+  }
+)`
   overflow: hidden;
 
   & > div {
@@ -33,7 +44,7 @@ const Container = styled(({ isCommentOpen, children, ...props }) => {
     background-color: ${({ lineChangeType, theme }) => {
       const colorMap = {
         add: theme.diff.codeInsertBackground,
-        delete: theme.diff.codeDeleteBackground,
+        delete: theme.diff.codeDeleteBackground
       }
 
       return colorMap[lineChangeType] || theme.background
@@ -42,7 +53,10 @@ const Container = styled(({ isCommentOpen, children, ...props }) => {
   }
 `
 
-const ContentContainer = styled.div`
+interface ContentContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  theme?: Theme
+}
+const ContentContainer = styled.div<ContentContainerProps>`
   flex: 1;
   position: relative;
   padding: 16px;
@@ -51,22 +65,27 @@ const ContentContainer = styled.div`
   user-select: none;
 `
 
-const ShowButton = styled(({ isCommentOpen, ...props }) => (
+interface ShowButtonProps extends DivProps {
+  isCommentOpen: boolean
+  theme?: Theme
+}
+
+const ShowButton = styled(({ isCommentOpen, ...props }: ShowButtonProps) => (
   <motion.div
     {...props}
     variants={{
       open: {
-        scaleX: 1,
+        scaleX: 1
       },
-      hidden: { scaleX: 10 },
+      hidden: { scaleX: 10 }
     }}
     whileHover={{
-      scale: 2,
+      scale: 2
     }}
     initial={isCommentOpen ? 'open' : 'hidden'}
     animate={isCommentOpen ? 'open' : 'hidden'}
     transition={{
-      duration: 0.25,
+      duration: 0.25
     }}
   />
 ))`
@@ -89,19 +108,34 @@ const Content = styled(Markdown)`
 const LINE_CHANGE_TYPES = {
   ADD: 'I',
   DELETE: 'D',
-  NEUTRAL: 'N',
+  NEUTRAL: 'N'
 }
 
-const getLineNumberWithType = ({ lineChangeType, lineNumber }) =>
-  `${LINE_CHANGE_TYPES[lineChangeType.toUpperCase()]}${lineNumber}`
+const getLineNumberWithType = ({
+  lineChangeType,
+  lineNumber
+}: {
+  lineChangeType: 'add' | 'delete' | 'neutral'
+  lineNumber: number
+}) => `${LINE_CHANGE_TYPES[lineChangeType.toUpperCase()]}${lineNumber}`
 
-const getComments = ({ versions, newPath, fromVersion, toVersion }) => {
+const getComments = ({
+  versions,
+  newPath,
+  fromVersion,
+  toVersion
+}: {
+  versions: string
+  newPath: string
+  fromVersion: string
+  toVersion: string
+}) => {
   const newPathSanitized = removeAppPathPrefix(newPath)
 
   const versionsInDiff = getVersionsContentInDiff({
     versions,
     fromVersion,
-    toVersion,
+    toVersion
   }).filter(
     ({ comments }) =>
       comments &&
@@ -131,7 +165,7 @@ const getComments = ({ versions, newPath, fromVersion, toVersion }) => {
 
     return {
       ...allComments,
-      ...comments,
+      ...comments
     }
   }, {})
 }

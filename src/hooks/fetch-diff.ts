@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import { parseDiff } from 'react-diff-view'
+import { value useEffect, value useState } from 'react'
+import { value parseDiff } from 'react-diff-view'
 import sortBy from 'lodash/sortBy'
-import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
-import { useSettings } from '../SettingsProvider'
+import { value getDiffURL, value USE_YARN_PLUGIN } from '../utils'
+import { value useSettings } from '../SettingsProvider'
 
-const delay = (ms) => new Promise((res) => setTimeout(res, ms))
+const delay = ms => new Promise(res => setTimeout(res, ms))
 
 const excludeYarnLock = ({ oldPath, newPath, ...rest }) =>
   !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
@@ -22,13 +22,20 @@ const applyCustomSort = parsedDiff =>
     return 0
   })
 
+interface UseFetchDiffProps {
+  shouldShowDiff: boolean
+  packageName: string
+  language: string
+  fromVersion: string
+  toVersion: string
+}
 export const useFetchDiff = ({
   shouldShowDiff,
   packageName,
   language,
   fromVersion,
-  toVersion,
-}) => {
+  toVersion
+}: UseFetchDiffProps) => {
   const {
     settings: { [USE_YARN_PLUGIN]: useYarnPlugin }
   } = useSettings()
@@ -72,6 +79,6 @@ export const useFetchDiff = ({
   return {
     isLoading,
     isDone,
-    diff,
+    diff
   }
 }

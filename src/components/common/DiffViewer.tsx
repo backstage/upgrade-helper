@@ -13,6 +13,7 @@ import ViewStyleOptions from './Diff/DiffViewStyleOptions'
 import CompletedFilesCounter from './CompletedFilesCounter'
 import RawDiffLinkButton from './RawDiffLinkButton'
 import { useFetchDiff } from '../../hooks/fetch-diff'
+import type { Theme } from '../../theme'
 
 const Container = styled.div`
   width: 90%;
@@ -27,7 +28,7 @@ const TopContainer = styled.div`
   justify-content: flex-end;
 `
 
-const Link = styled.a`
+const Link = styled.a<{ theme?: Theme }>`
   padding: 4px 15px;
   color: ${({ theme }) => theme.link};
 `
