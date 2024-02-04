@@ -17,7 +17,6 @@ import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
 import { SettingsProvider } from '../../SettingsProvider'
 import { lightTheme, darkTheme, type Theme } from '../../theme'
-import { CheckboxValueType } from 'antd/es/checkbox/Group'
 
 const Page = styled.div<{ theme?: Theme }>`
   background-color: ${({ theme }) => theme.background};
