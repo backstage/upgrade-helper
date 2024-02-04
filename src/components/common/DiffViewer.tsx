@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useReducer } from 'react'
 import styled from '@emotion/styled'
 import { Alert } from 'antd'
-import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { withChangeSelect } from 'react-diff-view'
 import 'react-diff-view/style/index.css'
 import { getTransitionDuration, getChangelogURL } from '../../utils'
@@ -178,7 +178,7 @@ const DiffViewer = ({
 
   return (
     <Container>
-      <AnimateSharedLayout>
+      <LayoutGroup>
         <motion.div
           initial={{ opacity: 0, translateY: 75 }}
           animate={{ opacity: 1, translateY: 0 }}
@@ -238,7 +238,7 @@ const DiffViewer = ({
             doneTitleRef={doneTitleRef}
           />
         </motion.div>
-      </AnimateSharedLayout>
+      </LayoutGroup>
 
       <CompletedFilesCounter
         completed={completedDiffs.length}
