@@ -11,6 +11,7 @@ import { deviceSizes } from '../../utils/device-sizes'
 import { useReleases } from '../../ReleaseProvider'
 import { useSettings } from '../../SettingsProvider'
 import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from '../../utils'
+import type { SelectProps } from './Select'
 
 export const testIDs = {
   fromVersionSelector: 'fromVersionSelector',
@@ -35,14 +36,19 @@ const FromVersionSelector = styled(Select)`
   }
 `
 
-const ToVersionSelector = styled(({ popover, ...props }) =>
-  popover ? (
-    React.cloneElement(popover, {
-      children: <Select {...props} />,
-    })
-  ) : (
-    <Select {...props} />
-  )
+interface ToVersionSelectorProps extends SelectProps {
+  popover?: React.ReactNode
+}
+
+const ToVersionSelector = styled(
+  ({ popover, ...props }: ToVersionSelectorProps) =>
+    popover ? (
+      React.cloneElement(popover, {
+        children: <Select {...props} />,
+      })
+    ) : (
+      <Select {...props} />
+    )
 )`
   @media ${deviceSizes.tablet} {
     padding-left: 5px;
