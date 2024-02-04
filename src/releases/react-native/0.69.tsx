@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
+import { ReleaseT } from '../types'
 
-export default {
+const release: ReleaseT = {
   usefulContent: {
     description:
       'React Native 0.69 includes a bundled version of the Hermes engine',
@@ -26,3 +27,5 @@ export default {
     },
   ],
 }
+
+export default release
