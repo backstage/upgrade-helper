@@ -9,7 +9,7 @@ import DiffSection from './Diff/DiffSection'
 import DiffLoading from './Diff/DiffLoading'
 import UsefulContentSection from './UsefulContentSection'
 import BinaryDownload from './BinaryDownload'
-import ViewStyleOptions from './Diff/DiffViewStyleOptions'
+import ViewStyleOptions, { DiffViewStyle } from './Diff/DiffViewStyleOptions'
 import CompletedFilesCounter from './CompletedFilesCounter'
 import RawDiffLinkButton from './RawDiffLinkButton'
 import { useFetchDiff } from '../../hooks/fetch-diff'
@@ -124,11 +124,11 @@ const DiffViewer = ({
 
   const resetCompletedDiffs = () => setCompletedDiffs([])
 
-  const [diffViewStyle, setViewStyle] = useState(
-    localStorage.getItem('viewStyle') || 'split'
+  const [diffViewStyle, setViewStyle] = useState<DiffViewStyle>(
+    (localStorage.getItem('viewStyle') || 'split') as DiffViewStyle
   )
 
-  const handleViewStyleChange = (newViewStyle) => {
+  const handleViewStyleChange = (newViewStyle: DiffViewStyle) => {
     setViewStyle(newViewStyle)
     localStorage.setItem('viewStyle', newViewStyle)
   }

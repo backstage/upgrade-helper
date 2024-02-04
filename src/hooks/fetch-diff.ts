@@ -1,15 +1,14 @@
-import { value useEffect, value useState } from 'react'
-import { value parseDiff } from 'react-diff-view'
+import { useEffect, useState } from 'react'
+import { parseDiff } from 'react-diff-view'
+import type { File } from 'gitdiff-parser'
+import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
 import sortBy from 'lodash/sortBy'
-import { value getDiffURL, value USE_YARN_PLUGIN } from '../utils'
-import { value useSettings } from '../SettingsProvider'
-
-const delay = ms => new Promise(res => setTimeout(res, ms))
+import { useSettings } from '../SettingsProvider'
 
 const excludeYarnLock = ({ oldPath, newPath, ...rest }) =>
   !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
 
-const applyCustomSort = parsedDiff =>
+const applyCustomSort = (parsedDiff) =>
   sortBy(parsedDiff, ({ newPath }) => {
     if (newPath.includes('package.json')) {
       return -1
@@ -21,6 +20,11 @@ const applyCustomSort = parsedDiff =>
 
     return 0
   })
+
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
+
+const movePackageJsonToTop = (parsedDiff: File[]) =>
+  parsedDiff.sort(({ newPath }) => (newPath.includes('package.json') ? -1 : 1))
 
 interface UseFetchDiffProps {
   shouldShowDiff: boolean
@@ -34,14 +38,14 @@ export const useFetchDiff = ({
   packageName,
   language,
   fromVersion,
-  toVersion
+  toVersion,
 }: UseFetchDiffProps) => {
   const {
-    settings: { [USE_YARN_PLUGIN]: useYarnPlugin }
+    settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
   } = useSettings()
   const [isLoading, setIsLoading] = useState(true)
   const [isDone, setIsDone] = useState(false)
-  const [diff, setDiff] = useState(undefined)
+  const [diff, setDiff] = useState<File[] | undefined>(undefined)
 
   useEffect(() => {
     const fetchDiff = async () => {
@@ -55,10 +59,10 @@ export const useFetchDiff = ({
             language,
             fromVersion,
             toVersion,
-            useYarnPlugin
+            useYarnPlugin,
           })
         ),
-        delay(300)
+        delay(300),
       ])
 
       const diff = await response.text()
@@ -79,6 +83,6 @@ export const useFetchDiff = ({
   return {
     isLoading,
     isDone,
-    diff
+    diff,
   }
 }

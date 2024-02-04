@@ -1,13 +1,19 @@
 import React, { value useState, value Fragment } from 'react'
 import styled from '@emotion/styled'
-import { value HTMLMotionProps, value motion } from 'framer-motion'
+import {
+  value HTMLMotionProps,
+  value MotionProps,
+  value motion
+} from 'framer-motion'
 import {
   value removeAppPathPrefix,
   value getVersionsContentInDiff
 } from '../../../utils'
 import Markdown from '../Markdown'
 import type { value Theme } from '../../../theme'
-interface ContainerProps extends HTMLMotionProps<'div'> {
+
+interface ContainerProps
+  extends React.PropsWithChildren<HTMLMotionProps<'div'>> {
   isCommentOpen: boolean
   lineChangeType: 'add' | 'delete'
   theme?: Theme
@@ -31,7 +37,7 @@ const Container = styled(
         }}
         inherit={false}
       >
-        <div children={children} />
+        <div>{children}</div>
       </motion.div>
     )
   }
@@ -65,7 +71,7 @@ const ContentContainer = styled.div<ContentContainerProps>`
   user-select: none;
 `
 
-interface ShowButtonProps extends DivProps {
+interface ShowButtonProps extends HTMLMotionProps<'div'> {
   isCommentOpen: boolean
   theme?: Theme
 }

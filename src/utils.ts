@@ -8,12 +8,12 @@ import {
   DIFF_BASE_BRANCH
 } from './constants'
 
-const getRNDiffRepository = ({ packageName }) =>
+const getRNDiffRepository = ({ packageName }: { packageName: string }) =>
   RN_DIFF_REPOSITORIES[packageName]
 const getDiffBranch = ({ packageName }) =>
   packageName === PACKAGE_NAMES.BACKSTAGE ? 'master' : 'diffs'
 
-export const getReleasesFileURL = ({ packageName, useYarnPlugin }) =>
+export const getReleasesFileURL = ({ packageName, useYarnPlugin }: { packageName: string, useYarnPlugin:boolean }) =>
   `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName
   })}/${DIFF_BASE_BRANCH}/${
@@ -34,6 +34,12 @@ export const getDiffURL = ({
   fromVersion,
   toVersion,
   useYarnPlugin
+}: {
+  packageName: string
+  language: string
+  fromVersion: string
+  toVersion: string
+  useYarnPlugin: boolean
 }) => {
   // eslint-disable-next-line no-unused-vars
   const languageDir =
@@ -50,15 +56,34 @@ export const getDiffURL = ({
   }/${fromVersion}..${toVersion}.diff`
 }
 
-const getBranch = ({ packageName, language, version }) =>
+const getBranch = ({
+  packageName,
+  language,
+  version,
+}: {
+  packageName: string
+  language?: string
+  version: string
+}) =>
   packageName === PACKAGE_NAMES.RNM
     ? `mac/${version}`
     : packageName === PACKAGE_NAMES.RNW
     ? `${language}/${version}`
     : version
 
+interface GetBinaryFileURLProps {
+  packageName: string
+  language?: string
+  version: string
+  path: string
+}
 // `path` must contain `RnDiffApp` prefix
-export const getBinaryFileURL = ({ packageName, language, version, path }) => {
+export const getBinaryFileURL = ({
+  packageName,
+  language,
+  version,
+  path,
+}: GetBinaryFileURLProps) => {
   const branch = getBranch({ packageName, language, version })
 
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
@@ -74,7 +99,11 @@ export const removeAppPathPrefix = (path: string, appName = DEFAULT_APP_NAME) =>
  * values if provided.
  * str could be a path, or content from a text file.
  */
-export const replaceAppDetails = (str, appName, appPackage) => {
+export const replaceAppDetails = (
+  str: string,
+  appName?: string,
+  appPackage?: string
+) => {
   const appNameOrFallback = appName || DEFAULT_APP_NAME
   const appPackageOrFallback =
     appPackage || `com.${appNameOrFallback.toLowerCase()}`
@@ -93,6 +122,11 @@ export const getVersionsContentInDiff = ({
   fromVersion,
   toVersion,
   versions
+}: {
+  packageName: string
+  fromVersion: string
+  toVersion: string
+  versions: any[] // TODO: type this
 }) => {
   const cleanedToVersion = semver.valid(semver.coerce(toVersion))
 
@@ -109,7 +143,13 @@ export const getVersionsContentInDiff = ({
   })
 }
 
-export const getChangelogURL = ({ version, packageName }) => {
+export const getChangelogURL = ({
+  version,
+  packageName,
+}: {
+  version: string
+  packageName: string
+}) => {
   if (packageName === PACKAGE_NAMES.RNW || packageName === PACKAGE_NAMES.RNM) {
     return `${RN_CHANGELOG_URLS[packageName]}v${version}`
   }
@@ -121,7 +161,7 @@ export const getChangelogURL = ({ version, packageName }) => {
 }
 
 // If the browser is headless (running puppeteer) then it doesn't have any duration
-export const getTransitionDuration = (duration) =>
+export const getTransitionDuration = (duration: number) =>
   navigator.webdriver ? 0 : duration
 
 // settings constants
@@ -138,6 +178,11 @@ export const getFilePathsToShow = ({
   newPath,
   appName,
   appPackage,
+}: {
+  oldPath: string
+  newPath: string
+  appName?: string
+  appPackage?: string
 }) => {
   const oldPathSanitized = replaceAppDetails(oldPath, appName, appPackage)
   const newPathSanitized = replaceAppDetails(newPath, appName, appPackage)
