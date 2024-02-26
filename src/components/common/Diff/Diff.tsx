@@ -301,7 +301,10 @@ const Diff = ({
     toVersion,
   })
 
-  const updatedHunks = React.useMemo(() => getHunksWithAppName(hunks), [hunks])
+  const updatedHunks: HunkData[] = React.useMemo(
+    () => getHunksWithAppName(hunks),
+    [hunks]
+  )
   const tokens: HunkTokens = React.useMemo(
     () =>
       tokenize(hunks, {
