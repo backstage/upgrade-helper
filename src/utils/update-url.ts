@@ -20,6 +20,12 @@ export function updateURL({
   if (fromVersion) {
     newURL.searchParams.set('from', fromVersion)
   }
+  if (appPackage) {
+    url.searchParams.set('package', appPackage)
+  }
+  if (appName) {
+    url.searchParams.set('name', appName)
+  }
 
   if (toVersion) {
     newURL.searchParams.set('to', toVersion)
