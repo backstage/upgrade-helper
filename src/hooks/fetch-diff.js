@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { parseDiff } from 'react-diff-view'
-import { getDiffURL } from '../utils'
+import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
+import { useSettings } from '../SettingsProvider'
 
 const delay = ms => new Promise(res => setTimeout(res, ms))
 
@@ -14,6 +15,9 @@ export const useFetchDiff = ({
   fromVersion,
   toVersion
 }) => {
+  const {
+    settings: { [USE_YARN_PLUGIN]: useYarnPlugin }
+  } = useSettings()
   const [isLoading, setIsLoading] = useState(true)
   const [isDone, setIsDone] = useState(false)
   const [diff, setDiff] = useState(undefined)
@@ -24,7 +28,15 @@ export const useFetchDiff = ({
       setIsDone(false)
 
       const [response] = await Promise.all([
-        fetch(getDiffURL({ packageName, language, fromVersion, toVersion })),
+        fetch(
+          getDiffURL({
+            packageName,
+            language,
+            fromVersion,
+            toVersion,
+            useYarnPlugin
+          })
+        ),
         delay(300)
       ])
 

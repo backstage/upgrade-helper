@@ -9,6 +9,8 @@ import UpgradeButton from './UpgradeButton'
 import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { useReleases } from '../../ReleaseProvider'
+import { useSettings } from '../../SettingsProvider'
+import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from '../../utils'
 
 export const testIDs = {
   fromVersionSelector: 'fromVersionSelector',
@@ -174,13 +176,52 @@ const doesVersionExist = ({ version, allVersions, minVersion }) => {
   }
 }
 
+const getDefaultToVersion = releases => releases[0]
+
+const getDefaultFromVersion = (toVersion, releases, showReleaseCandidates) => {
+  // Remove `rc` versions from the array of versions
+  const sanitizedVersionsWithReleases = getReleasedVersionsWithCandidates({
+    releasedVersions: releases,
+    toVersion,
+    latestVersion: releases[0].version,
+    showReleaseCandidates
+  })
+
+  const sanitizedVersions = sanitizedVersionsWithReleases.map(
+    ({ version }) => version
+  )
+
+  const version =
+    getFirstRelease(
+      {
+        releasedVersions: sanitizedVersions,
+        versionToCompare: toVersion.version
+      },
+      'minor'
+    ) ||
+    getFirstRelease(
+      {
+        releasedVersions: sanitizedVersions,
+        versionToCompare: toVersion.version
+      },
+      'patch'
+    )
+
+  return sanitizedVersionsWithReleases.find(value => value.version === version)
+}
+
 const VersionSelector = ({
   packageName,
   language,
   isPackageNameDefinedInURL,
-  showDiff,
-  showReleaseCandidates
+  showDiff
 }) => {
+  const {
+    settings: {
+      [SHOW_LATEST_RCS]: showReleaseCandidates,
+      [USE_YARN_PLUGIN]: useYarnPlugin
+    }
+  } = useSettings()
   const [allVersions, setAllVersions] = useState([])
   const [fromVersionList, setFromVersionList] = useState([])
   const [toVersionList, setToVersionList] = useState([])
@@ -300,15 +341,14 @@ const VersionSelector = ({
       })
     )
 
-    if (hasVersionsFromURL) {
-      upgradeButtonEl.current.props.onClick()
-    }
+    upgradeButtonEl.current.props.onClick()
   }, [
     isLoading,
     allVersions,
     localFromVersion,
     localToVersion,
     hasVersionsFromURL,
+    releases,
     showReleaseCandidates
   ])
 
@@ -316,15 +356,20 @@ const VersionSelector = ({
     const resolveDiffVersion = targetVersion =>
       releases.find(r => r.version === targetVersion)
 
+    const to =
+      resolveDiffVersion(localToVersion) || getDefaultToVersion(releases)
+    const from =
+      resolveDiffVersion(localFromVersion) ||
+      getDefaultFromVersion(to, releases, showReleaseCandidates)
+
     setSelectedVersions({
-      from: resolveDiffVersion(localFromVersion),
-      to: resolveDiffVersion(localToVersion)
+      from,
+      to
     })
 
     showDiff({
-      fromVersion:
-        resolveDiffVersion(localFromVersion)?.createApp || localFromVersion,
-      toVersion: resolveDiffVersion(localToVersion)?.createApp || localToVersion
+      fromVersion: from[useYarnPlugin ? 'version' : 'createApp'],
+      toVersion: to[useYarnPlugin ? 'version' : 'createApp']
     })
 
     updateURL({
@@ -340,6 +385,7 @@ const VersionSelector = ({
     <Fragment>
       <Selectors>
         <FromVersionSelector
+          key={'from-' + useYarnPlugin}
           data-testid={testIDs.fromVersionSelector}
           title={`What's your current Backstage release or @backstage/create-app (0.4.x) version?`}
           loading={isLoading}
@@ -349,6 +395,7 @@ const VersionSelector = ({
         />
 
         <ToVersionSelector
+          key={'to-' + useYarnPlugin}
           data-testid={testIDs.toVersionSelector}
           title="To which version would you like to upgrade?"
           loading={isLoading}
