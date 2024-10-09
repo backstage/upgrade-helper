@@ -8,12 +8,11 @@ import DiffViewer from '../common/DiffViewer'
 import Settings from '../common/Settings'
 import { homepage } from '../../../package.json'
 import logo from '../../assets/logo.svg'
-import { SHOW_LATEST_RCS } from '../../utils'
 import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
-import useLocalStorage from 'react-use/lib/useLocalStorage'
+import { SettingsProvider } from '../../SettingsProvider'
 
 const Page = styled.div`
   display: flex;
@@ -92,12 +91,6 @@ const Home = () => {
   const [toVersion, setToVersion] = useState('')
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
   // const [releases, setReleases] = useState({})
-  const [settings, setSettings] = useLocalStorage(
-    'backstage:upgrade-helper:settings',
-    {
-      [`${SHOW_LATEST_RCS}`]: false
-    }
-  )
   const [appName /* setAppName */] = useState('')
 
   useEffect(() => {
@@ -117,66 +110,64 @@ const Home = () => {
     setShouldShowDiff(true)
   }
 
-  const handleSettingsChange = settingsValues => {
-    setSettings(settingsValues)
-  }
-
   return (
-    <ReleasesProvider packageName={defaultPackageName}>
-      <Page>
-        <Container>
-          <HeaderContainer>
-            <TitleContainer>
-              <LogoImg alt="Backstage logo" title="Backstage logo" src={logo} />
+    <SettingsProvider>
+      <ReleasesProvider packageName={defaultPackageName}>
+        <Page>
+          <Container>
+            <HeaderContainer>
+              <TitleContainer>
+                <LogoImg
+                  alt="Backstage logo"
+                  title="Backstage logo"
+                  src={logo}
+                />
 
-              <a href={homepage}>
-                <TitleHeader>Backstage Upgrade Helper</TitleHeader>
-              </a>
-            </TitleContainer>
-            <SettingsContainer>
-              <StarButton
-                href="https://github.com/backstage/upgrade-helper"
-                data-icon="octicon-star"
-                data-show-count="true"
-                aria-label="Star backstage/upgrade-helper on GitHub"
-              >
-                Star
-              </StarButton>
-
-              <UpdateDocsLink>
-                <a href="https://backstage.io/docs/getting-started/keeping-backstage-updated">
-                  Keeping Backstage Updated
+                <a href={homepage}>
+                  <TitleHeader>Backstage Upgrade Helper</TitleHeader>
                 </a>
-              </UpdateDocsLink>
+              </TitleContainer>
+              <SettingsContainer>
+                <StarButton
+                  href="https://github.com/backstage/upgrade-helper"
+                  data-icon="octicon-star"
+                  data-show-count="true"
+                  aria-label="Star backstage/upgrade-helper on GitHub"
+                >
+                  Star
+                </StarButton>
 
-              <Settings
-                handleSettingsChange={handleSettingsChange}
-                settings={settings}
-              />
-            </SettingsContainer>
-          </HeaderContainer>
+                <UpdateDocsLink>
+                  <a href="https://backstage.io/docs/getting-started/keeping-backstage-updated">
+                    Keeping Backstage Updated
+                  </a>
+                </UpdateDocsLink>
 
-          <VersionSelector
-            key={defaultPackageName}
-            showDiff={handleShowDiff}
-            showReleaseCandidates={settings[SHOW_LATEST_RCS]}
+                <Settings />
+              </SettingsContainer>
+            </HeaderContainer>
+
+            <VersionSelector
+              key={defaultPackageName}
+              showDiff={handleShowDiff}
+              fromVersion={fromVersion}
+              toVersion={toVersion}
+              packageName={defaultPackageName}
+              language={defaultLanguage}
+              isPackageNameDefinedInURL={isPackageNameDefinedInURL}
+            />
+          </Container>
+          <DiffViewer
+            shouldShowDiff={shouldShowDiff}
             fromVersion={fromVersion}
             toVersion={toVersion}
+            appName={appName}
             packageName={defaultPackageName}
             language={defaultLanguage}
-            isPackageNameDefinedInURL={isPackageNameDefinedInURL}
           />
-        </Container>
-        <DiffViewer
-          shouldShowDiff={shouldShowDiff}
-          fromVersion={fromVersion}
-          toVersion={toVersion}
-          appName={appName}
-          packageName={defaultPackageName}
-          language={defaultLanguage}
-        />
-      </Page>
-    </ReleasesProvider>
+        </Page>
+      </ReleasesProvider>
+    </SettingsProvider>
   )
 }
 

@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useFetchReleases } from './hooks/fetch-release-versions'
+import { USE_YARN_PLUGIN } from './utils'
+import { useSettings } from './SettingsProvider'
 
 export const ReleasesContext = React.createContext({
   isDone: false,
@@ -8,7 +10,11 @@ export const ReleasesContext = React.createContext({
 })
 
 export const ReleasesProvider = React.memo(function({ children, packageName }) {
-  const value = useFetchReleases({ packageName })
+  const {
+    settings: { [USE_YARN_PLUGIN]: useYarnPlugin }
+  } = useSettings()
+
+  const value = useFetchReleases({ packageName, useYarnPlugin })
   const [selectedVersions, setSelectedVersions] = useState()
 
   return (

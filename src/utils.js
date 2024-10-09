@@ -12,12 +12,14 @@ const getRNDiffRepository = ({ packageName }) =>
 const getDiffBranch = ({ packageName }) =>
   packageName === PACKAGE_NAMES.BACKSTAGE ? 'master' : 'diffs'
 
-export const getReleasesFileURL = ({ packageName }) =>
+export const getReleasesFileURL = ({ packageName, useYarnPlugin }) =>
   `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName
   })}/${DIFF_BASE_BRANCH}/${
     packageName === PACKAGE_NAMES.BACKSTAGE
-      ? 'releases.json'
+      ? useYarnPlugin
+        ? 'releases-yarn-plugin.json'
+        : 'releases.json'
       : packageName === PACKAGE_NAMES.RNM
       ? 'RELEASES_MAC'
       : packageName === PACKAGE_NAMES.RNM
@@ -29,7 +31,8 @@ export const getDiffURL = ({
   packageName,
   language,
   fromVersion,
-  toVersion
+  toVersion,
+  useYarnPlugin
 }) => {
   // eslint-disable-next-line no-unused-vars
   const languageDir =
@@ -41,7 +44,9 @@ export const getDiffURL = ({
 
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName
-  })}/${getDiffBranch({ packageName })}/diffs/${fromVersion}..${toVersion}.diff`
+  })}/${getDiffBranch({ packageName })}/${
+    useYarnPlugin ? 'diffs-yarn-plugin' : 'diffs'
+  }/${fromVersion}..${toVersion}.diff`
 }
 
 // `path` must contain `RnDiffApp` prefix
@@ -111,6 +116,7 @@ export const getTransitionDuration = duration =>
 
 // settings constants
 export const SHOW_LATEST_RCS = 'Show all next releases'
+export const USE_YARN_PLUGIN = 'Use yarn plugin'
 
 export const getFilePathsToShow = ({ oldPath, newPath, appName }) => {
   const oldPathSanitized = replaceWithProvidedAppName(oldPath, appName)

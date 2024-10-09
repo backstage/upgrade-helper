@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getReleasesFileURL } from '../utils'
 import compare from 'semver/functions/rcompare'
 
-export const useFetchReleases = ({ packageName }) => {
+export const useFetchReleases = ({ packageName, useYarnPlugin }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isDone, setIsDone] = useState(false)
   const [releases, setReleases] = useState(undefined)
@@ -12,7 +12,7 @@ export const useFetchReleases = ({ packageName }) => {
       setIsLoading(true)
       setIsDone(false)
       const response = await (
-        await fetch(getReleasesFileURL({ packageName }))
+        await fetch(getReleasesFileURL({ packageName, useYarnPlugin }))
       ).json()
 
       const _releases = Object.entries(response)
@@ -27,7 +27,7 @@ export const useFetchReleases = ({ packageName }) => {
     }
 
     fetchReleaseVersions()
-  }, [packageName])
+  }, [packageName, useYarnPlugin])
 
   return {
     isLoading,

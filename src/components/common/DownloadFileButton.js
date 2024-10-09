@@ -6,7 +6,6 @@ import { getBinaryFileURL } from '../../utils'
 
 const DownloadFileButton = styled(
   ({ visible, version, path, packageName, ...props }) => {
-    console.info(visible, version, path, packageName)
     return visible ? (
       <Button
         {...props}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Popover, Button, Checkbox } from 'antd'
-import { SHOW_LATEST_RCS } from '../../utils'
+import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from '../../utils'
 import styled from '@emotion/styled'
+import { useSettings } from '../../SettingsProvider'
 
 const SettingsButton = styled(Button)`
   color: initial;
@@ -10,16 +11,24 @@ const SettingsButton = styled(Button)`
 const SettingsIcon = styled(props => <span {...props}>⚙️</span>)`
   font-family: initial;
 `
-const Settings = ({ handleSettingsChange, settings }) => {
+const Settings = () => {
+  const { settings, setSettings } = useSettings()
   const [popoverVisibility, setVisibility] = useState(false)
 
   const handleClickChange = visibility => {
     setVisibility(visibility)
   }
 
-  const updateCheckboxValues = () =>
-    handleSettingsChange({
+  const toggleShowLatestRCs = () =>
+    setSettings({
+      ...settings,
       [SHOW_LATEST_RCS]: !settings[SHOW_LATEST_RCS]
+    })
+
+  const toggleUseYarnPlugin = () =>
+    setSettings({
+      ...settings,
+      [USE_YARN_PLUGIN]: !settings[USE_YARN_PLUGIN]
     })
 
   return (
@@ -27,12 +36,22 @@ const Settings = ({ handleSettingsChange, settings }) => {
       placement="bottomRight"
       content={
         <>
-          <Checkbox
-            defaultChecked={settings[SHOW_LATEST_RCS]}
-            onChange={updateCheckboxValues}
-          >
-            {SHOW_LATEST_RCS}
-          </Checkbox>
+          <div>
+            <Checkbox
+              defaultChecked={settings[SHOW_LATEST_RCS]}
+              onChange={toggleShowLatestRCs}
+            >
+              {SHOW_LATEST_RCS}
+            </Checkbox>
+          </div>
+          <div>
+            <Checkbox
+              defaultChecked={settings[USE_YARN_PLUGIN]}
+              onChange={toggleUseYarnPlugin}
+            >
+              {USE_YARN_PLUGIN}
+            </Checkbox>
+          </div>
         </>
       }
       trigger="click"
