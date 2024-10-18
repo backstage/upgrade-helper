@@ -11,11 +11,11 @@ export function updateURL({
   const newURL = new URL(window.location.href)
 
   if (fromVersion) {
-    newURL.searchParams.set('fromVersion', fromVersion)
+    newURL.searchParams.set('from', fromVersion)
   }
 
   if (toVersion) {
-    newURL.searchParams.set('toVersion', toVersion)
+    newURL.searchParams.set('to', toVersion)
   }
 
   if (yarnPlugin !== undefined) {
