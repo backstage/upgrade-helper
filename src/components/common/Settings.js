@@ -19,17 +19,18 @@ const Settings = () => {
     setVisibility(visibility)
   }
 
-  const toggleShowLatestRCs = () =>
+  const toggleShowLatestRCs = e =>
     setSettings({
       ...settings,
-      [SHOW_LATEST_RCS]: !settings[SHOW_LATEST_RCS]
+      [SHOW_LATEST_RCS]: e.target.checked
     })
 
-  const toggleUseYarnPlugin = () =>
+  const toggleUseYarnPlugin = e => {
     setSettings({
       ...settings,
-      [USE_YARN_PLUGIN]: !settings[USE_YARN_PLUGIN]
+      [USE_YARN_PLUGIN]: e.target.checked
     })
+  }
 
   return (
     <Popover
@@ -38,7 +39,7 @@ const Settings = () => {
         <>
           <div>
             <Checkbox
-              defaultChecked={settings[SHOW_LATEST_RCS]}
+              checked={settings[SHOW_LATEST_RCS]}
               onChange={toggleShowLatestRCs}
             >
               {SHOW_LATEST_RCS}
@@ -46,7 +47,7 @@ const Settings = () => {
           </div>
           <div>
             <Checkbox
-              defaultChecked={settings[USE_YARN_PLUGIN]}
+              checked={settings[USE_YARN_PLUGIN]}
               onChange={toggleUseYarnPlugin}
             >
               {USE_YARN_PLUGIN}
