@@ -2,7 +2,7 @@ import React, { Fragment, useState, useMemo, useEffect, useRef } from 'react'
 import styled from '@emotion/styled'
 import { Popover } from 'antd'
 import semver from 'semver/preload'
-import queryString from 'query-string'
+import { useSearchParam } from 'react-use'
 import { Select } from './'
 import UpgradeButton from './UpgradeButton'
 // import { useFetchReleaseVersions } from '../../hooks/fetch-release-versions'
@@ -48,18 +48,6 @@ const ToVersionSelector = styled(({ popover, ...props }) =>
     padding-left: 5px;
   }
 `
-
-const getVersionsInURL = () => {
-  // Parses `/?from=VERSION&to=VERSION` from URL
-  const { from: fromVersion, to: toVersion } = queryString.parse(
-    window.location.search
-  )
-
-  return {
-    fromVersion,
-    toVersion
-  }
-}
 
 const compareReleaseCandidateVersions = ({ version, versionToCompare }) =>
   ['prerelease', 'prepatch', null].includes(
@@ -237,27 +225,26 @@ const VersionSelector = ({
     [releases]
   )
 
-  useEffect(() => {
-    const versionsInURL = getVersionsInURL()
+  const fromVersion = useSearchParam('from')
+  const toVersion = useSearchParam('to')
 
+  useEffect(() => {
     const fetchVersions = async () => {
       // Check if the versions provided in the URL are valid
       const hasFromVersionInURL = doesVersionExist({
-        version: versionsInURL.fromVersion,
+        version: fromVersion,
         allVersions: releaseVersions
       })
 
       const hasToVersionInURL = doesVersionExist({
-        version: versionsInURL.toVersion,
+        version: toVersion,
         allVersions: releaseVersions,
-        minVersion: versionsInURL.fromVersion
+        minVersion: fromVersion
       })
 
       const latestVersion = releaseVersions[0]
       // If the version from URL is not valid then fallback to the latest
-      const toVersionToBeSet = hasToVersionInURL
-        ? versionsInURL.toVersion
-        : latestVersion
+      const toVersionToBeSet = hasToVersionInURL ? toVersion : latestVersion
 
       // Remove `rc` versions from the array of versions
       const sanitizedVersionsWithReleases = getReleasedVersionsWithCandidates({
@@ -274,7 +261,7 @@ const VersionSelector = ({
       setAllVersions(sanitizedVersionsWithReleases)
 
       const fromVersionToBeSet = hasFromVersionInURL
-        ? versionsInURL.fromVersion
+        ? fromVersion
         : // Get first major release before latest
           getFirstRelease(
             {
@@ -316,6 +303,8 @@ const VersionSelector = ({
       fetchVersions()
     }
   }, [
+    fromVersion,
+    toVersion,
     isDone,
     releaseVersions,
     setLocalFromVersion,
