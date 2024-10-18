@@ -5,23 +5,37 @@ export function updateURL({
   language,
   isPackageNameDefinedInURL,
   fromVersion,
-  toVersion
-}) {
-  const pageURL = window.location.href.replace(window.location.search, '')
+  toVersion,
+  yarnPlugin
+} = {}) {
+  const newURL = new URL(window.location.href)
 
-  const newURL =
-    fromVersion !== '' || toVersion !== ''
-      ? `?from=${fromVersion}&to=${toVersion}`
-      : '?'
-  const packageNameInURL = isPackageNameDefinedInURL
-    ? `&package=${packageName}`
-    : ''
-  const languageInURL =
-    packageName === PACKAGE_NAMES.RNW ? `&language=${language}` : ''
+  if (fromVersion) {
+    newURL.searchParams.set('fromVersion', fromVersion)
+  }
 
-  window.history.replaceState(
-    null,
-    null,
-    `${pageURL}${newURL}${packageNameInURL}${languageInURL}`
-  )
+  if (toVersion) {
+    newURL.searchParams.set('toVersion', toVersion)
+  }
+
+  if (yarnPlugin !== undefined) {
+    newURL.searchParams.set('yarnPlugin', yarnPlugin ? '1' : '0')
+  }
+
+  if (isPackageNameDefinedInURL) {
+    newURL.searchParams.set('package', packageName)
+  }
+
+  if (language && packageName === PACKAGE_NAMES.RNW) {
+    newURL.searchParams.set('language', language)
+  }
+
+  window.history.pushState('', '', newURL.toString())
+
+  // The popstate event is not triggered by window.history.pushState,
+  // so we need to dispatch the event ourselves in order for listeners
+  // to pick it up.
+  //
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stacks
+  dispatchEvent(new PopStateEvent('popstate'))
 }
