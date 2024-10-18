@@ -11,7 +11,6 @@
     "date-fns": "^2.23.0",
     "framer-motion": "^2.0.0-beta.52",
     "markdown-to-jsx": "6.11.0",
-    "query-string": "6.11.1",
     "react": "16.13.0",
     "react-content-loader": "5.0.2",
     "react-copy-to-clipboard": "5.0.2",
