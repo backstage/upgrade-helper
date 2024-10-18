@@ -30,12 +30,14 @@ export function updateURL({
     newURL.searchParams.set('language', language)
   }
 
-  window.history.pushState('', '', newURL.toString())
+  if (window.location.href !== newURL.toString()) {
+    window.history.pushState('', '', newURL.toString())
 
-  // The popstate event is not triggered by window.history.pushState,
-  // so we need to dispatch the event ourselves in order for listeners
-  // to pick it up.
-  //
-  // https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stacks
-  dispatchEvent(new PopStateEvent('popstate'))
+    // The popstate event is not triggered by window.history.pushState,
+    // so we need to dispatch the event ourselves in order for listeners
+    // to pick it up.
+    //
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stacks
+    dispatchEvent(new PopStateEvent('popstate'))
+  }
 }
