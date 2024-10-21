@@ -5,8 +5,11 @@ import { useSettings } from '../SettingsProvider'
 
 const delay = ms => new Promise(res => setTimeout(res, ms))
 
-const movePackageJsonToTop = parsedDiff =>
-  parsedDiff.sort(({ newPath }) => (newPath.includes('package.json') ? -1 : 1))
+const excludeYarnLock = ({ oldPath, newPath, ...rest }) =>
+  !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
+
+const packageJsonFirst = ({ newPath }) =>
+  newPath.includes('package.json') ? -1 : 1
 
 export const useFetchDiff = ({
   shouldShowDiff,
@@ -42,7 +45,11 @@ export const useFetchDiff = ({
 
       const diff = await response.text()
 
-      setDiff(movePackageJsonToTop(parseDiff(diff)))
+      setDiff(
+        parseDiff(diff)
+          .filter(excludeYarnLock)
+          .sort(packageJsonFirst)
+      )
 
       setIsLoading(false)
       setIsDone(true)
