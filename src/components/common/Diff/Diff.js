@@ -7,6 +7,7 @@ import {
   tokenize,
   Decoration as DiffDecoration
 } from 'react-diff-view'
+import { Button, Card, Typography } from 'antd'
 import DiffHeader from './DiffHeader'
 import { getComments } from './DiffComment'
 import { replaceWithProvidedAppName } from '../../../utils'
@@ -85,6 +86,30 @@ const DiffView = styled(RDiff)`
 // Diff will be collapsed by default if the file has been deleted or has more than 5 hunks
 const isDiffCollapsedByDefault = ({ type, hunks }) =>
   type === 'delete' || hunks.length > 5 ? true : undefined
+
+const Placeholder = ({ newPath, children }) => {
+  const [showDiff, setShowDiff] = useState(false)
+
+  if (!showDiff && newPath === '.yarn/plugins/@yarnpkg/plugin-backstage.cjs') {
+    return (
+      <Card
+        bodyStyle={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          rowGap: '10px'
+        }}
+      >
+        <Button onClick={() => setShowDiff(true)}>Show diff</Button>
+        <Typography>
+          The diff for the Backstage yarn plugin is hidden by default.
+        </Typography>
+      </Card>
+    )
+  }
+
+  return children
+}
 
 const Diff = ({
   packageName,
@@ -185,36 +210,38 @@ const Diff = ({
       />
 
       {!isDiffCollapsed && (
-        <DiffView
-          viewType={diffViewStyle}
-          diffType={type}
-          hunks={hunks}
-          widgets={diffComments}
-          optimizeSelection={true}
-          selectedChanges={selectedChanges}
-        >
-          {originalHunks => {
-            const updatedHunks = getHunksWithAppName(originalHunks)
+        <Placeholder newPath={newPath}>
+          <DiffView
+            viewType={diffViewStyle}
+            diffType={type}
+            hunks={hunks}
+            widgets={diffComments}
+            optimizeSelection={true}
+            selectedChanges={selectedChanges}
+          >
+            {originalHunks => {
+              const updatedHunks = getHunksWithAppName(originalHunks)
 
-            const options = {
-              enhancers: [markEdits(updatedHunks)]
-            }
+              const options = {
+                enhancers: [markEdits(updatedHunks)]
+              }
 
-            const tokens = tokenize(updatedHunks, options)
+              const tokens = tokenize(updatedHunks, options)
 
-            return updatedHunks.map(hunk => [
-              <Decoration key={'decoration-' + hunk.content}>
-                <More>{hunk.content}</More>
-              </Decoration>,
-              <Hunk
-                key={hunk.content}
-                hunk={hunk}
-                tokens={tokens}
-                gutterEvents={{ onClick: onToggleChangeSelection }}
-              />
-            ])
-          }}
-        </DiffView>
+              return updatedHunks.map(hunk => [
+                <Decoration key={'decoration-' + hunk.content}>
+                  <More>{hunk.content}</More>
+                </Decoration>,
+                <Hunk
+                  key={hunk.content}
+                  hunk={hunk}
+                  tokens={tokens}
+                  gutterEvents={{ onClick: onToggleChangeSelection }}
+                />
+              ])
+            }}
+          </DiffView>
+        </Placeholder>
       )}
     </Container>
   )
