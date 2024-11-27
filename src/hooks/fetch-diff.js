@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { parseDiff } from 'react-diff-view'
+import sortBy from 'lodash/sortBy'
 import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
 import { useSettings } from '../SettingsProvider'
 
@@ -8,8 +9,18 @@ const delay = ms => new Promise(res => setTimeout(res, ms))
 const excludeYarnLock = ({ oldPath, newPath, ...rest }) =>
   !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
 
-const packageJsonFirst = ({ newPath }) =>
-  newPath.includes('package.json') ? -1 : 1
+const applyCustomSort = parsedDiff =>
+  sortBy(parsedDiff, ({ newPath }) => {
+    if (newPath.includes('package.json')) {
+      return -1
+    } else if (newPath === '.yarnrc.yml') {
+      return 1
+    } else if (newPath.startsWith('.yarn/')) {
+      return 2
+    }
+
+    return 0
+  })
 
 export const useFetchDiff = ({
   shouldShowDiff,
@@ -45,11 +56,7 @@ export const useFetchDiff = ({
 
       const diff = await response.text()
 
-      setDiff(
-        parseDiff(diff)
-          .filter(excludeYarnLock)
-          .sort(packageJsonFirst)
-      )
+      setDiff(applyCustomSort(parseDiff(diff).filter(excludeYarnLock)))
 
       setIsLoading(false)
       setIsDone(true)
