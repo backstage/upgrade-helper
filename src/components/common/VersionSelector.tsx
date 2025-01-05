@@ -413,8 +413,8 @@ const VersionSelector = ({
       isPackageNameDefinedInURL,
       fromVersion: localFromVersion,
       toVersion: localToVersion,
-      appPackage,
-      appName,
+      // appPackage,
+      // appName,
     })
   }
 

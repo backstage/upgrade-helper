@@ -34,9 +34,10 @@ const CopyFileButton = styled(
     )
 
     const fetchContent = () =>
-      fetch(getBinaryFileURL({ packageName, version, path }))
-        .then((response) => response.text())
-        .then((content) => replaceAppDetails(content, appName, appPackage))
+      fetch(getBinaryFileURL({ packageName, version, path })).then((response) =>
+        response.text()
+      )
+    // .then((content) => replaceAppDetails(content, appName, appPackage))
 
     const copyContent = () => {
       // From https://wolfgangrittner.dev/how-to-use-clipboard-api-in-firefox/

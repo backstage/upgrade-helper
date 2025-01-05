@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import styled from '@emotion/styled'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button, List } from 'antd'
 import type { ButtonProps } from 'antd'
 import { HTMLMotionProps, motion } from 'framer-motion'
 
@@ -11,11 +11,13 @@ import {
   getTransitionDuration,
 } from '../../utils'
 import UpgradeSupportAlert from './UpgradeSupportAlert'
+
+// import AppNameWarning from './AppNameWarning'
 import UsefulLinks from './UsefulLinks'
-import AlignDepsAlert from './AlignDepsAlert'
 
 import { PACKAGE_NAMES } from '../../constants'
 import type { Theme } from '../../theme'
+import Link from 'antd/es/typography/Link'
 
 const Container = styled.div<{ isContentOpen: boolean }>`
   position: relative;
@@ -206,6 +208,16 @@ class UsefulContentSection extends Component<
         version: toVersion,
       }
     }
+    if (packageName === PACKAGE_NAMES.BACKSTAGE) {
+      return {
+        title: `Backstage ${version} changelog`,
+        url: getChangelogURL({
+          packageName,
+          version,
+        }),
+        version,
+      }
+    }
 
     const versionWithoutEndingZero = version.slice(0, 4)
 
@@ -224,9 +236,9 @@ class UsefulContentSection extends Component<
     const { isContentOpen } = this.state
 
     const versions = getVersionsContentInDiff({
-      packageName,
-      fromVersion,
-      toVersion,
+      fromVersion: this.context.from.version,
+      toVersion: this.context.to.version,
+      versions: this.context.releases,
     })
 
     const doesAnyVersionHaveUsefulLinks = versions.some(
@@ -249,16 +261,38 @@ class UsefulContentSection extends Component<
           />
 
           <ContentContainer isContentOpen={isContentOpen}>
-            {doesAnyVersionHaveUsefulLinks ? (
+            {/* {doesAnyVersionHaveUsefulLinks ? (
               <UsefulLinks
                 packageName={packageName}
                 versions={versions}
                 toVersion={toVersion}
               />
-            ) : null}
+            ) : null} */}
+            {versions.map(({ usefulContent, version }, key) => {
+              const changelog = this.getChangelog({ version })
+              const links = [...(usefulContent?.links || []), changelog]
+              return (
+                <Fragment key={key}>
+                  {key > 0 && <Separator />}
 
-            <AlignDepsAlert />
+                  {hasMoreThanOneRelease && (
+                    <h3>Release {changelog.version}</h3>
+                  )}
 
+                  <span>{usefulContent?.description}</span>
+
+                  <List>
+                    {links.map(({ url, title }, key) => (
+                      <li key={`${url}${key}`}>
+                        <Link href={url}>{title}</Link>
+                      </li>
+                    ))}
+                  </List>
+                </Fragment>
+              )
+            })}
+            <UpgradeSupportAlert />
+            {/*
             <Separator />
 
             <UpgradeSupportAlert />

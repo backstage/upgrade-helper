@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useDeferredValue } from 'react'
+import React, { useState, useEffect /* useDeferredValue  */ } from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
 import { Card, Input, Typography, ConfigProvider, theme } from 'antd'
 import GitHubButton, { ReactGitHubButtonProps } from 'react-github-btn'
 import ReactGA from 'react-ga'
 import createPersistedState from 'use-persisted-state'
-import queryString from 'query-string'
+// import queryString from 'query-string'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer from '../common/DiffViewer'
 import Settings from '../common/Settings'
@@ -24,6 +24,9 @@ import { DarkModeButton } from '../common/DarkModeButton'
 import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { lightTheme, darkTheme, type Theme } from '../../theme'
+import pkg from '../../../package.json'
+
+const homepage = pkg.homepage
 
 const Page = styled.div<{ theme?: Theme }>`
   background-color: ${({ theme }) => theme.background};
@@ -222,22 +225,62 @@ const Home = () => {
       ? darkTheme.background
       : lightTheme.background
   }, [isDarkMode])
-
+  debugger
   return (
-    <ConfigProvider
-      theme={{
-        algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
-      }}
-    >
-      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-        <Page>
-          <Container>
-            <HeaderContainer>
-              <TitleContainer>
-                <LogoImg
-                  alt="React Native Upgrade Helper logo"
-                  title="React Native Upgrade Helper logo"
-                  src={logo}
+    <SettingsProvider>
+      <ReleasesProvider packageName={defaultPackageName}>
+        <ConfigProvider
+          theme={{
+            algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+          }}
+        >
+          <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <Page>
+              <Container>
+                <HeaderContainer>
+                  <TitleContainer>
+                    <LogoImg
+                      alt="Backstage logo"
+                      title="Backstage logo"
+                      src={logo}
+                    />
+
+                    <a href={homepage}>
+                      <TitleHeader>Backstage Upgrade Helper</TitleHeader>
+                    </a>
+                  </TitleContainer>
+                  <SettingsContainer>
+                    <StarButton
+                      href="https://github.com/backstage/upgrade-helper"
+                      data-icon="octicon-star"
+                      data-show-count="true"
+                      aria-label="Star backstage/upgrade-helper on GitHub"
+                    >
+                      Star
+                    </StarButton>
+
+                    <UpdateDocsLink>
+                      <a href="https://backstage.io/docs/getting-started/keeping-backstage-updated">
+                        Keeping Backstage Updated
+                      </a>
+                    </UpdateDocsLink>
+
+                    <Settings />
+                    <DarkModeButton
+                      isDarkMode={isDarkMode}
+                      onClick={toggleDarkMode}
+                    />
+                  </SettingsContainer>
+                </HeaderContainer>
+
+                <VersionSelector
+                  key={defaultPackageName}
+                  showDiff={handleShowDiff}
+                  fromVersion={fromVersion}
+                  toVersion={toVersion}
+                  packageName={defaultPackageName}
+                  language={defaultLanguage}
+                  isPackageNameDefinedInURL={isPackageNameDefinedInURL}
                 />
                 <a href={homepageUrl}>
                   <TitleHeader>React Native Upgrade Helper</TitleHeader>

@@ -18,6 +18,7 @@ const versionsWithContent = {
   ],
   [PACKAGE_NAMES.RNM]: [],
   [PACKAGE_NAMES.RNW]: [],
+  [PACKAGE_NAMES.BACKSTAGE]: [],
 }
 
 const getReleaseVersionFiles = (packageName) =>
@@ -29,5 +30,6 @@ const getReleaseVersionFiles = (packageName) =>
 export default {
   [PACKAGE_NAMES.RN]: getReleaseVersionFiles(PACKAGE_NAMES.RN),
   [PACKAGE_NAMES.RNM]: getReleaseVersionFiles(PACKAGE_NAMES.RNM),
+  [PACKAGE_NAMES.BACKSTAGE]: getReleaseVersionFiles(PACKAGE_NAMES.BACKSTAGE),
   [PACKAGE_NAMES.RNW]: getReleaseVersionFiles(PACKAGE_NAMES.RNW),
 }

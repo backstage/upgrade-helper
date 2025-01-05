@@ -2,25 +2,42 @@ import semver from 'semver/preload'
 import {
   RN_DIFF_REPOSITORIES,
   DEFAULT_APP_NAME,
-  DEFAULT_APP_PACKAGE,
   PACKAGE_NAMES,
   RN_CHANGELOG_URLS,
+  DIFF_BASE_BRANCH,
 } from './constants'
 import versions from './releases'
 
 const getRNDiffRepository = ({ packageName }: { packageName: string }) =>
   RN_DIFF_REPOSITORIES[packageName]
 
-export const getReleasesFileURL = ({ packageName }: { packageName: string }) =>
+export const getReleasesFileURL = ({
+  packageName,
+  useYarnPlugin,
+}: {
+  packageName: string
+  useYarnPlugin: boolean
+}) =>
   `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName,
-  })}/master/${packageName === PACKAGE_NAMES.RNM ? 'RELEASES_MAC' : 'RELEASES'}`
+  })}/${DIFF_BASE_BRANCH}/${
+    packageName === PACKAGE_NAMES.BACKSTAGE
+      ? useYarnPlugin
+        ? 'releases-yarn-plugin.json'
+        : 'releases.json'
+      : packageName === PACKAGE_NAMES.RNM
+      ? 'RELEASES_MAC'
+      : packageName === PACKAGE_NAMES.RNM
+      ? 'RELEASES_MAC'
+      : 'RELEASES'
+  }`
 
 export const getDiffURL = ({
   packageName,
   language,
   fromVersion,
   toVersion,
+  useYarnPlugin,
 }: {
   packageName: string
   language: string
@@ -36,7 +53,9 @@ export const getDiffURL = ({
 
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName,
-  })}/diffs/diffs/${languageDir}${fromVersion}..${toVersion}.diff`
+  })}/${getDiffBranch({ packageName })}/${
+    useYarnPlugin ? 'diffs-yarn-plugin' : 'diffs'
+  }/${fromVersion}..${toVersion}.diff`
 }
 
 const getBranch = ({
@@ -87,6 +106,7 @@ export const replaceAppDetails = (
   appName?: string,
   appPackage?: string
 ) => {
+  const DEFAULT_APP_PACKAGE = '???'
   const appNameOrFallback = appName || DEFAULT_APP_NAME
   const appPackageOrFallback =
     appPackage || `com.${appNameOrFallback.toLowerCase()}`
@@ -105,6 +125,7 @@ export const getVersionsContentInDiff = ({
   packageName,
   fromVersion,
   toVersion,
+  versions,
 }: {
   packageName: string
   fromVersion: string

@@ -33,12 +33,12 @@ export function updateURL({
   if (packageName === PACKAGE_NAMES.RNW) {
     url.searchParams.set('language', language)
   }
-  if (appPackage) {
-    url.searchParams.set('package', appPackage)
-  }
-  if (appName) {
-    url.searchParams.set('name', appName)
-  }
+  // if (appPackage) {
+  //   url.searchParams.set('package', appPackage)
+  // }
+  // if (appName) {
+  //   url.searchParams.set('name', appName)
+  // }
 
   window.history.replaceState(null, '', url.toString())
 }
