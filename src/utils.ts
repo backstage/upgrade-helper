@@ -46,14 +46,6 @@ export const getDiffURL = ({
   toVersion: string
   useYarnPlugin: boolean
 }) => {
-  // eslint-disable-next-line no-unused-vars
-  const languageDir =
-    packageName === PACKAGE_NAMES.RNM
-      ? 'mac/'
-      : packageName === PACKAGE_NAMES.RNW
-      ? `${language}/`
-      : ''
-
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName,
   })}/${getDiffBranch({ packageName })}/${

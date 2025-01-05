@@ -32,12 +32,14 @@
     "react-dom-confetti": "0.2.0",
     "react-ga": "3.3.1",
     "react-github-btn": "1.4.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-use": "^17.4.0",
     "semver": "7.3.8",
     "use-persisted-state": "^0.3.3"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-private-property-in-object": "^7.25.9",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@emotion/eslint-plugin": "^11.11.0",
     "@jest/globals": "^29.7.0",
