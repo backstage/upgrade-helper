@@ -14,17 +14,20 @@ jobs:
           node-version: '20'
 
       - name: ⬆️ Upload output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ github.sha }}
-          path: ./**
+          path: |
+            ./**
+            !${{ github.workspace }}/.eslint*
+            !${{ github.workspace }}/.dockerignore
 
   install:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Restore output
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ github.sha }}
 
@@ -35,10 +38,8 @@ jobs:
     needs: [setup, install]
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Restore output
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ github.sha }}
+      - name: ⬇️ Checkout repository code
+        uses: actions/checkout@v3
 
       - name: 🛠 Install dependencies
         uses: bahmutov/npm-install@v1
@@ -54,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Restore output
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ github.sha }}
 
@@ -70,7 +71,7 @@ jobs:
     if: ${{ !always() }}
     steps:
       - name: ⬇️ Restore output
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ github.sha }}
 
@@ -78,7 +79,7 @@ jobs:
         run: yarn test-e2e
 
       - name: ⬆️ Upload output
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: image-comparisons
