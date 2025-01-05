@@ -44,13 +44,6 @@ export const getDiffURL = ({
   fromVersion: string
   toVersion: string
 }) => {
-  const languageDir =
-    packageName === PACKAGE_NAMES.RNM
-      ? 'mac/'
-      : packageName === PACKAGE_NAMES.RNW
-      ? `${language}/`
-      : ''
-
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName,
   })}/${getDiffBranch({ packageName })}/${
