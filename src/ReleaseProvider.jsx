@@ -6,12 +6,15 @@ import { useSettings } from './SettingsProvider'
 export const ReleasesContext = React.createContext({
   isDone: false,
   isLoading: false,
-  releases: undefined
+  releases: undefined,
 })
 
-export const ReleasesProvider = React.memo(function({ children, packageName }) {
+export const ReleasesProvider = React.memo(function ({
+  children,
+  packageName,
+}) {
   const {
-    settings: { [USE_YARN_PLUGIN]: useYarnPlugin }
+    settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
   } = useSettings()
 
   const value = useFetchReleases({ packageName, useYarnPlugin })

@@ -2,10 +2,9 @@ import semver from 'semver/preload'
 import {
   RN_DIFF_REPOSITORIES,
   DEFAULT_APP_NAME,
-  DEFAULT_APP_PACKAGE,
   PACKAGE_NAMES,
   RN_CHANGELOG_URLS,
-  DIFF_BASE_BRANCH
+  DIFF_BASE_BRANCH,
 } from './constants'
 
 const getRNDiffRepository = ({ packageName }: { packageName: string }) =>
@@ -13,9 +12,15 @@ const getRNDiffRepository = ({ packageName }: { packageName: string }) =>
 const getDiffBranch = ({ packageName }) =>
   packageName === PACKAGE_NAMES.BACKSTAGE ? 'master' : 'diffs'
 
-export const getReleasesFileURL = ({ packageName, useYarnPlugin }: { packageName: string, useYarnPlugin:boolean }) =>
+export const getReleasesFileURL = ({
+  packageName,
+  useYarnPlugin,
+}: {
+  packageName: string
+  useYarnPlugin: boolean
+}) =>
   `https://raw.githubusercontent.com/${getRNDiffRepository({
-    packageName
+    packageName,
   })}/${DIFF_BASE_BRANCH}/${
     packageName === PACKAGE_NAMES.BACKSTAGE
       ? useYarnPlugin
@@ -33,7 +38,7 @@ export const getDiffURL = ({
   language,
   fromVersion,
   toVersion,
-  useYarnPlugin
+  useYarnPlugin,
 }: {
   packageName: string
   language: string
@@ -50,7 +55,7 @@ export const getDiffURL = ({
       : ''
 
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
-    packageName
+    packageName,
   })}/${getDiffBranch({ packageName })}/${
     useYarnPlugin ? 'diffs-yarn-plugin' : 'diffs'
   }/${fromVersion}..${toVersion}.diff`
@@ -104,6 +109,7 @@ export const replaceAppDetails = (
   appName?: string,
   appPackage?: string
 ) => {
+  const DEFAULT_APP_PACKAGE = '???'
   const appNameOrFallback = appName || DEFAULT_APP_NAME
   const appPackageOrFallback =
     appPackage || `com.${appNameOrFallback.toLowerCase()}`
@@ -121,7 +127,7 @@ export const replaceAppDetails = (
 export const getVersionsContentInDiff = ({
   fromVersion,
   toVersion,
-  versions
+  versions,
 }: {
   packageName: string
   fromVersion: string

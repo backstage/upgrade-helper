@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useDeferredValue } from 'react'
+import React, { useState, useEffect /* useDeferredValue  */ } from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
 import { Card, Input, Typography, ConfigProvider, theme } from 'antd'
 import GitHubButton, { ReactGitHubButtonProps } from 'react-github-btn'
 // import ReactGA from 'react-ga'
 import createPersistedState from 'use-persisted-state'
-import queryString from 'query-string'
+// import queryString from 'query-string'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer from '../common/DiffViewer'
 import Settings from '../common/Settings'
@@ -18,6 +18,9 @@ import { deviceSizes } from '../../utils/device-sizes'
 import { ReleasesProvider } from '../../ReleaseProvider'
 import { SettingsProvider } from '../../SettingsProvider'
 import { lightTheme, darkTheme, type Theme } from '../../theme'
+import pkg from '../../../package.json'
+
+const homepage = pkg.homepage
 
 const Page = styled.div<{ theme?: Theme }>`
   background-color: ${({ theme }) => theme.background};
@@ -161,6 +164,7 @@ const Home = () => {
       ? darkTheme.background
       : lightTheme.background
   }, [isDarkMode])
+  debugger
   return (
     <SettingsProvider>
       <ReleasesProvider packageName={defaultPackageName}>
@@ -169,7 +173,7 @@ const Home = () => {
             algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
           }}
         >
-          <ThemeProvider theme={themeName === 'light' ? lightTheme : darkTheme}>
+          <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
             <Page>
               <Container>
                 <HeaderContainer>

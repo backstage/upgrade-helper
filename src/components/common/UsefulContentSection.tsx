@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import styled from '@emotion/styled'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button, List } from 'antd'
 import type { ButtonProps } from 'antd'
 import { HTMLMotionProps, motion } from 'framer-motion'
 
@@ -13,13 +13,12 @@ import {
 import UpgradeSupportAlert from './UpgradeSupportAlert'
 
 // import AppNameWarning from './AppNameWarning'
-import { motion } from 'framer-motion'
 import UsefulLinks from './UsefulLinks'
-import AlignDepsAlert from './AlignDepsAlert'
 
 import { PACKAGE_NAMES } from '../../constants'
 import { ReleasesContext } from '../../ReleaseProvider'
 import type { Theme } from '../../theme'
+import Link from 'antd/es/typography/Link'
 
 const Container = styled.div<{ isContentOpen: boolean }>`
   position: relative;
@@ -216,9 +215,9 @@ class UsefulContentSection extends Component<
         title: `Backstage ${version} changelog`,
         url: getChangelogURL({
           packageName,
-          version
+          version,
         }),
-        version
+        version,
       }
     }
 
@@ -241,7 +240,7 @@ class UsefulContentSection extends Component<
     const versions = getVersionsContentInDiff({
       fromVersion: this.context.from.version,
       toVersion: this.context.to.version,
-      versions: this.context.releases
+      versions: this.context.releases,
     })
 
     const hasMoreThanOneRelease = versions.length > 1
@@ -262,16 +261,16 @@ class UsefulContentSection extends Component<
           />
 
           <ContentContainer isContentOpen={isContentOpen}>
-            {doesAnyVersionHaveUsefulLinks ? (
+            {/* {doesAnyVersionHaveUsefulLinks ? (
               <UsefulLinks
                 packageName={packageName}
                 versions={versions}
                 toVersion={toVersion}
               />
-            ) : null}
-
+            ) : null} */}
+            {versions.map(({ usefulContent, version }, key) => {
+              const changelog = this.getChangelog({ version })
               const links = [...(usefulContent?.links || []), changelog]
-
               return (
                 <Fragment key={key}>
                   {key > 0 && <Separator />}
@@ -292,7 +291,6 @@ class UsefulContentSection extends Component<
                 </Fragment>
               )
             })}
-
             <UpgradeSupportAlert />
             {/*
             <Separator />

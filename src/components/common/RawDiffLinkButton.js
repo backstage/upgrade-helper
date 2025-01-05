@@ -21,7 +21,7 @@ const RawDiffLinkButton = ({
   packageName,
   language,
   fromVersion,
-  toVersion
+  toVersion,
 }) => {
   if (fromVersion === '') {
     return null
@@ -30,7 +30,7 @@ const RawDiffLinkButton = ({
     packageName,
     language,
     fromVersion,
-    toVersion
+    toVersion,
   })
   return (
     <Container>

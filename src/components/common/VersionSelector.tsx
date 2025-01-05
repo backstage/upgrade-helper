@@ -398,7 +398,9 @@ const VersionSelector = ({
       })
     )
 
-    upgradeButtonEl.current.props.onClick()
+    if (hasVersionsFromURL) {
+      upgradeButtonEl?.current?.click()
+    }
   }, [
     isLoading,
     allVersions,
@@ -435,8 +437,8 @@ const VersionSelector = ({
       isPackageNameDefinedInURL,
       fromVersion: localFromVersion,
       toVersion: localToVersion,
-      appPackage,
-      appName,
+      // appPackage,
+      // appName,
     })
   }
 
