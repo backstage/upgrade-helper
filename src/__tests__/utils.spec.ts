@@ -1,10 +1,6 @@
 import { PACKAGE_NAMES } from '../constants'
 import '../releases/__mocks__/index'
-import {
-  getVersionsContentInDiff,
-  replaceAppDetails,
-  getChangelogURL,
-} from '../utils'
+import { getVersionsContentInDiff, getChangelogURL } from '../utils'
 
 const fixtureVersions = ['0.59', '0.58', '0.57', '0.56'].map((version) => ({
   version,

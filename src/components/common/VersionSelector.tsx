@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useMemo, useEffect, useRef } from 'react'
 import styled from '@emotion/styled'
 import { Popover } from 'antd'
-import semver, { SemVer } from 'semver/preload'
+import semver from 'semver/preload'
 import { useSearchParam } from 'react-use'
 import { Select } from './'
 import UpgradeButton from './UpgradeButton'
@@ -9,7 +9,7 @@ import UpgradeButton from './UpgradeButton'
 import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import type { SelectProps } from './Select'
-import queryString from 'query-string'
+// import queryString from 'query-string'
 import { ReleaseT } from '../../releases/types'
 
 export const testIDs = {
@@ -45,20 +45,20 @@ const ToVersionSelector = styled(
     )
 )``
 
-const getVersionsInURL = (): {
-  fromVersion: string
-  toVersion: string
-} => {
-  // Parses `/?from=VERSION&to=VERSION` from URL
-  const { from: fromVersion, to: toVersion } = queryString.parse(
-    window.location.search
-  )
+// const getVersionsInURL = (): {
+//   fromVersion: string
+//   toVersion: string
+// } => {
+//   // Parses `/?from=VERSION&to=VERSION` from URL
+//   const { from: fromVersion, to: toVersion } = queryString.parse(
+//     window.location.search
+//   )
 
-  return {
-    fromVersion: fromVersion as string,
-    toVersion: toVersion as string,
-  }
-}
+//   return {
+//     fromVersion: fromVersion as string,
+//     toVersion: toVersion as string,
+//   }
+// }
 
 // Users making changes to version should not retain anchor links
 // to files that may or may not change.
