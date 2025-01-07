@@ -1,7 +1,7 @@
 import React, { useState, useEffect /* useDeferredValue  */ } from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
-import { Card, Input, Typography, ConfigProvider, theme } from 'antd'
+import { Card, ConfigProvider, theme } from 'antd'
 import GitHubButton, { ReactGitHubButtonProps } from 'react-github-btn'
 // import ReactGA from 'react-ga'
 import createPersistedState from 'use-persisted-state'
@@ -68,23 +68,23 @@ const TitleContainer = styled.div`
   margin-bottom: 8px;
 `
 
-const AppNameField = styled.div`
-  width: 100%;
-`
+// const AppNameField = styled.div`
+//   width: 100%;
+// `
 
-const AppPackageField = styled.div`
-  width: 100%;
-`
+// const AppPackageField = styled.div`
+//   width: 100%;
+// `
 
-const AppDetailsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+// const AppDetailsContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 16px;
 
-  @media ${deviceSizes.tablet} {
-    flex-direction: row;
-  }
-`
+//   @media ${deviceSizes.tablet} {
+//     flex-direction: row;
+//   }
+// `
 
 const SettingsContainer = styled.div`
   display: flex;
@@ -127,7 +127,7 @@ const Home = () => {
   // const [releases, setReleases] = useState({})
   const [appName /* setAppName */] = useState('')
 
-  const homepageUrl = process.env.PUBLIC_URL
+  // const homepageUrl = process.env.PUBLIC_URL
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
@@ -157,7 +157,7 @@ const Home = () => {
   const [isDarkMode, setIsDarkMode] = useDarkModeState(false) // Remembers dark mode state between sessions.
   const toggleDarkMode = () =>
     setIsDarkMode((previousValue: boolean) => !previousValue)
-  const themeString = isDarkMode ? 'dark' : 'light'
+  // const themeString = isDarkMode ? 'dark' : 'light'
   useEffect(() => {
     // Set the document's background color to the theme's body color.
     document.body.style.backgroundColor = isDarkMode

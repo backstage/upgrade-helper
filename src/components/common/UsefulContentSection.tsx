@@ -13,7 +13,7 @@ import {
 import UpgradeSupportAlert from './UpgradeSupportAlert'
 
 // import AppNameWarning from './AppNameWarning'
-import UsefulLinks from './UsefulLinks'
+// import UsefulLinks from './UsefulLinks'
 
 import { PACKAGE_NAMES } from '../../constants'
 import { ReleasesContext } from '../../ReleaseProvider'
@@ -235,7 +235,7 @@ class UsefulContentSection extends Component<
   }
 
   render() {
-    const { packageName, fromVersion, toVersion } = this.props
+    // const { packageName, fromVersion, toVersion } = this.props
     const { isContentOpen } = this.state
 
     const versions = getVersionsContentInDiff({

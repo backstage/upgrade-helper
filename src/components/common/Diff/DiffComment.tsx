@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react'
 import styled from '@emotion/styled'
-import { HTMLMotionProps, MotionProps, motion } from 'framer-motion'
+import { HTMLMotionProps, motion } from 'framer-motion'
 import { removeAppPathPrefix, getVersionsContentInDiff } from '../../../utils'
 import Markdown from '../Markdown'
 import type { Theme } from '../../../theme'

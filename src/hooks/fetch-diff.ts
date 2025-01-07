@@ -23,8 +23,8 @@ const applyCustomSort = (parsedDiff: File[]) =>
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
-const movePackageJsonToTop = (parsedDiff: File[]) =>
-  parsedDiff.sort(({ newPath }) => (newPath.includes('package.json') ? -1 : 1))
+// const movePackageJsonToTop = (parsedDiff: File[]) =>
+//   parsedDiff.sort(({ newPath }) => (newPath.includes('package.json') ? -1 : 1))
 
 interface UseFetchDiffProps {
   shouldShowDiff: boolean

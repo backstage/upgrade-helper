@@ -6,7 +6,6 @@ import {
   type ViewType,
   withChangeSelect,
   ChangeEventArgs,
-  HunkData,
 } from 'react-diff-view'
 import 'react-diff-view/style/index.css'
 import { getTransitionDuration, getChangelogURL } from '../../utils'

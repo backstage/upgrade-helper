@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Button, Popover } from 'antd'
 import type { ButtonProps } from 'antd'
-import { getBinaryFileURL, replaceAppDetails } from '../../utils'
+import { getBinaryFileURL } from '../../utils'
 import { CopyOutlined } from '@ant-design/icons'
 
 const popoverContentOpts = {
