@@ -6,7 +6,16 @@ it('renders without crashing', () => {
   const { container } = render(
     <Select
       title="The title"
-      options={['one option', 'other option']}
+      options={[
+        {
+          version: 'one option',
+          createApp: '',
+        },
+        {
+          version: 'other option',
+          createApp: '',
+        },
+      ]}
       value="one option"
     />
   )

@@ -308,7 +308,7 @@ interface DiffHeaderProps extends WrapperProps {
   resetCopyPathPopoverContent: () => void
   appName: string
   appPackage: string
-  diffComments: ReleaseCommentT[]
+  diffComments: ReleaseCommentT
   packageName: string
 }
 

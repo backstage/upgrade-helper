@@ -1,14 +1,16 @@
 import React, { Fragment, useState, useMemo, useEffect, useRef } from 'react'
 import styled from '@emotion/styled'
 import { Popover } from 'antd'
-import semver from 'semver/preload'
-import queryString from 'query-string'
-import { Select } from '.'
+import semver, { SemVer } from 'semver/preload'
+import { useSearchParam } from 'react-use'
+import { Select } from './'
 import UpgradeButton from './UpgradeButton'
 // import { useFetchReleaseVersions } from '../../hooks/fetch-release-versions'
 import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import type { SelectProps } from './Select'
+import queryString from 'query-string'
+import { ReleaseT } from '../../releases/types'
 
 export const testIDs = {
   fromVersionSelector: 'fromVersionSelector',
@@ -80,14 +82,14 @@ const compareReleaseCandidateVersions = ({
     semver.diff(version, versionToCompare)
   )
 
-const getLatestMajorReleaseVersion = (releasedVersions: string[]) =>
+const getLatestMajorReleaseVersion = (releasedVersions: ReleaseT[]) =>
   semver.valid(
     semver.coerce(
       releasedVersions.find(
         (releasedVersion) =>
           !semver.prerelease(releasedVersion) &&
           semver.patch(releasedVersion) === 0
-      )
+      )?.version
     )
   )
 
@@ -113,12 +115,15 @@ const getReleasedVersionsWithCandidates = ({
   latestVersion,
   showReleaseCandidates,
 }: {
-  releasedVersions: string[]
-  toVersion: string
+  releasedVersions: ReleaseT[]
+  toVersion: ReleaseT | string
   latestVersion: string
   showReleaseCandidates: boolean
 }) => {
-  const isToVersionAReleaseCandidate = semver.prerelease(toVersion) !== null
+  const toVersionString =
+    typeof toVersion == 'string' ? toVersion : toVersion.version
+  const isToVersionAReleaseCandidate =
+    semver.prerelease(toVersionString) !== null
   const isLatestAReleaseCandidate = semver.prerelease(latestVersion) !== null
 
   return releasedVersions.filter((releasedVersion) => {
@@ -141,7 +146,7 @@ const getReleasedVersionsWithCandidates = ({
       semver.prerelease(releasedVersion) === null ||
       (isToVersionAReleaseCandidate &&
         compareReleaseCandidateVersions({
-          version: toVersion,
+          version: toVersionString,
           versionToCompare: releasedVersion,
         })) ||
       (isLatestAReleaseCandidate &&
@@ -158,7 +163,7 @@ const getReleasedVersions = ({
   minVersion,
   maxVersion,
 }: {
-  releasedVersions: string[]
+  releasedVersions: ReleaseT[]
   minVersion?: string
   maxVersion?: string
 }) => {
@@ -191,8 +196,8 @@ const getFirstMajorRelease = ({
     (releasedVersion) =>
       semver.lt(releasedVersion, versionToCompare) &&
       semver.diff(
-        semver.valid(semver.coerce(releasedVersion)),
-        semver.valid(semver.coerce(versionToCompare))
+        semver.valid(semver.coerce(releasedVersion)) ?? '',
+        semver.valid(semver.coerce(versionToCompare)) ?? ''
       ) === type
   )
 
@@ -219,9 +224,13 @@ const doesVersionExist = ({
   }
 }
 
-const getDefaultToVersion = releases => releases[0]
+const getDefaultToVersion = (releases: any[]) => releases[0]
 
-const getDefaultFromVersion = (toVersion, releases, showReleaseCandidates) => {
+const getDefaultFromVersion = (
+  toVersion: ReleaseT,
+  releases: ReleaseT[],
+  showReleaseCandidates: boolean
+) => {
   // Remove `rc` versions from the array of versions
   const sanitizedVersionsWithReleases = getReleasedVersionsWithCandidates({
     releasedVersions: releases,
@@ -270,18 +279,29 @@ const VersionSelector = ({
   appPackage: string
   appName: string
 }) => {
-  const { isLoading, isDone, releaseVersions } = useFetchReleaseVersions({
-    packageName,
-  })
-  const [allVersions, setAllVersions] = useState<string[]>([])
-  const [fromVersionList, setFromVersionList] = useState([])
-  const [toVersionList, setToVersionList] = useState([])
+  const {
+    settings: {
+      [SHOW_LATEST_RCS]: showReleaseCandidates,
+      [USE_YARN_PLUGIN]: useYarnPlugin,
+    },
+  } = useSettings()
+  const [allVersions, setAllVersions] = useState<ReleaseT[]>([])
+  const [fromVersionList, setFromVersionList] = useState<ReleaseT[]>([])
+  const [toVersionList, setToVersionList] = useState<ReleaseT[]>([])
   const [hasVersionsFromURL, setHasVersionsFromURL] = useState<boolean>(false)
 
   const [localFromVersion, setLocalFromVersion] = useState<string>('')
   const [localToVersion, setLocalToVersion] = useState<string>('')
 
-  const upgradeButtonEl = useRef<HTMLElement>(null)
+  const upgradeButtonEl = useRef<HTMLAnchorElement | HTMLButtonElement>(null)
+  const { isDone, isLoading, releases, setSelectedVersions } = useReleases()
+  const releaseVersions = useMemo(
+    () => releases?.map(({ version }) => version),
+    [releases]
+  )
+
+  const fromVersion = useSearchParam('from') || ''
+  const toVersion = useSearchParam('to') || ''
 
   useEffect(() => {
     const fetchVersions = async () => {
@@ -336,7 +356,7 @@ const VersionSelector = ({
         })
       )
 
-      setLocalFromVersion(fromVersionToBeSet)
+      setLocalFromVersion(fromVersionToBeSet ?? '')
       setLocalToVersion(toVersionToBeSet)
 
       const doesHaveVersionsInURL = hasFromVersionInURL && hasToVersionInURL
@@ -388,8 +408,8 @@ const VersionSelector = ({
   ])
 
   const onShowDiff = () => {
-    const resolveDiffVersion = targetVersion =>
-      releases.find(r => r.version === targetVersion)
+    const resolveDiffVersion = (targetVersion: string) =>
+      releases.find((r) => r.version === targetVersion)
 
     const to =
       resolveDiffVersion(localToVersion) || getDefaultToVersion(releases)
@@ -403,8 +423,8 @@ const VersionSelector = ({
     })
 
     showDiff({
-      fromVersion: localFromVersion,
-      toVersion: localToVersion,
+      fromVersion: from?.[useYarnPlugin ? 'version' : 'createApp'] || '',
+      toVersion: to[useYarnPlugin ? 'version' : 'createApp'],
     })
 
     updateURL({

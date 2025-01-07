@@ -18,6 +18,9 @@ export interface ReleaseCommentT {
 }
 
 export interface ReleaseT {
-  usefulContent: ReleaseUsefulContentT
+  usefulContent?: ReleaseUsefulContentT
   comments?: ReleaseCommentT[]
+  createApp: string
+  version: string
+  comments: string[]
 }

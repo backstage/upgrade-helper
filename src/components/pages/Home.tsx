@@ -130,7 +130,7 @@ const StarButton = styled(({ className, ...props }: StarButtonProps) => (
 
 // Set up a persisted state hook for for dark mode so users coming back
 // will have dark mode automatically if they've selected it previously.
-const useDarkModeState = createPersistedState('darkMode')
+const useDarkModeState = createPersistedState<boolean>('darkMode')
 
 const Home = () => {
   const { packageName: defaultPackageName, isPackageNameDefinedInURL } =
@@ -225,7 +225,6 @@ const Home = () => {
       ? darkTheme.background
       : lightTheme.background
   }, [isDarkMode])
-  debugger
   return (
     <SettingsProvider>
       <ReleasesProvider packageName={defaultPackageName}>
@@ -276,109 +275,27 @@ const Home = () => {
                 <VersionSelector
                   key={defaultPackageName}
                   showDiff={handleShowDiff}
-                  fromVersion={fromVersion}
-                  toVersion={toVersion}
+                  // fromVersion={fromVersion}
+                  // toVersion={toVersion}
                   packageName={defaultPackageName}
                   language={defaultLanguage}
                   isPackageNameDefinedInURL={isPackageNameDefinedInURL}
                 />
-                <a href={homepageUrl}>
-                  <TitleHeader>React Native Upgrade Helper</TitleHeader>
-                </a>
-              </TitleContainer>
-
-              <SettingsContainer>
-                <StarButton
-                  href="https://github.com/react-native-community/upgrade-helper"
-                  data-icon="octicon-star"
-                  data-show-count="true"
-                  aria-label="Star react-native-community/upgrade-helper on GitHub"
-                  data-color-scheme={`no-preference: ${themeString}; light: ${themeString}; dark: ${themeString};`}
-                >
-                  Star
-                </StarButton>
-                {packageName === PACKAGE_NAMES.RN && (
-                  <TroubleshootingGuidesButton />
-                )}
-                <Settings
-                  handleSettingsChange={handleSettingsChange}
-                  packageName={packageName}
-                  onChangePackageNameAndLanguage={
-                    handlePackageNameAndLanguageChange
-                  }
-                  language={language}
-                />
-                <DarkModeButton
-                  isDarkMode={isDarkMode as boolean}
-                  onClick={toggleDarkMode}
-                />
-              </SettingsContainer>
-            </HeaderContainer>
-
-            <AppDetailsContainer>
-              <AppNameField>
-                <Typography.Title level={5}>
-                  What's your app name?
-                </Typography.Title>
-
-                <Input
-                  size="large"
-                  placeholder={DEFAULT_APP_NAME}
-                  value={appName}
-                  onChange={({ target }) => setAppName((value) => target.value)}
-                />
-              </AppNameField>
-
-              <AppPackageField>
-                <Typography.Title level={5}>
-                  What's your app package?
-                </Typography.Title>
-
-                <Input
-                  size="large"
-                  placeholder={DEFAULT_APP_PACKAGE}
-                  value={appPackage}
-                  onChange={({ target }) =>
-                    setAppPackage((value) => target.value)
-                  }
-                />
-              </AppPackageField>
-            </AppDetailsContainer>
-            <VersionSelector
-              key={packageName}
-              showDiff={handleShowDiff}
-              showReleaseCandidates={settings[SHOW_LATEST_RCS]}
-              packageName={packageName}
-              language={language}
-              isPackageNameDefinedInURL={isPackageNameDefinedInURL}
-              appPackage={appPackage}
-              appName={appName}
-            />
-          </Container>
-          {/*
-        Pass empty values for app name and package if they're the defaults to 
-        hint to diffing components they don't need to further patch the 
-        rn-diff-purge output.
-      */}
-          <DiffViewer
-            //@ts-ignore-next-line
-            shouldShowDiff={shouldShowDiff}
-            fromVersion={fromVersion}
-            toVersion={toVersion}
-            appName={
-              deferredAppName !== DEFAULT_APP_NAME ? deferredAppName : ''
-            }
-            appPackage={
-              deferredAppPackage !== DEFAULT_APP_PACKAGE
-                ? deferredAppPackage
-                : ''
-            }
-            packageName={packageName}
-            language={language}
-          />
-        </Page>
-      </ThemeProvider>
-    </ConfigProvider>
+              </Container>
+              <DiffViewer
+                //@ts-expect-error - the component prop type is messed up
+                shouldShowDiff={shouldShowDiff}
+                fromVersion={fromVersion}
+                toVersion={toVersion}
+                appName={appName}
+                packageName={defaultPackageName}
+                language={defaultLanguage}
+              />
+            </Page>
+          </ThemeProvider>
+        </ConfigProvider>
+      </ReleasesProvider>
+    </SettingsProvider>
   )
 }
 

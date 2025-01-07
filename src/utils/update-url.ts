@@ -1,25 +1,23 @@
 import { PACKAGE_NAMES } from '../constants'
 
-export function updateURL({
-  packageName,
-  language,
-  isPackageNameDefinedInURL,
-  fromVersion,
-  toVersion,
-  appPackage,
-  appName,
-}: {
-  packageName: string
-  language: string
-  isPackageNameDefinedInURL: boolean
-  fromVersion: string
-  toVersion: string
-  appPackage: string
-  appName: string
-}) {
-  const url = new URL(window.location.origin)
-  url.pathname = window.location.pathname
-  url.hash = window.location.hash
+export function updateURL(
+  {
+    packageName,
+    language,
+    isPackageNameDefinedInURL,
+    fromVersion,
+    toVersion,
+    yarnPlugin,
+  }: {
+    packageName?: string
+    language?: string
+    isPackageNameDefinedInURL?: boolean
+    fromVersion?: string
+    toVersion?: string
+    yarnPlugin?: boolean
+  } = { packageName: PACKAGE_NAMES.BACKSTAGE }
+) {
+  const newURL = new URL(window.location.href)
 
   if (fromVersion) {
     url.searchParams.set('from', fromVersion)
@@ -40,5 +38,30 @@ export function updateURL({
   //   url.searchParams.set('name', appName)
   // }
 
-  window.history.replaceState(null, '', url.toString())
+  if (toVersion) {
+    newURL.searchParams.set('to', toVersion)
+  }
+
+  if (yarnPlugin !== undefined) {
+    newURL.searchParams.set('yarnPlugin', yarnPlugin ? '1' : '0')
+  }
+
+  if (isPackageNameDefinedInURL) {
+    newURL.searchParams.set('package', packageName!)
+  }
+
+  if (language && packageName === PACKAGE_NAMES.RNW) {
+    newURL.searchParams.set('language', language)
+  }
+
+  if (window.location.href !== newURL.toString()) {
+    window.history.pushState('', '', newURL.toString())
+
+    // The popstate event is not triggered by window.history.pushState,
+    // so we need to dispatch the event ourselves in order for listeners
+    // to pick it up.
+    //
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stacks
+    dispatchEvent(new PopStateEvent('popstate'))
+  }
 }

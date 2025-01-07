@@ -1,21 +1,28 @@
 import { useEffect, useState } from 'react'
 import { getReleasesFileURL } from '../utils'
 import compare from 'semver/functions/rcompare'
+import { ReleaseT } from '../releases/types'
 
 export const useFetchReleaseVersions = ({
   packageName,
 }: {
   packageName: string
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [isDone, setIsDone] = useState<boolean>(false)
-  const [releaseVersions, setReleaseVersions] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDone, setIsDone] = useState(false)
+  const [releases, setReleases] = useState<ReleaseT[]>([])
 
   useEffect(() => {
     const fetchReleaseVersions = async () => {
       setIsLoading(true)
       setIsDone(false)
-      const response = await (
+      type ReleaseResponse = {
+        [version: string]: {
+          createApp: string
+        }
+      }
+
+      const response: ReleaseResponse = await (
         await fetch(getReleasesFileURL({ packageName, useYarnPlugin }))
       ).json()
 

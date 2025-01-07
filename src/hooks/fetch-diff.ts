@@ -1,7 +1,25 @@
 import { useEffect, useState } from 'react'
 import { parseDiff } from 'react-diff-view'
 import type { File } from 'gitdiff-parser'
-import { getDiffURL } from '../utils'
+import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
+import sortBy from 'lodash/sortBy'
+import { useSettings } from '../SettingsProvider'
+
+const excludeYarnLock = ({ oldPath, newPath, ...rest }: File) =>
+  !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
+
+const applyCustomSort = (parsedDiff: File[]) =>
+  sortBy(parsedDiff, ({ newPath }: File) => {
+    if (newPath.includes('package.json')) {
+      return -1
+    } else if (newPath === '.yarnrc.yml') {
+      return 1
+    } else if (newPath.startsWith('.yarn/')) {
+      return 2
+    }
+
+    return 0
+  })
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
 

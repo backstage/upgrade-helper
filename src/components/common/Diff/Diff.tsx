@@ -1,4 +1,11 @@
-import React, { useState, useCallback, Fragment } from 'react'
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  ReactElement,
+  Fragment,
+  ReactNode,
+} from 'react'
 import styled from '@emotion/styled'
 import {
   Diff as RDiff,
@@ -183,6 +190,34 @@ const renderToken = (
   }
 }
 
+interface PlaceholderProps {
+  newPath: string
+  children: ReactElement
+}
+
+const Placeholder: React.FC<PlaceholderProps> = ({ newPath, children }) => {
+  const [showDiff, setShowDiff] = useState(false)
+
+  if (!showDiff && newPath === '.yarn/plugins/@yarnpkg/plugin-backstage.cjs') {
+    return (
+      <Card
+        bodyStyle={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          rowGap: '10px',
+        }}
+      >
+        <Button onClick={() => setShowDiff(true)}>Show diff</Button>
+        <Typography>
+          The diff for the Backstage yarn plugin is hidden by default.
+        </Typography>
+      </Card>
+    )
+  }
+
+  return children
+}
 interface DiffProps {
   packageName: string
   oldPath: string
@@ -315,34 +350,41 @@ const Diff = ({
       />
 
       {!isDiffCollapsed && (
-        <DiffView
-          viewType={diffViewStyle}
-          diffType={type}
-          hunks={hunks}
-          renderToken={renderToken}
-          tokens={tokens}
-          widgets={diffComments}
-          optimizeSelection={true}
-          selectedChanges={selectedChanges}
-        >
-          {(hunks: HunkData[]) =>
-            hunks
-              .map((_, i) => updatedHunks[i])
-              .map((hunk) => (
-                <Fragment key={hunk.content}>
-                  <Decoration key={'decoration-' + hunk.content}>
-                    <More>{hunk.content}</More>
-                  </Decoration>
-                  <Hunk
-                    key={hunk.content}
-                    hunk={hunk}
-                    // @ts-ignore-next-line
-                    gutterEvents={{ onClick: onToggleChangeSelection }}
-                  />
-                </Fragment>
-              ))
-          }
-        </DiffView>
+        <Placeholder newPath={newPath}>
+          <DiffView
+            viewType={diffViewStyle}
+            diffType={type}
+            hunks={hunks}
+            renderToken={renderToken}
+            tokens={tokens}
+            widgets={
+              diffComments as unknown as Record<
+                string,
+                ReactNode
+              > /** TODO see why this complains */
+            }
+            optimizeSelection={true}
+            selectedChanges={selectedChanges}
+          >
+            {(hunks: HunkData[]) =>
+              hunks
+                .map((_, i) => updatedHunks[i])
+                .map((hunk) => (
+                  <Fragment key={hunk.content}>
+                    <Decoration key={'decoration-' + hunk.content}>
+                      <More>{hunk.content}</More>
+                    </Decoration>
+                    <Hunk
+                      key={hunk.content}
+                      hunk={hunk}
+                      // @ts-ignore-next-line
+                      gutterEvents={{ onClick: onToggleChangeSelection }}
+                    />
+                  </Fragment>
+                ))
+            }
+          </DiffView>
+        </Placeholder>
       )}
     </Container>
   )

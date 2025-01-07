@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Popover, Button, Checkbox, Radio, Typography } from 'antd'
-import { SHOW_LATEST_RCS } from '../../utils'
+import { Popover, Button, Checkbox, CheckboxChangeEvent } from 'antd'
+import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from '../../utils'
 import styled from '@emotion/styled'
 import { WindowsFilled } from '@ant-design/icons'
 import { PACKAGE_NAMES, LANGUAGE_NAMES } from '../../constants'
@@ -67,8 +67,18 @@ const Settings = ({
     }
   }
 
-  const updateCheckboxValues = (checkboxValues: CheckboxValueType[]) =>
-    handleSettingsChange(checkboxValues)
+  const toggleShowLatestRCs = (e: CheckboxChangeEvent) =>
+    setSettings({
+      ...settings,
+      [SHOW_LATEST_RCS]: e.target.checked,
+    })
+
+  const toggleUseYarnPlugin = (e: CheckboxChangeEvent) => {
+    setSettings({
+      ...settings,
+      [USE_YARN_PLUGIN]: e.target.checked,
+    })
+  }
 
   return (
     <Popover
