@@ -46,6 +46,7 @@
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.12",
     "@types/jest-image-snapshot": "^6.4.0",
+    "@types/lodash": "^4.17.14",
     "@types/markdown-to-jsx": "^7.0.1",
     "@types/node": "^20.11.16",
     "@types/react": "18.2.0",

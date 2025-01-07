@@ -1,20 +1,22 @@
 import { PACKAGE_NAMES } from '../constants'
 
-export function updateURL({
-  packageName,
-  language,
-  isPackageNameDefinedInURL,
-  fromVersion,
-  toVersion,
-  yarnPlugin,
-}: {
-  packageName?: string
-  language?: string
-  isPackageNameDefinedInURL?: boolean
-  fromVersion?: string
-  toVersion?: string
-  yarnPlugin?: boolean
-} = {}) {
+export function updateURL(
+  {
+    packageName,
+    language,
+    isPackageNameDefinedInURL,
+    fromVersion,
+    toVersion,
+    yarnPlugin,
+  }: {
+    packageName?: string
+    language?: string
+    isPackageNameDefinedInURL?: boolean
+    fromVersion?: string
+    toVersion?: string
+    yarnPlugin?: boolean
+  } = { packageName: PACKAGE_NAMES.BACKSTAGE }
+) {
   const newURL = new URL(window.location.href)
 
   if (fromVersion) {
@@ -36,7 +38,7 @@ export function updateURL({
   }
 
   if (isPackageNameDefinedInURL) {
-    newURL.searchParams.set('package', packageName)
+    newURL.searchParams.set('package', packageName!)
   }
 
   if (language && packageName === PACKAGE_NAMES.RNW) {

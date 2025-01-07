@@ -23,7 +23,7 @@ interface UpgradeButtonProps extends React.PropsWithRef<ButtonProps> {
 }
 
 const UpgradeButton = React.forwardRef<
-  HTMLElement,
+  HTMLButtonElement | HTMLAnchorElement,
   UpgradeButtonProps & React.RefAttributes<HTMLElement>
 >(({ onShowDiff, ...props }, ref) => (
   <Container>

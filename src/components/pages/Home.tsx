@@ -115,7 +115,7 @@ const StarButton = styled(({ className, ...props }: StarButtonProps) => (
 
 // Set up a persisted state hook for for dark mode so users coming back
 // will have dark mode automatically if they've selected it previously.
-const useDarkModeState = createPersistedState('darkMode')
+const useDarkModeState = createPersistedState<boolean>('darkMode')
 
 const Home = () => {
   const { packageName: defaultPackageName, isPackageNameDefinedInURL } =
@@ -164,7 +164,6 @@ const Home = () => {
       ? darkTheme.background
       : lightTheme.background
   }, [isDarkMode])
-  debugger
   return (
     <SettingsProvider>
       <ReleasesProvider packageName={defaultPackageName}>
@@ -215,14 +214,15 @@ const Home = () => {
                 <VersionSelector
                   key={defaultPackageName}
                   showDiff={handleShowDiff}
-                  fromVersion={fromVersion}
-                  toVersion={toVersion}
+                  // fromVersion={fromVersion}
+                  // toVersion={toVersion}
                   packageName={defaultPackageName}
                   language={defaultLanguage}
                   isPackageNameDefinedInURL={isPackageNameDefinedInURL}
                 />
               </Container>
               <DiffViewer
+                //@ts-expect-error - the component prop type is messed up
                 shouldShowDiff={shouldShowDiff}
                 fromVersion={fromVersion}
                 toVersion={toVersion}

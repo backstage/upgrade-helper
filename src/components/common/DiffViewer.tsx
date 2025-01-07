@@ -6,6 +6,7 @@ import {
   type ViewType,
   withChangeSelect,
   ChangeEventArgs,
+  HunkData,
 } from 'react-diff-view'
 import 'react-diff-view/style/index.css'
 import { getTransitionDuration, getChangelogURL } from '../../utils'
@@ -279,5 +280,5 @@ const DiffViewer = ({
   )
 }
 
-// @ts-ignore-next-line
+// @ts-expect-error
 export default withChangeSelect({ multiple: true })(DiffViewer)

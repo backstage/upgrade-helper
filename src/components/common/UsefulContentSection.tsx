@@ -169,6 +169,7 @@ class UsefulContentSection extends Component<
   UsefulContentSectionProps,
   UsefulContentSectionState
 > {
+  context: React.ContextType<typeof ReleasesContext> = null as any
   state = {
     isContentOpen: true,
   }
@@ -194,7 +195,7 @@ class UsefulContentSection extends Component<
   getChangelog = ({ version }: { version: string }) => {
     const { packageName } = this.props
     const { to } = this.context
-    const { version: toVersion } = to
+    const { version: toVersion } = to! // TODO: remove the ! when we have a better way to handle this
     if (
       packageName === PACKAGE_NAMES.RNW ||
       packageName === PACKAGE_NAMES.RNM
@@ -238,8 +239,8 @@ class UsefulContentSection extends Component<
     const { isContentOpen } = this.state
 
     const versions = getVersionsContentInDiff({
-      fromVersion: this.context.from.version,
-      toVersion: this.context.to.version,
+      fromVersion: this.context.from?.version!, // TODO: remove the ! when we have a better way to handle this
+      toVersion: this.context.to?.version!, // TODO: remove the ! when we have a better way to handle this
       versions: this.context.releases,
     })
 

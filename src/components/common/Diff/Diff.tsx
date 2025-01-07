@@ -1,4 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  ReactElement,
+  Fragment,
+  ReactNode,
+} from 'react'
 import styled from '@emotion/styled'
 import {
   Diff as RDiff,
@@ -185,27 +192,12 @@ const renderToken = (
   }
 }
 
-interface DiffProps {
-  packageName: string
-  oldPath: string
+interface PlaceholderProps {
   newPath: string
-  type: DiffType
-  hunks: HunkData[]
-  fromVersion: string
-  toVersion: string
-  diffKey: string
-  isDiffCompleted: boolean
-  onCompleteDiff: (diffKey: string) => void
-  selectedChanges: string[]
-  onToggleChangeSelection: (args: ChangeEventArgs) => void
-  areAllCollapsed?: boolean
-  setAllCollapsed: (collapse: boolean | undefined) => void
-  diffViewStyle: ViewType
-  appName: string
-  appPackage: string
+  children: ReactElement
 }
 
-const Placeholder = ({ newPath, children }) => {
+const Placeholder: React.FC<PlaceholderProps> = ({ newPath, children }) => {
   const [showDiff, setShowDiff] = useState(false)
 
   if (!showDiff && newPath === '.yarn/plugins/@yarnpkg/plugin-backstage.cjs') {
@@ -227,6 +219,25 @@ const Placeholder = ({ newPath, children }) => {
   }
 
   return children
+}
+interface DiffProps {
+  packageName: string
+  oldPath: string
+  newPath: string
+  type: DiffType
+  hunks: HunkData[]
+  fromVersion: string
+  toVersion: string
+  diffKey: string
+  isDiffCompleted: boolean
+  onCompleteDiff: (diffKey: string) => void
+  selectedChanges: string[]
+  onToggleChangeSelection: (args: ChangeEventArgs) => void
+  areAllCollapsed?: boolean
+  setAllCollapsed: (collapse: boolean | undefined) => void
+  diffViewStyle: ViewType
+  appName: string
+  appPackage: string
 }
 
 const Diff = ({
@@ -349,31 +360,34 @@ const Diff = ({
             viewType={diffViewStyle}
             diffType={type}
             hunks={hunks}
-            widgets={diffComments}
+            renderToken={renderToken}
+            tokens={tokens}
+            widgets={
+              diffComments as unknown as Record<
+                string,
+                ReactNode
+              > /** TODO see why this complains */
+            }
             optimizeSelection={true}
             selectedChanges={selectedChanges}
           >
-            {(originalHunks: HunkData[]) => {
-              const updatedHunks = getHunksWithAppName(originalHunks)
-
-              const options = {
-                enhancers: [markEdits(updatedHunks)],
-              }
-
-              const tokens = tokenize(updatedHunks, options)
-
-              return updatedHunks.map((hunk) => [
-                <Decoration key={'decoration-' + hunk.content}>
-                  <More>{hunk.content}</More>
-                </Decoration>,
-                <Hunk
-                  key={hunk.content}
-                  hunk={hunk}
-                  tokens={tokens}
-                  gutterEvents={{ onClick: onToggleChangeSelection }}
-                />,
-              ])
-            }}
+            {(hunks: HunkData[]) =>
+              hunks
+                .map((_, i) => updatedHunks[i])
+                .map((hunk) => (
+                  <Fragment key={hunk.content}>
+                    <Decoration key={'decoration-' + hunk.content}>
+                      <More>{hunk.content}</More>
+                    </Decoration>
+                    <Hunk
+                      key={hunk.content}
+                      hunk={hunk}
+                      // @ts-ignore-next-line
+                      gutterEvents={{ onClick: onToggleChangeSelection }}
+                    />
+                  </Fragment>
+                ))
+            }
           </DiffView>
         </Placeholder>
       )}

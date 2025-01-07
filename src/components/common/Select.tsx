@@ -2,6 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Select as AntdSelect, Typography } from 'antd'
 import type { SelectProps as AntdSelectProps } from 'antd'
+import { ReleaseT } from '../../releases/types'
 
 const { Option } = AntdSelect
 
@@ -14,7 +15,7 @@ const SelectBox = styled(AntdSelect)`
 
 export interface SelectProps extends AntdSelectProps<any, {}> {
   title: string
-  options: string[]
+  options: ReleaseT[]
 }
 
 const Select = ({ title, options, ...props }: SelectProps) => (

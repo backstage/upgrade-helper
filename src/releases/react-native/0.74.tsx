@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 import type { ReleaseT } from '../types'
 
 const release: ReleaseT = {
+  version: '0.74',
+  createApp: '',
   usefulContent: {
     description:
       'React Native 0.74 includes Yoga 3.0, Bridgeless by default under the New Architecture, batched onLayout updates, Yarn 3, removal of previously deprecated PropTypes, and some breaking changes, including updates to PushNotificationIOS. The Android Minimum SDK is now 23 (Android 6.0).',

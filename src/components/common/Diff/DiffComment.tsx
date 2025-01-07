@@ -135,11 +135,11 @@ const getComments = ({
   fromVersion,
   toVersion,
 }: {
-  versions: string
+  versions: ReleaseT[]
   newPath: string
   fromVersion: string
   toVersion: string
-}) => {
+}): ReleaseCommentT => {
   const newPathSanitized = removeAppPathPrefix(newPath)
 
   const versionsInDiff = getVersionsContentInDiff({
@@ -180,7 +180,7 @@ const getComments = ({
       ...allComments,
       ...comments,
     }
-  }, {})
+  }, {} as ReleaseCommentT)
 }
 
 const DiffComment = ({

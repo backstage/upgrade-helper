@@ -6,10 +6,11 @@ import {
   RN_CHANGELOG_URLS,
   DIFF_BASE_BRANCH,
 } from './constants'
+import { ReleaseT } from './releases/types'
 
 const getRNDiffRepository = ({ packageName }: { packageName: string }) =>
   RN_DIFF_REPOSITORIES[packageName]
-const getDiffBranch = ({ packageName }) =>
+const getDiffBranch = ({ packageName }: { packageName: string }) =>
   packageName === PACKAGE_NAMES.BACKSTAGE ? 'master' : 'diffs'
 
 export const getReleasesFileURL = ({
@@ -121,10 +122,9 @@ export const getVersionsContentInDiff = ({
   toVersion,
   versions,
 }: {
-  packageName: string
   fromVersion: string
   toVersion: string
-  versions: any[] // TODO: type this
+  versions: ReleaseT[]
 }) => {
   const cleanedToVersion = semver.valid(semver.coerce(toVersion))
 
@@ -134,6 +134,8 @@ export const getVersionsContentInDiff = ({
 
     // `cleanedVersion` can't be newer than `cleanedToVersion` nor older (or equal) than `fromVersion`
     return (
+      cleanedToVersion &&
+      cleanedVersion &&
       !isPreRelease &&
       semver.compare(cleanedToVersion, cleanedVersion) !== -1 &&
       ![0, -1].includes(semver.compare(cleanedVersion, fromVersion))

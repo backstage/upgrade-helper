@@ -5,11 +5,11 @@ import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
 import sortBy from 'lodash/sortBy'
 import { useSettings } from '../SettingsProvider'
 
-const excludeYarnLock = ({ oldPath, newPath, ...rest }) =>
+const excludeYarnLock = ({ oldPath, newPath, ...rest }: File) =>
   !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
 
-const applyCustomSort = (parsedDiff) =>
-  sortBy(parsedDiff, ({ newPath }) => {
+const applyCustomSort = (parsedDiff: File[]) =>
+  sortBy(parsedDiff, ({ newPath }: File) => {
     if (newPath.includes('package.json')) {
       return -1
     } else if (newPath === '.yarnrc.yml') {
