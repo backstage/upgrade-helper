@@ -49,6 +49,6 @@ This project is a fork of [React Native Upgrade Helper](https://github.com/react
 
 This project proudly uses [`rn-diff-purge`](https://github.com/react-native-community/rn-diff-purge), [`react-diff-view`](https://github.com/otakustay/react-diff-view) and [`create-react-app`](https://github.com/facebook/create-react-app).
 
-## 📝 License
+## 📝 License & CoC
 
 This project is released under the MIT license (check the LICENSE and NOTICE files for details).
