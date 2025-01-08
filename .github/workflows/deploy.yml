@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - changelog
 
 jobs:
   build-and-deploy:
@@ -19,7 +20,7 @@ jobs:
           node-version: 20
 
       - name: 🛠 Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: yarn install --immutable
 
       - name: 🔥 Build
         run: yarn build

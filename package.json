@@ -1,6 +1,6 @@
 {
   "name": "upgrade-helper",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "homepage": "https://backstage.github.io/upgrade-helper",
   "license": "MIT",
   "scripts": {
@@ -32,6 +32,7 @@
     "react-dom-confetti": "0.2.0",
     "react-ga": "3.3.1",
     "react-github-btn": "1.4.0",
+    "react-router-dom": "^7.1.1",
     "react-scripts": "^5.0.1",
     "react-use": "^17.4.0",
     "semver": "7.3.8",
@@ -87,5 +88,6 @@
       "pre-commit": "pretty-quick --staged --pattern \"src/**/*.*(js|jsx|ts|tsx)\"",
       "pre-push": "yarn run lint"
     }
-  }
+  },
+  "packageManager": "yarn@4.6.0"
 }
