@@ -1,4 +1,8 @@
-import React, { useState, useEffect /* useDeferredValue  */ } from 'react'
+import React, {
+  useState,
+  useEffect /* useDeferredValue  */,
+  ComponentProps,
+} from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
 import { Card, ConfigProvider, theme } from 'antd'
@@ -7,7 +11,7 @@ import GitHubButton, { ReactGitHubButtonProps } from 'react-github-btn'
 import createPersistedState from 'use-persisted-state'
 // import queryString from 'query-string'
 import VersionSelector from '../common/VersionSelector'
-import DiffViewer from '../common/DiffViewer'
+import DiffViewer, { DiffViewerProps } from '../common/DiffViewer'
 import Settings from '../common/Settings'
 // @ts-ignore-next-line
 import logo from '../../assets/logo.svg'
@@ -19,6 +23,9 @@ import { ReleasesProvider } from '../../ReleaseProvider'
 import { SettingsProvider } from '../../SettingsProvider'
 import { lightTheme, darkTheme, type Theme } from '../../theme'
 import pkg from '../../../package.json'
+import { getChangelogURL } from '../../utils'
+import { PACKAGE_NAMES } from '../../constants'
+import { Link } from '../common/Markdown'
 
 const homepage = pkg.homepage
 
@@ -124,7 +131,6 @@ const Home = () => {
   const [fromVersion, setFromVersion] = useState('')
   const [toVersion, setToVersion] = useState('')
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
-  // const [releases, setReleases] = useState({})
   const [appName /* setAppName */] = useState('')
 
   // const homepageUrl = process.env.PUBLIC_URL
@@ -143,9 +149,9 @@ const Home = () => {
     fromVersion: string
     toVersion: string
   }) => {
-    if (fromVersion === toVersion) {
-      return
-    }
+    // if (fromVersion === toVersion) {
+    //   return
+    // }
 
     setFromVersion(fromVersion)
     setToVersion(toVersion)
@@ -221,7 +227,7 @@ const Home = () => {
                   isPackageNameDefinedInURL={isPackageNameDefinedInURL}
                 />
               </Container>
-              <DiffViewer
+              <BackstageDiffViewer
                 //@ts-expect-error - the component prop type is messed up
                 shouldShowDiff={shouldShowDiff}
                 fromVersion={fromVersion}
@@ -236,6 +242,36 @@ const Home = () => {
       </ReleasesProvider>
     </SettingsProvider>
   )
+}
+
+function BackstageDiffViewer(props: ComponentProps<typeof DiffViewer>) {
+  const { fromVersion, toVersion } = props as unknown as DiffViewerProps
+
+  if (fromVersion && fromVersion === toVersion) {
+    return (
+      <div style={{ textAlign: 'center', width: '90%' }}>
+        <p>
+          The selected versions share the same dependencies. This usually
+          happens when a patch for one of the dependencies is released.
+        </p>
+        <p>
+          Please refer to the{' '}
+          <Link
+            href={getChangelogURL({
+              packageName: PACKAGE_NAMES.BACKSTAGE,
+              version: toVersion,
+            })}
+            target="_blank"
+            rel="noreferrer"
+          >
+            changelog
+          </Link>{' '}
+          to see what has changed.
+        </p>
+      </div>
+    )
+  }
+  return <DiffViewer {...props} />
 }
 
 export default Home
