@@ -63,7 +63,7 @@ const jumpToAnchor = (stopScrolling: boolean) => {
   return true
 }
 
-interface DiffViewerProps {
+export interface DiffViewerProps {
   packageName: string
   language: string
   fromVersion: string
@@ -189,6 +189,19 @@ const DiffViewer = ({
         <AnimatePresence>
           <DiffLoading />
         </AnimatePresence>
+      </Container>
+    )
+  }
+
+  if (diff instanceof Error) {
+    return (
+      <Container>
+        <Alert
+          message="Error"
+          description={diff.message}
+          type="error"
+          showIcon
+        />
       </Container>
     )
   }
