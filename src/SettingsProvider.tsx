@@ -21,32 +21,27 @@ export const SettingsProvider = React.memo(function ({
   children: ReactNode
 }) {
   const useYarnPluginParam = useSearchParam('yarnPlugin')
-  const useYarnPlugin = useYarnPluginParam
-    ? !!JSON.parse(useYarnPluginParam)
-    : false
+  const useYarnPlugin =
+    useYarnPluginParam !== null ? !!Number(useYarnPluginParam) : false
 
   const [settings, setLocalStorageSettings] = useLocalStorage(
     'backstage:upgrade-helper:settings',
     INITIAL_STATE.settings
   )
 
-  const setUseYarnPlugin = (useYarnPlugin: string) => {
-    updateURL({ yarnPlugin: !!useYarnPlugin })
-  }
-
-  const setSettings = useCallback((settings: typeof INITIAL_STATE.settings) => {
+  const setSettings = (settings: typeof INITIAL_STATE.settings) => {
     const { [USE_YARN_PLUGIN]: newUseYarnPlugin, ...localStorageSettings } =
       settings
 
     if (newUseYarnPlugin !== useYarnPlugin) {
-      setUseYarnPlugin(newUseYarnPlugin ? '1' : '0')
+      updateURL({ yarnPlugin: newUseYarnPlugin })
     }
 
     setLocalStorageSettings({
       [USE_YARN_PLUGIN]: newUseYarnPlugin,
       ...localStorageSettings,
     })
-  }, [])
+  }
 
   return (
     <SettingsContext.Provider
