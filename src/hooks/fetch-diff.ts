@@ -5,22 +5,6 @@ import { getDiffURL, USE_YARN_PLUGIN } from '../utils'
 import sortBy from 'lodash/sortBy'
 import { useSettings } from '../SettingsProvider'
 
-const excludeYarnLock = ({ oldPath, newPath, ...rest }: File) =>
-  !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
-
-const applyCustomSort = (parsedDiff: File[]) =>
-  sortBy(parsedDiff, ({ newPath }: File) => {
-    if (newPath.includes('package.json')) {
-      return -1
-    } else if (newPath === '.yarnrc.yml') {
-      return 1
-    } else if (newPath.startsWith('.yarn/')) {
-      return 2
-    }
-
-    return 0
-  })
-
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
 // const movePackageJsonToTop = (parsedDiff: File[]) =>
@@ -42,7 +26,7 @@ export const useFetchDiff = ({
 }: UseFetchDiffProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isDone, setIsDone] = useState<boolean>(false)
-  const [diff, setDiff] = useState<File[]>([])
+  const [diff, setDiff] = useState<File[] | Error>([])
 
   useEffect(() => {
     const fetchDiff = async () => {
@@ -56,7 +40,7 @@ export const useFetchDiff = ({
 
       const diff = await response.text()
 
-      setDiff(applyCustomSort(parseDiff(diff).filter(excludeYarnLock)))
+      setDiff(applyBackstageDiff(response, parseDiff(diff)))
 
       setIsLoading(false)
       setIsDone(true)
@@ -74,4 +58,26 @@ export const useFetchDiff = ({
     isDone,
     diff,
   }
+}
+
+function applyBackstageDiff(response: Response, parsedDiff: File[]) {
+  if (response.status === 404) {
+    return new Error('Diff not found. Please reach out to the maintainers.')
+  }
+
+  return sortBy(parsedDiff, ({ newPath }: File) => {
+    if (newPath.includes('package.json')) {
+      return -1
+    } else if (newPath === '.yarnrc.yml') {
+      return 1
+    } else if (newPath.startsWith('.yarn/')) {
+      return 2
+    }
+
+    return 0
+  }).filter(excludeYarnLock)
+}
+
+function excludeYarnLock({ oldPath, newPath }: File) {
+  return !(oldPath.includes('yarn.lock') || newPath.includes('yarn.lock'))
 }

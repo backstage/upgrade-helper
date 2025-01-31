@@ -1,4 +1,8 @@
-import React, { useState, useEffect /* useDeferredValue  */ } from 'react'
+import React, {
+  useState,
+  useEffect /* useDeferredValue  */,
+  ComponentProps,
+} from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
 import { Card, ConfigProvider, theme } from 'antd'
@@ -7,7 +11,7 @@ import ReactGA from 'react-ga'
 import createPersistedState from 'use-persisted-state'
 // import queryString from 'query-string'
 import VersionSelector from '../common/VersionSelector'
-import DiffViewer from '../common/DiffViewer'
+import DiffViewer, { DiffViewerProps } from '../common/DiffViewer'
 import Settings from '../common/Settings'
 // @ts-ignore-next-line
 import logo from '../../assets/logo.svg'
@@ -25,6 +29,9 @@ import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { lightTheme, darkTheme, type Theme } from '../../theme'
 import pkg from '../../../package.json'
+import { getChangelogURL } from '../../utils'
+import { PACKAGE_NAMES } from '../../constants'
+import { Link } from '../common/Markdown'
 
 const homepage = pkg.homepage
 
@@ -136,22 +143,10 @@ const Home = () => {
   const { packageName: defaultPackageName, isPackageNameDefinedInURL } =
     useGetPackageNameFromURL()
   const defaultLanguage = useGetLanguageFromURL()
-  const [packageName, setPackageName] = useState(defaultPackageName)
-  const [language, setLanguage] = useState(defaultLanguage)
-  const [fromVersion, setFromVersion] = useState<string>('')
-  const [toVersion, setToVersion] = useState<string>('')
-  const [shouldShowDiff, setShouldShowDiff] = useState<boolean>(false)
-  const [settings, setSettings] = useState<Record<string, boolean>>({
-    [`${SHOW_LATEST_RCS}`]: false,
-  })
-
-  const appInfoInURL = getAppInfoInURL()
-  const [appName, setAppName] = useState<string>(appInfoInURL.appName)
-  const [appPackage, setAppPackage] = useState<string>(appInfoInURL.appPackage)
-
-  // Avoid UI lag when typing.
-  const deferredAppName = useDeferredValue(appName)
-  const deferredAppPackage = useDeferredValue(appPackage)
+  const [fromVersion, setFromVersion] = useState('')
+  const [toVersion, setToVersion] = useState('')
+  const [shouldShowDiff, setShouldShowDiff] = useState(false)
+  const [appName /* setAppName */] = useState('')
 
   // const homepageUrl = process.env.PUBLIC_URL
 
@@ -169,9 +164,9 @@ const Home = () => {
     fromVersion: string
     toVersion: string
   }) => {
-    if (fromVersion === toVersion) {
-      return
-    }
+    // if (fromVersion === toVersion) {
+    //   return
+    // }
 
     setFromVersion(fromVersion)
     setToVersion(toVersion)
@@ -282,7 +277,7 @@ const Home = () => {
                   isPackageNameDefinedInURL={isPackageNameDefinedInURL}
                 />
               </Container>
-              <DiffViewer
+              <BackstageDiffViewer
                 //@ts-expect-error - the component prop type is messed up
                 shouldShowDiff={shouldShowDiff}
                 fromVersion={fromVersion}
@@ -297,6 +292,36 @@ const Home = () => {
       </ReleasesProvider>
     </SettingsProvider>
   )
+}
+
+function BackstageDiffViewer(props: ComponentProps<typeof DiffViewer>) {
+  const { fromVersion, toVersion } = props as unknown as DiffViewerProps
+
+  if (fromVersion && fromVersion === toVersion) {
+    return (
+      <div style={{ textAlign: 'center', width: '90%' }}>
+        <p>
+          The selected versions share the same dependencies. This usually
+          happens when a patch for one of the dependencies is released.
+        </p>
+        <p>
+          Please refer to the{' '}
+          <Link
+            href={getChangelogURL({
+              packageName: PACKAGE_NAMES.BACKSTAGE,
+              version: toVersion,
+            })}
+            target="_blank"
+            rel="noreferrer"
+          >
+            changelog
+          </Link>{' '}
+          to see what has changed.
+        </p>
+      </div>
+    )
+  }
+  return <DiffViewer {...props} />
 }
 
 export default Home

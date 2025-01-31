@@ -444,7 +444,7 @@ const VersionSelector = ({
         <FromVersionSelector
           showSearch
           data-testid={testIDs.fromVersionSelector}
-          title={`What's your current Backstage release or @backstage/create-app (0.4.x) version?`}
+          title={`What's your current Backstage version?`}
           loading={isLoading}
           value={localFromVersion}
           options={fromVersionList}
