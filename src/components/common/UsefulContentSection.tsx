@@ -285,7 +285,9 @@ class UsefulContentSection extends Component<
                   <List>
                     {links.map(({ url, title }, key) => (
                       <li key={`${url}${key}`}>
-                        <Link href={url}>{title}</Link>
+                        <Link href={url} target="_blank">
+                          {title}
+                        </Link>
                       </li>
                     ))}
                   </List>
