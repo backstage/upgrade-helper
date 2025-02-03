@@ -14,6 +14,12 @@
   </a>
 </p>
 
+![Image showing a screenshot of Upgrade Helper with the phrase "You are gonna love this!"](https://user-images.githubusercontent.com/6207220/61382138-7a3a6780-a8ac-11e9-8c74-b4cb4830e131.png)
+
+## ⚙️ How to use
+
+[![How to upgrade using upgrade-helper](https://img.youtube.com/vi/fmh_ZGHh_eg/0.jpg)](https://www.youtube.com/watch?v=fmh_ZGHh_eg)
+
 ## 🎩 How it works
 
 The **Upgrade Helper** tool aims to provide the full set of changes happening between any two versions, based on the previous work done in the [upgrade-helper-diff](https://github.com/backstage/upgrade-helper-diff) project:
@@ -49,6 +55,8 @@ This project is a fork of [React Native Upgrade Helper](https://github.com/react
 
 This project proudly uses [`rn-diff-purge`](https://github.com/react-native-community/rn-diff-purge), [`react-diff-view`](https://github.com/otakustay/react-diff-view) and [`create-react-app`](https://github.com/facebook/create-react-app).
 
-## 📝 License
+## 📝 License & CoC
 
-This project is released under the MIT license (check the LICENSE and NOTICE files for details).
+This project is released under the [MIT license](./LICENSE).
+
+Morerover, this projects adopts the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md) and all contributors are expected to follow it.

@@ -1,7 +1,13 @@
 const { override, addBabelPreset } = require('customize-cra')
-const { addReactRefresh } = require('customize-cra-react-refresh')
+
+const ignoreWarnings = (value) => (config) => {
+  config.ignoreWarnings = value
+  return config
+}
 
 module.exports = override(
   addBabelPreset('@emotion/babel-preset-css-prop'),
-  addReactRefresh({ disableRefreshCheck: true })
+
+  // Ignore warnings about the react-diff-view sourcemap files.
+  ignoreWarnings([/Failed to parse source map/])
 )

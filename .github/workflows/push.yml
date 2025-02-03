@@ -7,14 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: ⬆️ Upload output
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ github.sha }}
           path: ./**
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Restore output
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ github.sha }}
 
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Restore output
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ github.sha }}
 
@@ -46,12 +46,15 @@ jobs:
       - name: Run lint
         run: yarn lint
 
+      - name: Run typecheck
+        run: yarn typecheck
+
   test:
     needs: [setup, install]
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Restore output
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ github.sha }}
 
@@ -60,23 +63,3 @@ jobs:
 
       - name: Run tests
         run: yarn test --runInBand
-
-  test-e2e:
-    needs: [setup, install]
-    runs-on: ubuntu-latest
-    if: ${{ !always() }}
-    steps:
-      - name: ⬇️ Restore output
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ github.sha }}
-
-      - name: Run e2e tests
-        run: yarn test-e2e
-
-      - name: ⬆️ Upload output
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: image-comparisons
-          path: ./src/__tests__/__image_snapshots__/__diff_output__/
