@@ -1,26 +1,14 @@
 {
   "files": {
-    "main.css": "/upgrade-helper/static/css/main.bb9eb706.chunk.css",
-    "main.js": "/upgrade-helper/static/js/main.be97eaea.chunk.js",
-    "main.js.map": "/upgrade-helper/static/js/main.be97eaea.chunk.js.map",
-    "runtime-main.js": "/upgrade-helper/static/js/runtime-main.1a503537.js",
-    "runtime-main.js.map": "/upgrade-helper/static/js/runtime-main.1a503537.js.map",
-    "static/css/2.0967b3c0.chunk.css": "/upgrade-helper/static/css/2.0967b3c0.chunk.css",
-    "static/js/2.4cd6a955.chunk.js": "/upgrade-helper/static/js/2.4cd6a955.chunk.js",
-    "static/js/2.4cd6a955.chunk.js.map": "/upgrade-helper/static/js/2.4cd6a955.chunk.js.map",
+    "main.css": "/upgrade-helper/static/css/main.473f3693.css",
+    "main.js": "/upgrade-helper/static/js/main.980f580c.js",
+    "static/media/logo.svg": "/upgrade-helper/static/media/logo.943430fe5f4ba581166e90638520c73c.svg",
     "index.html": "/upgrade-helper/index.html",
-    "precache-manifest.b258de99c75c614e48845348d87b7e45.js": "/upgrade-helper/precache-manifest.b258de99c75c614e48845348d87b7e45.js",
-    "service-worker.js": "/upgrade-helper/service-worker.js",
-    "static/css/2.0967b3c0.chunk.css.map": "/upgrade-helper/static/css/2.0967b3c0.chunk.css.map",
-    "static/css/main.bb9eb706.chunk.css.map": "/upgrade-helper/static/css/main.bb9eb706.chunk.css.map",
-    "static/js/2.4cd6a955.chunk.js.LICENSE.txt": "/upgrade-helper/static/js/2.4cd6a955.chunk.js.LICENSE.txt",
-    "static/media/logo.svg": "/upgrade-helper/static/media/logo.d7a4563b.svg"
+    "main.473f3693.css.map": "/upgrade-helper/static/css/main.473f3693.css.map",
+    "main.980f580c.js.map": "/upgrade-helper/static/js/main.980f580c.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.1a503537.js",
-    "static/css/2.0967b3c0.chunk.css",
-    "static/js/2.4cd6a955.chunk.js",
-    "static/css/main.bb9eb706.chunk.css",
-    "static/js/main.be97eaea.chunk.js"
+    "static/css/main.473f3693.css",
+    "static/js/main.980f580c.js"
   ]
 }
