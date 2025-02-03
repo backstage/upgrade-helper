@@ -27,6 +27,8 @@ const release: ReleaseT = {
       ),
     },
   ],
+  createApp: '',
+  version: '',
 }
 
 export default release

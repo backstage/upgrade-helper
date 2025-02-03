@@ -11,6 +11,9 @@ import { deviceSizes } from '../../utils/device-sizes'
 import type { SelectProps } from './Select'
 // import queryString from 'query-string'
 import { ReleaseT } from '../../releases/types'
+import { useSettings } from '../../SettingsProvider'
+import { useReleases } from '../../ReleaseProvider'
+import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from '../../utils'
 
 export const testIDs = {
   fromVersionSelector: 'fromVersionSelector',
@@ -86,14 +89,14 @@ const getLatestMajorReleaseVersion = (releasedVersions: ReleaseT[]) =>
   semver.valid(
     semver.coerce(
       releasedVersions.find(
-        (releasedVersion) =>
-          !semver.prerelease(releasedVersion) &&
-          semver.patch(releasedVersion) === 0
+        ({ version }) =>
+          !semver.prerelease(version) && semver.patch(version) === 0
       )?.version
     )
   )
 
 // Check if `from` rc version is one of the latest major release (ie. 0.60.0)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const checkIfVersionIsALatestRC = ({
   version,
   latestVersion,
@@ -126,7 +129,7 @@ const getReleasedVersionsWithCandidates = ({
     semver.prerelease(toVersionString) !== null
   const isLatestAReleaseCandidate = semver.prerelease(latestVersion) !== null
 
-  return releasedVersions.filter((releasedVersion) => {
+  return releasedVersions.filter(({ version: releasedVersion }) => {
     // Show the release candidates of the latest version
     const isNotLatestReleaseCandidate =
       showReleaseCandidates &&
@@ -137,7 +140,7 @@ const getReleasedVersionsWithCandidates = ({
 
     const isLatestReleaseCandidate = checkIfVersionIsALatestPrerelease({
       version: releasedVersion,
-      latestVersion
+      latestVersion,
     })
 
     return (
@@ -175,7 +178,7 @@ const getReleasedVersions = ({
     semver.valid(semver.coerce(version)) === latestMajorReleaseVersion
 
   return releasedVersions.filter(
-    (releasedVersion) =>
+    ({ version: releasedVersion }) =>
       releasedVersion.length > 0 &&
       ((maxVersion && semver.lt(releasedVersion, maxVersion)) ||
         (minVersion &&
@@ -185,21 +188,21 @@ const getReleasedVersions = ({
 }
 
 // Finds the first minor release (which in react-native is the major) when compared to another version
-const getFirstMajorRelease = ({
-  releasedVersions,
-  versionToCompare,
-}: {
-  releasedVersions: string[]
-  versionToCompare: string
-}) =>
-  releasedVersions.find(
-    (releasedVersion) =>
-      semver.lt(releasedVersion, versionToCompare) &&
-      semver.diff(
-        semver.valid(semver.coerce(releasedVersion)) ?? '',
-        semver.valid(semver.coerce(versionToCompare)) ?? ''
-      ) === type
-  )
+// const getFirstMajorRelease = ({
+//   releasedVersions,
+//   versionToCompare,
+// }: {
+//   releasedVersions: string[]
+//   versionToCompare: string
+// }) =>
+//   releasedVersions.find(
+//     (releasedVersion) =>
+//       semver.lt(releasedVersion, versionToCompare) &&
+//       semver.diff(
+//         semver.valid(semver.coerce(releasedVersion)),
+//         semver.valid(semver.coerce(versionToCompare))
+//       ) === 'minor'
+//   )
 
 // Return if version exists in the ones returned from GitHub
 const doesVersionExist = ({
@@ -236,7 +239,7 @@ const getDefaultFromVersion = (
     releasedVersions: releases,
     toVersion,
     latestVersion: releases[0].version,
-    showReleaseCandidates
+    showReleaseCandidates,
   })
 
   const sanitizedVersions = sanitizedVersionsWithReleases.map(
@@ -247,19 +250,21 @@ const getDefaultFromVersion = (
     getFirstRelease(
       {
         releasedVersions: sanitizedVersions,
-        versionToCompare: toVersion.version
+        versionToCompare: toVersion.version,
       },
       'minor'
     ) ||
     getFirstRelease(
       {
         releasedVersions: sanitizedVersions,
-        versionToCompare: toVersion.version
+        versionToCompare: toVersion.version,
       },
       'patch'
     )
 
-  return sanitizedVersionsWithReleases.find(value => value.version === version)
+  return sanitizedVersionsWithReleases.find(
+    (value) => value.version === version
+  )
 }
 
 const VersionSelector = ({
@@ -267,17 +272,14 @@ const VersionSelector = ({
   language,
   isPackageNameDefinedInURL,
   showDiff,
-  showReleaseCandidates,
-  appPackage,
-  appName,
 }: {
-  packageName: string
-  language: string
+  packageName?: string
+  language?: string
   isPackageNameDefinedInURL: boolean
   showDiff: (args: { fromVersion: string; toVersion: string }) => void
-  showReleaseCandidates: boolean
-  appPackage: string
-  appName: string
+  showReleaseCandidates?: boolean
+  appPackage?: string
+  appName?: string
 }) => {
   const {
     settings: {
@@ -285,6 +287,7 @@ const VersionSelector = ({
       [USE_YARN_PLUGIN]: useYarnPlugin,
     },
   } = useSettings()
+
   const [allVersions, setAllVersions] = useState<ReleaseT[]>([])
   const [fromVersionList, setFromVersionList] = useState<ReleaseT[]>([])
   const [toVersionList, setToVersionList] = useState<ReleaseT[]>([])
@@ -304,17 +307,19 @@ const VersionSelector = ({
   const toVersion = useSearchParam('to') || ''
 
   useEffect(() => {
+    // const versionsInURL = getVersionsInURL()
+
     const fetchVersions = async () => {
       // Check if the versions provided in the URL are valid
       const hasFromVersionInURL = doesVersionExist({
-        version: versionsInURL.fromVersion,
+        version: fromVersion,
         allVersions: releaseVersions,
       })
 
       const hasToVersionInURL = doesVersionExist({
         version: toVersion,
         allVersions: releaseVersions,
-        minVersion: versionsInURL.fromVersion,
+        minVersion: fromVersion,
       })
 
       const latestVersion = releaseVersions[0]
@@ -338,20 +343,30 @@ const VersionSelector = ({
       const fromVersionToBeSet = hasFromVersionInURL
         ? fromVersion
         : // Get first major release before latest
-          getFirstMajorRelease({
-            releasedVersions: sanitizedVersions,
-            versionToCompare: toVersionToBeSet,
-          })
+          getFirstRelease(
+            {
+              releasedVersions: sanitizedVersions,
+              versionToCompare: toVersionToBeSet,
+            },
+            'minor'
+          ) ||
+          getFirstRelease(
+            {
+              releasedVersions: sanitizedVersions,
+              versionToCompare: toVersionToBeSet,
+            },
+            'patch'
+          )
 
       setFromVersionList(
         getReleasedVersions({
-          releasedVersions: sanitizedVersions,
+          releasedVersions: sanitizedVersionsWithReleases,
           maxVersion: toVersionToBeSet,
         })
       )
       setToVersionList(
         getReleasedVersions({
-          releasedVersions: sanitizedVersions,
+          releasedVersions: sanitizedVersionsWithReleases,
           minVersion: fromVersionToBeSet,
         })
       )
@@ -419,7 +434,7 @@ const VersionSelector = ({
 
     setSelectedVersions({
       from,
-      to
+      to,
     })
 
     showDiff({
@@ -481,3 +496,37 @@ const VersionSelector = ({
 }
 
 export default VersionSelector
+
+// Finds the first specified release (patch, minor, major) when compared to another version
+const getFirstRelease = (
+  {
+    releasedVersions,
+    versionToCompare,
+  }: {
+    releasedVersions: string[]
+    versionToCompare: string
+  },
+  type = 'minor'
+) =>
+  releasedVersions.find(
+    (releasedVersion) =>
+      semver.lt(releasedVersion, versionToCompare) &&
+      semver.diff(
+        semver.valid(semver.coerce(releasedVersion)) ?? '',
+        semver.valid(semver.coerce(versionToCompare)) ?? ''
+      ) === type
+  )
+
+// Check if `from` rc version is one of the latest major release (ie. 0.60.0)
+const checkIfVersionIsALatestPrerelease = ({
+  version,
+  latestVersion,
+}: {
+  version: string
+  latestVersion: string
+}) =>
+  semver.prerelease(version) &&
+  compareReleaseCandidateVersions({
+    version: latestVersion,
+    versionToCompare: version,
+  })

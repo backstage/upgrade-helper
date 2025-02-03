@@ -7,6 +7,8 @@ export function updateURL(
     isPackageNameDefinedInURL,
     fromVersion,
     toVersion,
+    appPackage,
+    appName,
     yarnPlugin,
   }: {
     packageName?: string
@@ -14,10 +16,12 @@ export function updateURL(
     isPackageNameDefinedInURL?: boolean
     fromVersion?: string
     toVersion?: string
+    appPackage?: string
+    appName?: string
     yarnPlugin?: boolean
   } = { packageName: PACKAGE_NAMES.BACKSTAGE }
 ) {
-  const newURL = new URL(window.location.href)
+  const url = new URL(window.location.href)
 
   if (fromVersion) {
     url.searchParams.set('from', fromVersion)
@@ -25,37 +29,25 @@ export function updateURL(
   if (toVersion) {
     url.searchParams.set('to', toVersion)
   }
-  if (isPackageNameDefinedInURL) {
+  if (isPackageNameDefinedInURL && packageName) {
     url.searchParams.set('package', packageName)
   }
-  if (packageName === PACKAGE_NAMES.RNW) {
+  if (packageName === PACKAGE_NAMES.RNW && language) {
     url.searchParams.set('language', language)
   }
-  // if (appPackage) {
-  //   url.searchParams.set('package', appPackage)
-  // }
-  // if (appName) {
-  //   url.searchParams.set('name', appName)
-  // }
-
-  if (toVersion) {
-    newURL.searchParams.set('to', toVersion)
+  if (appPackage) {
+    url.searchParams.set('package', appPackage)
+  }
+  if (appName) {
+    url.searchParams.set('name', appName)
   }
 
   if (yarnPlugin !== undefined) {
-    newURL.searchParams.set('yarnPlugin', yarnPlugin ? '1' : '0')
+    url.searchParams.set('yarnPlugin', yarnPlugin ? '1' : '0')
   }
 
-  if (isPackageNameDefinedInURL) {
-    newURL.searchParams.set('package', packageName!)
-  }
-
-  if (language && packageName === PACKAGE_NAMES.RNW) {
-    newURL.searchParams.set('language', language)
-  }
-
-  if (window.location.href !== newURL.toString()) {
-    window.history.pushState('', '', newURL.toString())
+  if (window.location.href !== url.toString()) {
+    window.history.pushState('', '', url.toString())
 
     // The popstate event is not triggered by window.history.pushState,
     // so we need to dispatch the event ourselves in order for listeners

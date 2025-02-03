@@ -27,6 +27,9 @@ export const useFetchDiff = ({
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isDone, setIsDone] = useState<boolean>(false)
   const [diff, setDiff] = useState<File[] | Error>([])
+  const {
+    settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
+  } = useSettings()
 
   useEffect(() => {
     const fetchDiff = async () => {
@@ -34,7 +37,15 @@ export const useFetchDiff = ({
       setIsDone(false)
 
       const [response] = await Promise.all([
-        fetch(getDiffURL({ packageName, language, fromVersion, toVersion })),
+        fetch(
+          getDiffURL({
+            packageName,
+            language,
+            fromVersion,
+            toVersion,
+            useYarnPlugin,
+          })
+        ),
         delay(300),
       ])
 

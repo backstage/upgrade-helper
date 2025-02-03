@@ -5,8 +5,10 @@ import { ReleaseT } from '../releases/types'
 
 export const useFetchReleaseVersions = ({
   packageName,
+  useYarnPlugin,
 }: {
   packageName: string
+  useYarnPlugin: boolean
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isDone, setIsDone] = useState(false)
@@ -43,6 +45,6 @@ export const useFetchReleaseVersions = ({
   return {
     isLoading,
     isDone,
-    releaseVersions,
+    releases,
   }
 }

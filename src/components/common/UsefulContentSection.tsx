@@ -18,6 +18,7 @@ import UpgradeSupportAlert from './UpgradeSupportAlert'
 import { PACKAGE_NAMES } from '../../constants'
 import type { Theme } from '../../theme'
 import Link from 'antd/es/typography/Link'
+import { ReleasesContext } from '../../ReleaseProvider'
 
 const Container = styled.div<{ isContentOpen: boolean }>`
   position: relative;
@@ -243,9 +244,11 @@ class UsefulContentSection extends Component<
       versions: this.context.releases,
     })
 
-    const doesAnyVersionHaveUsefulLinks = versions.some(
-      ({ usefulContent }) => !!usefulContent
-    )
+    // const doesAnyVersionHaveUsefulLinks = versions.some(
+    //   ({ usefulContent }) => !!usefulContent
+    // )
+
+    const hasMoreThanOneRelease = versions.length > 1
 
     return (
       <Container isContentOpen={isContentOpen}>
@@ -296,15 +299,15 @@ class UsefulContentSection extends Component<
               )
             })}
             <UpgradeSupportAlert />
-            {/*
-            <Separator />
-
-            <UpgradeSupportAlert />
+            {/* <Separator />
+            <UpgradeSupportAlert /> */}
           </ContentContainer>
         </InnerContainer>
       </Container>
     )
   }
 }
+
+UsefulContentSection.contextType = ReleasesContext
 
 export default UsefulContentSection

@@ -4,11 +4,13 @@ import { getVersionsContentInDiff, getChangelogURL } from '../utils'
 
 const fixtureVersions = ['0.59', '0.58', '0.57', '0.56'].map((version) => ({
   version,
+  createApp: '',
 }))
+
 describe('getVersionsContentInDiff', () => {
   it('returns the versions in the provided range', () => {
     const versions = getVersionsContentInDiff({
-      packageName: PACKAGE_NAMES.RN,
+      // packageName: PACKAGE_NAMES.RN,
       fromVersion: '0.57.0',
       toVersion: '0.59.0',
       versions: fixtureVersions,
@@ -19,7 +21,7 @@ describe('getVersionsContentInDiff', () => {
 
   it('returns the versions in the provided range with release candidates', () => {
     const versions = getVersionsContentInDiff({
-      packageName: PACKAGE_NAMES.RN,
+      // packageName: PACKAGE_NAMES.RN,
       fromVersion: '0.56.0',
       toVersion: '0.59.0-rc.1',
       versions: fixtureVersions,
@@ -34,7 +36,7 @@ describe('getVersionsContentInDiff', () => {
 
   it('returns the versions in the provided range with patches specified', () => {
     const versions = getVersionsContentInDiff({
-      packageName: PACKAGE_NAMES.RN,
+      // packageName: PACKAGE_NAMES.RN,
       fromVersion: '0.57.2',
       toVersion: '0.59.9',
       versions: fixtureVersions,

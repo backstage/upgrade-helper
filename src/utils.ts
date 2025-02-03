@@ -36,7 +36,6 @@ export const getReleasesFileURL = ({
 
 export const getDiffURL = ({
   packageName,
-  language,
   fromVersion,
   toVersion,
   useYarnPlugin,
@@ -45,6 +44,7 @@ export const getDiffURL = ({
   language: string
   fromVersion: string
   toVersion: string
+  useYarnPlugin: boolean
 }) => {
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName,
@@ -117,7 +117,6 @@ export const replaceAppDetails = (
 }
 
 export const getVersionsContentInDiff = ({
-  packageName,
   fromVersion,
   toVersion,
   versions,
@@ -126,14 +125,15 @@ export const getVersionsContentInDiff = ({
   toVersion: string
   versions: ReleaseT[]
 }) => {
-  if (!versions[packageName]) {
-    return []
-  }
+  // if (!versions[packageName]) {
+  //   return []
+  // }
 
   const cleanedToVersion = semver.valid(semver.coerce(toVersion))
 
-  return versions[packageName].filter(({ version }) => {
+  return versions.filter(({ version }) => {
     const cleanedVersion = semver.coerce(version)
+    const isPreRelease = semver.prerelease(version)
 
     // `cleanedVersion` can't be newer than `cleanedToVersion` nor older (or equal) than `fromVersion`
     return (
@@ -166,6 +166,7 @@ export const getTransitionDuration = (duration: number) =>
 
 // settings constants
 export const SHOW_LATEST_RCS = 'Show latest release candidates'
+export const USE_YARN_PLUGIN = 'Use yarn plugin'
 
 /**
  * Returns the file paths to display for each side of the diff. Takes into account

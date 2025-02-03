@@ -1,7 +1,6 @@
 import React, {
   useState,
   useCallback,
-  useEffect,
   Fragment,
   ReactNode,
   ComponentProps,
@@ -26,6 +25,8 @@ import { replaceAppDetails } from '../../../utils'
 import type { Theme } from '../../../theme'
 import type { ChangeEventArgs } from 'react-diff-view'
 import type { DefaultRenderToken } from 'react-diff-view/types/context'
+import { Button, Card, Typography } from 'antd'
+import { useReleases } from '../../../ReleaseProvider'
 
 const copyPathPopoverContentOpts = {
   default: 'Copy file path',
@@ -272,11 +273,13 @@ const Diff = ({
     setIsDiffCollapsed(true)
   }
 
+  const { releases } = useReleases()
   const diffComments = getComments({
-    packageName,
+    // packageName,
     newPath,
     fromVersion,
     toVersion,
+    versions: releases,
   })
 
   const updatedHunks: HunkData[] = React.useMemo(

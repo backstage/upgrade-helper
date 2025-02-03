@@ -2,6 +2,7 @@ import React, {
   useState,
   useEffect /* useDeferredValue  */,
   ComponentProps,
+  useDeferredValue,
 } from 'react'
 import styled from '@emotion/styled'
 import { ThemeProvider } from '@emotion/react'
@@ -9,13 +10,13 @@ import { Card, ConfigProvider, theme } from 'antd'
 import GitHubButton, { ReactGitHubButtonProps } from 'react-github-btn'
 import ReactGA from 'react-ga'
 import createPersistedState from 'use-persisted-state'
-// import queryString from 'query-string'
+import queryString from 'query-string'
 import VersionSelector from '../common/VersionSelector'
 import DiffViewer, { DiffViewerProps } from '../common/DiffViewer'
 import Settings from '../common/Settings'
 // @ts-ignore-next-line
 import logo from '../../assets/logo.svg'
-import { SHOW_LATEST_RCS } from '../../utils'
+// import { SHOW_LATEST_RCS } from '../../utils'
 import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
 import {
@@ -23,15 +24,16 @@ import {
   DEFAULT_APP_PACKAGE,
   PACKAGE_NAMES,
 } from '../../constants'
-import { TroubleshootingGuidesButton } from '../common/TroubleshootingGuidesButton'
+// import { TroubleshootingGuidesButton } from '../common/TroubleshootingGuidesButton'
 import { DarkModeButton } from '../common/DarkModeButton'
 import { updateURL } from '../../utils/update-url'
 import { deviceSizes } from '../../utils/device-sizes'
 import { lightTheme, darkTheme, type Theme } from '../../theme'
 import pkg from '../../../package.json'
 import { getChangelogURL } from '../../utils'
-import { PACKAGE_NAMES } from '../../constants'
 import { Link } from '../common/Markdown'
+import { SettingsProvider } from '../../SettingsProvider'
+import { ReleasesProvider } from '../../ReleaseProvider'
 
 const homepage = pkg.homepage
 
@@ -108,6 +110,10 @@ const SettingsContainer = styled.div`
   flex: 1;
 `
 
+const UpdateDocsLink = styled.div`
+  flex: 1;
+`
+
 const getAppInfoInURL = (): {
   appPackage: string
   appName: string
@@ -143,10 +149,24 @@ const Home = () => {
   const { packageName: defaultPackageName, isPackageNameDefinedInURL } =
     useGetPackageNameFromURL()
   const defaultLanguage = useGetLanguageFromURL()
+  const [packageName, setPackageName] = useState(defaultPackageName)
+  const [language, setLanguage] = useState(defaultLanguage)
   const [fromVersion, setFromVersion] = useState('')
   const [toVersion, setToVersion] = useState('')
   const [shouldShowDiff, setShouldShowDiff] = useState(false)
+  // const [settings, setSettings] = useState<Record<string, boolean>>({
+  //   [`${SHOW_LATEST_RCS}`]: false,
+  // })
+
+  const appInfoInURL = getAppInfoInURL()
   const [appName /* setAppName */] = useState('')
+  const [appPackage /*setAppPackage*/] = useState<string>(
+    appInfoInURL.appPackage
+  )
+
+  // Avoid UI lag when typing.
+  const deferredAppName = useDeferredValue(appName)
+  const deferredAppPackage = useDeferredValue(appPackage)
 
   // const homepageUrl = process.env.PUBLIC_URL
 
@@ -173,6 +193,7 @@ const Home = () => {
     setShouldShowDiff(true)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handlePackageNameAndLanguageChange = ({
     newPackageName,
     newLanguage,
@@ -199,14 +220,14 @@ const Home = () => {
     setShouldShowDiff(false)
   }
 
-  const handleSettingsChange = (settingsValues: string[]) => {
-    const normalizedIncomingSettings = settingsValues.reduce((acc, val) => {
-      acc[val] = true
-      return acc
-    }, {})
+  // const handleSettingsChange = (settingsValues: string[]) => {
+  //   const normalizedIncomingSettings = settingsValues.reduce((acc, val) => {
+  //     acc[val] = true
+  //     return acc
+  //   }, {})
 
-    setSettings(normalizedIncomingSettings)
-  }
+  //   setSettings(normalizedIncomingSettings)
+  // }
 
   // Dark Mode Setup:
   const { defaultAlgorithm, darkAlgorithm } = theme // Get default and dark mode states from antd.
@@ -282,9 +303,16 @@ const Home = () => {
                 shouldShowDiff={shouldShowDiff}
                 fromVersion={fromVersion}
                 toVersion={toVersion}
-                appName={appName}
-                packageName={defaultPackageName}
-                language={defaultLanguage}
+                appName={
+                  deferredAppName !== DEFAULT_APP_NAME ? deferredAppName : ''
+                }
+                appPackage={
+                  deferredAppPackage !== DEFAULT_APP_PACKAGE
+                    ? deferredAppPackage
+                    : ''
+                }
+                packageName={packageName}
+                language={language}
               />
             </Page>
           </ThemeProvider>

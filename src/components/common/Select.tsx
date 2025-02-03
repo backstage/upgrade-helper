@@ -23,9 +23,9 @@ const Select = ({ title, options, ...props }: SelectProps) => (
     <Typography.Title level={5}>{title}</Typography.Title>
 
     <SelectBox size="large" {...props}>
-      {options.map((option) => (
-        <Option key={option} value={option}>
-          {option}
+      {options.map(({ version, createApp }) => (
+        <Option key={version} value={version}>
+          {createApp ? `${version} (create-app@${createApp})` : version}
         </Option>
       ))}
     </SelectBox>

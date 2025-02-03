@@ -130,10 +130,10 @@ const getLineNumberWithType = ({
   }${lineNumber}`
 
 const getComments = ({
-  packageName,
   newPath,
   fromVersion,
   toVersion,
+  versions,
 }: {
   versions: ReleaseT[]
   newPath: string
@@ -143,7 +143,8 @@ const getComments = ({
   const newPathSanitized = removeAppPathPrefix(newPath)
 
   const versionsInDiff = getVersionsContentInDiff({
-    packageName,
+    // packageName,
+    versions,
     fromVersion,
     toVersion,
   }).filter(
