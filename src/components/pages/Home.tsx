@@ -16,6 +16,8 @@ import DiffViewer, { DiffViewerProps } from '../common/DiffViewer'
 import Settings from '../common/Settings'
 // @ts-ignore-next-line
 import logo from '../../assets/logo.svg'
+// @ts-ignore-next-line
+import logoWhite from '../../assets/logo-white.svg'
 // import { SHOW_LATEST_RCS } from '../../utils'
 import { useGetLanguageFromURL } from '../../hooks/get-language-from-url'
 import { useGetPackageNameFromURL } from '../../hooks/get-package-name-from-url'
@@ -257,7 +259,7 @@ const Home = () => {
                     <LogoImg
                       alt="Backstage logo"
                       title="Backstage logo"
-                      src={logo}
+                      src={isDarkMode ? logoWhite : logo}
                     />
 
                     <a href={homepage}>
