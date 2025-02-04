@@ -195,7 +195,7 @@ class UsefulContentSection extends Component<
   getChangelog = ({ version }: { version: string }) => {
     const { packageName } = this.props
     const { to } = this.context
-    const { version: toVersion } = to! // TODO: remove the ! when we have a better way to handle this
+    const { version: toVersion } = to
     if (
       packageName === PACKAGE_NAMES.RNW ||
       packageName === PACKAGE_NAMES.RNM

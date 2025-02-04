@@ -35,7 +35,7 @@ import pkg from '../../../package.json'
 import { getChangelogURL } from '../../utils'
 import { Link } from '../common/Markdown'
 import { SettingsProvider } from '../../SettingsProvider'
-import { ReleasesProvider } from '../../ReleaseProvider'
+import { ReleasesProvider, useReleases } from '../../ReleaseProvider'
 
 const homepage = pkg.homepage
 
@@ -326,6 +326,7 @@ const Home = () => {
 
 function BackstageDiffViewer(props: ComponentProps<typeof DiffViewer>) {
   const { fromVersion, toVersion } = props as unknown as DiffViewerProps
+  const { to } = useReleases()
 
   if (fromVersion && fromVersion === toVersion) {
     return (
@@ -339,7 +340,7 @@ function BackstageDiffViewer(props: ComponentProps<typeof DiffViewer>) {
           <Link
             href={getChangelogURL({
               packageName: PACKAGE_NAMES.BACKSTAGE,
-              version: toVersion,
+              version: to.version,
             })}
             target="_blank"
             rel="noreferrer"

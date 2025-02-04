@@ -8,14 +8,16 @@ export const ReleasesContext = React.createContext<{
   isDone: boolean
   isLoading: boolean
   releases: ReleaseT[]
-  from?: ReleaseT
-  to?: ReleaseT
+  from: ReleaseT
+  to: ReleaseT
   setSelectedVersions: (selectedVersions: any) => void
 }>({
   isDone: false,
   isLoading: false,
   releases: [],
   setSelectedVersions: () => {},
+  from: undefined!,
+  to: undefined!,
 })
 
 export const ReleasesProvider = React.memo(function ({
@@ -31,9 +33,12 @@ export const ReleasesProvider = React.memo(function ({
 
   const value = useFetchReleaseVersions({ packageName, useYarnPlugin })
   const [selectedVersions, setSelectedVersions] = useState<{
-    from?: ReleaseT
-    to?: ReleaseT
-  }>({})
+    from: ReleaseT
+    to: ReleaseT
+  }>({
+    from: { createApp: '', version: '' },
+    to: { createApp: '', version: '' },
+  })
 
   return (
     <ReleasesContext.Provider

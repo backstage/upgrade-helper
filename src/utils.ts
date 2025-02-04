@@ -153,7 +153,11 @@ export const getChangelogURL = ({
   version: string
   packageName: string
 }) => {
-  if (packageName === PACKAGE_NAMES.RNW || packageName === PACKAGE_NAMES.RNM) {
+  if (
+    packageName === PACKAGE_NAMES.RNW ||
+    packageName === PACKAGE_NAMES.RNM ||
+    packageName === PACKAGE_NAMES.BACKSTAGE
+  ) {
     return `${RN_CHANGELOG_URLS[packageName]}v${version}`
   }
 
