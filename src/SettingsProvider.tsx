@@ -1,16 +1,27 @@
-import React, { ReactNode, useContext } from 'react'
+import React, { ReactNode, useContext, useEffect } from 'react'
 import useLocalStorage from 'react-use/lib/useLocalStorage'
 import useSearchParam from 'react-use/lib/useSearchParam'
 
 import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from './utils'
 import { updateURL } from './utils/update-url'
 
+export interface SETTINGS {
+  [SHOW_LATEST_RCS]: boolean
+  [USE_YARN_PLUGIN]: boolean
+}
+
+const settings: SETTINGS = {
+  [SHOW_LATEST_RCS]: false,
+  [USE_YARN_PLUGIN]: false,
+}
+
+type SET_SETTINGS = (settings: SETTINGS) => void
+
+const setSettings: SET_SETTINGS = (settings: SETTINGS) => {}
+
 const INITIAL_STATE = {
-  settings: {
-    [`${SHOW_LATEST_RCS}`]: false,
-    [`${USE_YARN_PLUGIN}`]: false,
-  },
-  setSettings: (setting: any) => {},
+  settings,
+  setSettings,
 }
 
 export const SettingsContext = React.createContext(INITIAL_STATE)
@@ -21,6 +32,7 @@ export const SettingsProvider = React.memo(function ({
   children: ReactNode
 }) {
   const useYarnPluginParam = useSearchParam('yarnPlugin')
+  const shouldPopulateYarnPluginParam = !useYarnPluginParam
   const useYarnPlugin =
     useYarnPluginParam !== null ? !!Number(useYarnPluginParam) : false
 
@@ -29,7 +41,13 @@ export const SettingsProvider = React.memo(function ({
     INITIAL_STATE.settings
   )
 
-  const setSettings = (settings: typeof INITIAL_STATE.settings) => {
+  useEffect(() => {
+    if (shouldPopulateYarnPluginParam) {
+      updateURL({ yarnPlugin: settings?.[USE_YARN_PLUGIN] ?? false })
+    }
+  }, [shouldPopulateYarnPluginParam])
+
+  const setSettings = (settings: SETTINGS) => {
     const { [USE_YARN_PLUGIN]: newUseYarnPlugin, ...localStorageSettings } =
       settings
 
