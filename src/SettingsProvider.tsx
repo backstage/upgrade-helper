@@ -5,7 +5,7 @@ import useSearchParam from 'react-use/lib/useSearchParam'
 import { SHOW_LATEST_RCS, USE_YARN_PLUGIN } from './utils'
 import { updateURL } from './utils/update-url'
 
-export interface SETTINGS {
+interface SETTINGS {
   [SHOW_LATEST_RCS]: boolean
   [USE_YARN_PLUGIN]: boolean
 }
