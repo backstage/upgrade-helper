@@ -32,9 +32,9 @@ export const SettingsProvider = React.memo(function ({
   children: ReactNode
 }) {
   const useYarnPluginParam = useSearchParam('yarnPlugin')
-  const shouldPopulateYarnPluginParam = !useYarnPluginParam
+  const shouldPopulateYarnPluginParam = useYarnPluginParam === null
   const useYarnPlugin =
-    useYarnPluginParam !== null ? !!Number(useYarnPluginParam) : false
+    !shouldPopulateYarnPluginParam ? !!Number(useYarnPluginParam) : false
 
   const [settings, setLocalStorageSettings] = useLocalStorage(
     'backstage:upgrade-helper:settings',
