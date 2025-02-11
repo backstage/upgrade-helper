@@ -4,7 +4,7 @@ import { getVersionsContentInDiff, getChangelogURL } from '../utils'
 
 const fixtureVersions = ['0.59', '0.58', '0.57', '0.56'].map((version) => ({
   version,
-  createApp: '',
+  createApp: undefined!,
 }))
 
 const toEqualVersions = (versions: string[]) =>
