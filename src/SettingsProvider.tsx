@@ -15,8 +15,11 @@ type State = {
   setSettings(settings: SETTINGS): void
 }
 const INITIAL_STATE = {
-  settings,
-  setSettings,
+  settings: {
+    [`${SHOW_LATEST_RCS}`]: false,
+    [`${USE_YARN_PLUGIN}`]: false,
+  },
+  setSettings: () => {},
 }
 
 export const SettingsContext = React.createContext(INITIAL_STATE)
