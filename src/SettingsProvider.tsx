@@ -10,15 +10,10 @@ interface SETTINGS {
   [USE_YARN_PLUGIN]: boolean
 }
 
-const settings: SETTINGS = {
-  [SHOW_LATEST_RCS]: false,
-  [USE_YARN_PLUGIN]: false,
+type State = {
+  settings: SETTINGS
+  setSettings(settings: SETTINGS): void
 }
-
-type SET_SETTINGS = (settings: SETTINGS) => void
-
-const setSettings: SET_SETTINGS = (settings: SETTINGS) => {}
-
 const INITIAL_STATE = {
   settings,
   setSettings,
