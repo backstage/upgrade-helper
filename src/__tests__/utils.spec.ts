@@ -7,9 +7,6 @@ const fixtureVersions = ['0.59', '0.58', '0.57', '0.56'].map((version) => ({
   createApp: undefined!,
 }))
 
-const toEqualVersions = (versions: string[]) =>
-  versions.map((version) => ({ version, createApp: '' }))
-
 describe('getVersionsContentInDiff', () => {
   it('returns the versions in the provided range', () => {
     const versions = getVersionsContentInDiff({
@@ -19,7 +16,7 @@ describe('getVersionsContentInDiff', () => {
       versions: fixtureVersions,
     })
 
-    expect(versions).toEqual(toEqualVersions(['0.59', '0.58']))
+    expect(versions).toEqual([{ version: '0.59' }, { version: '0.58' }])
   })
 
   it('returns the versions in the provided range with release candidates', () => {
@@ -30,7 +27,11 @@ describe('getVersionsContentInDiff', () => {
       versions: fixtureVersions,
     })
 
-    expect(versions).toEqual(toEqualVersions(['0.59', '0.58', '0.57']))
+    expect(versions).toEqual([
+      { version: '0.59' },
+      { version: '0.58' },
+      { version: '0.57' },
+    ])
   })
 
   it('returns the versions in the provided range with patches specified', () => {
@@ -41,7 +42,7 @@ describe('getVersionsContentInDiff', () => {
       versions: fixtureVersions,
     })
 
-    expect(versions).toEqual(toEqualVersions(['0.59', '0.58']))
+    expect(versions).toEqual([{ version: '0.59' }, { version: '0.58' }])
   })
 })
 
