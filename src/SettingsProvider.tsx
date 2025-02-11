@@ -14,7 +14,7 @@ type State = {
   settings: SETTINGS
   setSettings(settings: SETTINGS): void
 }
-const INITIAL_STATE = {
+const INITIAL_STATE: State = {
   settings: {
     [`${SHOW_LATEST_RCS}`]: false,
     [`${USE_YARN_PLUGIN}`]: false,
