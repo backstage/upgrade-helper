@@ -43,7 +43,7 @@ export const SettingsProvider = React.memo(function ({
     if (shouldPopulateYarnPluginParam) {
       updateURL({ yarnPlugin: settings?.[USE_YARN_PLUGIN] ?? false })
     }
-  }, [shouldPopulateYarnPluginParam])
+  }, [shouldPopulateYarnPluginParam, settings?.[USE_YARN_PLUGIN]])
 
   const setSettings = (settings: SETTINGS) => {
     const { [USE_YARN_PLUGIN]: newUseYarnPlugin, ...localStorageSettings } =
