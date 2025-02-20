@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/upgrade-helper/static/css/main.473f3693.css",
-    "main.js": "/upgrade-helper/static/js/main.bc2bd025.js",
+    "main.js": "/upgrade-helper/static/js/main.04982ec2.js",
     "static/media/logo-white.svg": "/upgrade-helper/static/media/logo-white.86c10982a3f2516711310dd9df8a0703.svg",
     "static/media/logo.svg": "/upgrade-helper/static/media/logo.943430fe5f4ba581166e90638520c73c.svg",
     "index.html": "/upgrade-helper/index.html",
     "main.473f3693.css.map": "/upgrade-helper/static/css/main.473f3693.css.map",
-    "main.bc2bd025.js.map": "/upgrade-helper/static/js/main.bc2bd025.js.map"
+    "main.04982ec2.js.map": "/upgrade-helper/static/js/main.04982ec2.js.map"
   },
   "entrypoints": [
     "static/css/main.473f3693.css",
-    "static/js/main.bc2bd025.js"
+    "static/js/main.04982ec2.js"
   ]
 }
