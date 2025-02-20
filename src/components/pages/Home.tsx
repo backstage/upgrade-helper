@@ -243,6 +243,7 @@ const Home = () => {
       ? darkTheme.background
       : lightTheme.background
   }, [isDarkMode])
+
   return (
     <SettingsProvider>
       <ReleasesProvider packageName={defaultPackageName}>
@@ -305,9 +306,7 @@ const Home = () => {
                 shouldShowDiff={shouldShowDiff}
                 fromVersion={fromVersion}
                 toVersion={toVersion}
-                appName={
-                  deferredAppName !== DEFAULT_APP_NAME ? deferredAppName : ''
-                }
+                appName={deferredAppName || DEFAULT_APP_NAME}
                 appPackage={
                   deferredAppPackage !== DEFAULT_APP_PACKAGE
                     ? deferredAppPackage
