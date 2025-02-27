@@ -116,16 +116,13 @@ const UpdateDocsLink = styled.div`
   flex: 1;
 `
 
-const getAppInfoInURL = (): {
-  appPackage: string
-  appName: string
-} => {
+const getAppInfoInURL = () => {
   // Parses `/?name=RnDiffApp&package=com.rndiffapp` from URL
   const { name, package: pkg } = queryString.parse(window.location.search)
 
   return {
     appPackage: pkg as string,
-    appName: name as string,
+    appName: name as string | null,
   }
 }
 
@@ -161,13 +158,13 @@ const Home = () => {
   // })
 
   const appInfoInURL = getAppInfoInURL()
-  const [appName /* setAppName */] = useState('')
+  const [appName /* setAppName */] = useState(appInfoInURL.appName)
   const [appPackage /*setAppPackage*/] = useState<string>(
     appInfoInURL.appPackage
   )
 
   // Avoid UI lag when typing.
-  const deferredAppName = useDeferredValue(appName)
+  const deferredAppName = useDeferredValue(appName || DEFAULT_APP_NAME)
   const deferredAppPackage = useDeferredValue(appPackage)
 
   // const homepageUrl = process.env.PUBLIC_URL
@@ -305,9 +302,7 @@ const Home = () => {
                 shouldShowDiff={shouldShowDiff}
                 fromVersion={fromVersion}
                 toVersion={toVersion}
-                appName={
-                  deferredAppName !== DEFAULT_APP_NAME ? deferredAppName : ''
-                }
+                appName={deferredAppName}
                 appPackage={
                   deferredAppPackage !== DEFAULT_APP_PACKAGE
                     ? deferredAppPackage
