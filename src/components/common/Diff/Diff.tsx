@@ -385,7 +385,7 @@ function BackstageDiffView({
 
   if (
     (!showDiff && newPath === '.yarn/plugins/@yarnpkg/plugin-backstage.cjs') ||
-    newPath.startsWith('./yarn/releases/')
+    newPath.startsWith('.yarn/releases/')
   ) {
     return (
       <Card
@@ -397,10 +397,7 @@ function BackstageDiffView({
         }}
       >
         <Button onClick={() => setShowDiff(true)}>Show diff</Button>
-        <Typography>
-          The diff of this file for the Backstage Yarn plugin is hidden by
-          default.
-        </Typography>
+        <Typography>The diff of this file is hidden by default.</Typography>
       </Card>
     )
   }
