@@ -2,7 +2,7 @@
   "name": "upgrade-helper",
   "version": "0.1.0",
   "license": "MIT",
-  "homepage": "https://react-native-community.github.io/upgrade-helper",
+  "homepage": "https://backstage.github.io/upgrade-helper",
   "scripts": {
     "build": "EXTEND_ESLINT=true react-app-rewired build",
     "docker-test-e2e": "yarn start-and-wait && react-app-rewired test --watchAll=false --onlyChanged=false --testPathPattern='/__tests__/.*(\\.|).e2e.spec.(js|jsx|ts|tsx)?$'",
