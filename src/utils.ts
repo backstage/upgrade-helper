@@ -10,8 +10,18 @@ import { ReleaseT } from './releases/types'
 
 const getRNDiffRepository = ({ packageName }: { packageName: string }) =>
   RN_DIFF_REPOSITORIES[packageName]
-const getDiffBranch = ({ packageName }: { packageName: string }) =>
-  packageName === PACKAGE_NAMES.BACKSTAGE ? 'master' : 'diffs'
+const getDiffBranch = ({
+  packageName,
+  toVersion,
+  useYarnPlugin,
+}: {
+  packageName: string
+  toVersion: string
+  useYarnPlugin: boolean
+}) =>
+  packageName === PACKAGE_NAMES.BACKSTAGE
+    ? `release-diff/${useYarnPlugin ? '' : 'legacy/'}v${toVersion}`
+    : 'diffs'
 
 export const getReleasesFileURL = ({
   packageName,
@@ -48,9 +58,11 @@ export const getDiffURL = ({
 }) => {
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName,
-  })}/${getDiffBranch({ packageName })}/${
-    useYarnPlugin ? 'diffs-yarn-plugin' : 'diffs'
-  }/${fromVersion}..${toVersion}.diff`
+  })}/${getDiffBranch({
+    packageName,
+    toVersion,
+    useYarnPlugin,
+  })}/diffs/${fromVersion}..${toVersion}.diff`
 }
 
 const getBranch = ({
