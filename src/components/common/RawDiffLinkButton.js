@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { Button as AntdButton } from 'antd'
-import { getDiffURL } from '../../utils'
+import { getDiffURL, USE_YARN_PLUGIN } from '../../utils'
+import { useSettings } from '../../SettingsProvider'
 
 const Container = styled.div`
   display: flex;
@@ -23,6 +24,10 @@ const RawDiffLinkButton = ({
   fromVersion,
   toVersion,
 }) => {
+  const {
+    settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
+  } = useSettings()
+
   if (fromVersion === '') {
     return null
   }
@@ -31,6 +36,7 @@ const RawDiffLinkButton = ({
     language,
     fromVersion,
     toVersion,
+    useYarnPlugin,
   })
   return (
     <Container>
