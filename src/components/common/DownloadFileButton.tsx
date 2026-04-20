@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button, ButtonProps } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
-import { getBinaryFileURL } from '../../utils'
+import { getBinaryFileURL, USE_YARN_PLUGIN } from '../../utils'
+import { useSettings } from '../../SettingsProvider'
 
 interface DownloadFileButtonProps extends ButtonProps {
   open: boolean
@@ -16,13 +17,17 @@ const DownloadFileButton = ({
   packageName,
   ...props
 }: DownloadFileButtonProps) => {
+  const {
+    settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
+  } = useSettings()
+
   return open ? (
     <Button
       {...props}
       shape="circle"
       icon={<DownloadOutlined />}
       target="_blank"
-      href={getBinaryFileURL({ packageName, version, path })}
+      href={getBinaryFileURL({ packageName, version, path, useYarnPlugin })}
     />
   ) : null
 }

@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { Button, ButtonProps } from 'antd'
-import { getBinaryFileURL } from '../../utils'
+import { getBinaryFileURL, USE_YARN_PLUGIN } from '../../utils'
+import { useSettings } from '../../SettingsProvider'
 
 interface ViewFileButtonProps extends ButtonProps {
   open: boolean
@@ -15,12 +16,16 @@ const ViewFileButton = styled(
       return null
     }
 
+    const {
+      settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
+    } = useSettings()
+
     return (
       <Button
         {...props}
         target="_blank"
         size="small"
-        href={getBinaryFileURL({ packageName, version, path })}
+        href={getBinaryFileURL({ packageName, version, path, useYarnPlugin })}
       >
         Raw
       </Button>

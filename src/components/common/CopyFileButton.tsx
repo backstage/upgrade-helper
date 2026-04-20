@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Button, Popover } from 'antd'
 import type { ButtonProps } from 'antd'
-import { getBinaryFileURL } from '../../utils'
+import { getBinaryFileURL, USE_YARN_PLUGIN } from '../../utils'
 import { CopyOutlined } from '@ant-design/icons'
+import { useSettings } from '../../SettingsProvider'
 
 const popoverContentOpts = {
   default: 'Copy raw contents',
@@ -33,10 +34,14 @@ const CopyFileButton = styled(
       popoverContentOpts.default
     )
 
+    const {
+      settings: { [USE_YARN_PLUGIN]: useYarnPlugin },
+    } = useSettings()
+
     const fetchContent = () =>
-      fetch(getBinaryFileURL({ packageName, version, path })).then((response) =>
-        response.text()
-      )
+      fetch(
+        getBinaryFileURL({ packageName, version, path, useYarnPlugin })
+      ).then((response) => response.text())
     // .then((content) => replaceAppDetails(content, appName, appPackage))
 
     const copyContent = () => {

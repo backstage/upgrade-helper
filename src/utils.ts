@@ -92,12 +92,13 @@ export const getBinaryFileURL = ({
   language,
   version,
   path,
-}: GetBinaryFileURLProps) => {
+  useYarnPlugin,
+}: GetBinaryFileURLProps & { useYarnPlugin: boolean }) => {
   const branch = getBranch({ packageName, language, version })
 
   return `https://raw.githubusercontent.com/${getRNDiffRepository({
     packageName,
-  })}/release/${branch}/${path}`
+  })}/release/${useYarnPlugin ? 'yarn-plugin/' : ''}${branch}/${path}`
 }
 
 export const removeAppPathPrefix = (path: string, appName = DEFAULT_APP_NAME) =>
